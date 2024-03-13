@@ -65,6 +65,10 @@ class Task(models.Model):
             job.spawn()
         return new_task
 
+    def user_is_collaborator(self) -> bool:
+        repo = self.github.get_repo(self.github_project)
+        return repo.has_in_collaborators(self.github_user)
+
 
 class TaskEvent(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -101,3 +105,4 @@ class CostItem(models.Model):
 
     def __str__(self):
         return f"{self.title} - ${self.total_cost_usd}"
+
