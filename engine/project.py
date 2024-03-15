@@ -18,7 +18,7 @@ class Project(BaseModel):
         repo = git.Repo(settings.REPO_DIR)
         repo.git.add(A=True)
 
-        repo.index.commit(message)
+        repo.index.commit(message, no_verify=True)
         if push:
             origin = repo.remote(name='origin')
             origin.push(repo.active_branch.name, set_upstream=True)
@@ -99,3 +99,4 @@ class Project(BaseModel):
         TaskEvent.add(actor="assistant", action="create_pull_request", target=head,
                       message=f"Created [PR {pr.number}]({pr.html_url}) for branch `{head}`")
         return pr
+
