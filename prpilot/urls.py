@@ -22,16 +22,16 @@ from django.views.generic import RedirectView
 from accounts.views import health_check, home
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('admin', admin.site.urls),
     # Redirect default account login to GitHub login URL
-    path('accounts/login/', RedirectView.as_view(url='/accounts/github/login/?process=login', permanent=True)),
+    path('accounts/login', RedirectView.as_view(url='/accounts/github/login/?process=login', permanent=True)),
     # Include the allauth URLs
-    path('accounts/', include('allauth.urls')),
+    path('accounts', include('allauth.urls')),
     # Explicitly add a path for GitHub OAuth2 login for clarity
-    path('accounts/github/login/', oauth2_login, name='github_login'),
-    path('user/', include('accounts.urls')),
-    path('webhooks/', include('webhooks.urls')),
-    path('dashboard/', include('dashboard.urls')),
-    path('healthz/', health_check, name='health_check'),
+    path('accounts/github/login', oauth2_login, name='github_login'),
+    path('user', include('accounts.urls')),
+    path('webhooks', include('webhooks.urls')),
+    path('dashboard', include('dashboard.urls')),
+    path('healthz', health_check, name='health_check'),
     path('', home, name='home'),
 ]
