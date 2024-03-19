@@ -16,4 +16,4 @@ psycopg2-binary==2.9.9
 django-tables2==2.7.0
 Markdown==3.5.2
 sentry-sdk==1.41.0
-stripe
+stripe==8.7.0

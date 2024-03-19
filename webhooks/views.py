@@ -2,11 +2,15 @@ import hashlib
 import hmac
 import json
 import logging
+from decimal import Decimal
+
 import stripe
 from django.conf import settings
 from django.http import JsonResponse, HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
 from django.urls import reverse
+
+from accounts.models import UserBudget
 from webhooks.handlers.app_deletion import handle_app_deletion
 from webhooks.handlers.app_installation import handle_app_installation
 from webhooks.handlers.handle_issue_comment import handle_issue_comment
@@ -25,6 +29,41 @@ def is_valid_signature(request):
         digestmod=hashlib.sha256
     ).hexdigest()
     return hmac.compare_digest(github_signature, signature)
+
+
+@csrf_exempt
+def stripe_webhook(request):
+    payload = request.body
+    sig_header = request.META['HTTP_STRIPE_SIGNATURE']
+    endpoint_secret = settings.STRIPE_WEBHOOK_SECRET
+    event = None
+
+    try:
+        event = stripe.Webhook.construct_event(
+            payload, sig_header, endpoint_secret
+        )
+    except ValueError as e:
+        # Invalid payload
+        logger.error(f'Invalid payload: {e}')
+        return JsonResponse({'status': 'error', 'message': 'Invalid payload'}, status=400)
+    except stripe.error.SignatureVerificationError as e:
+        # Invalid signature
+        logger.error(f'Invalid signature: {e}')
+        return JsonResponse({'status': 'error', 'message': 'Invalid signature'}, status=400)
+
+    # Handle the event
+    if event['type'] == 'checkout.session.completed':
+        session = event['data']['object']
+        github_user = session.metadata['github_user']
+        credit_count = session.metadata['credits']
+        budget = UserBudget.get_user_budget(github_user)
+        budget.budget += Decimal(f'{credit_count}.00')
+        budget.save()
+        logger.info(f'Payment completed for user {github_user}')
+        logger.info(f'Added {credit_count} credits. New budget: {budget.budget}')
+        return JsonResponse({'status': 'success', 'message': 'Payment registered'}, status=200)
+
+    return JsonResponse({'status': 'ignored', 'message': 'Unhandled event'})
 
 
 @csrf_exempt

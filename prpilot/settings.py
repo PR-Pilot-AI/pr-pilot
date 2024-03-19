@@ -231,3 +231,6 @@ sentry_sdk.init(
     profiles_sample_rate=1.0,
     debug=False
 )
+
+STRIPE_API_KEY = os.getenv('STRIPE_API_KEY')
+STRIPE_WEBHOOK_SECRET = os.getenv('STRIPE_WEBHOOK_SECRET')

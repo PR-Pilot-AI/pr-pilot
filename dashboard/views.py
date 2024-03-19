@@ -1,4 +1,5 @@
 import markdown
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
@@ -68,27 +69,29 @@ class TaskDetailView(LoginRequiredMixin, DetailView):
         context['total_cost'] = sum([item.credits for item in task.cost_items.all()])
         return context
 
-@csrf_exempt
+
+@login_required
 def create_stripe_payment_link(request):
+    # Check if the user is authenticated
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('account_login'))
 
+    # Get 'credits' query param
+    credits = request.GET.get('credits')
+    if not credits:
+        return HttpResponseRedirect(reverse('task_list'))
+
     stripe.api_key = settings.STRIPE_API_KEY
-    session = stripe.checkout.Session.create(
-        payment_method_types=['card'],
-        line_items=[{
-            'price_data': {
-                'currency': 'usd',
-                'product_data': {
-                    'name': 'Credits Refill',
-                },
-                'unit_amount': 100,
-            },
-            'quantity': 1,
-        }],
-        mode='payment',
-        success_url=request.build_absolute_uri('/') + '?success=true',
-        cancel_url=request.build_absolute_uri('/') + '?canceled=true',
-        metadata={'user_id': request.user.id},
+    payment_link = stripe.PaymentLink.create(
+        line_items=[{'price': 'price_1OvuaJCyRBEZZGEuL8I9b308', 'quantity': int(credits)}],
+        after_completion={
+            "type": "redirect",
+            "redirect": {"url": "https://app.pr-pilot.ai/dashboard/"}
+        },
+        metadata={
+            'github_user': request.user.username,
+            'credits': int(credits),
+        },
     )
-    return HttpResponseRedirect(session.url)
+
+    return HttpResponseRedirect(payment_link.url)
