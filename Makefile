@@ -44,7 +44,10 @@ docker-push: build-docker
 deploy:
 	helm upgrade --install pr-pilot ./helm-chart --set image.tag=$(VERSION)
 
+create-private-key-secret:
+	kubectl create secret generic pr-pilot-private-key --from-file=github_app_private_key.pem
+
 # Kubernetes Secrets
 create-k8s-secrets:
-	kubectl create secret generic pr-pilot-private-key --from-file=github_app_private_key.pem
+	kubectl delete secret pr-pilot-secret
 	kubectl create secret generic pr-pilot-secret --from-env-file=k8s.env
