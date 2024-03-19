@@ -59,29 +59,3 @@ def github_webhook(request):
 
     else:
         return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=405)
-
-
-@csrf_exempt
-def create_stripe_payment_link(request):
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('account_login'))
-
-    stripe.api_key = settings.STRIPE_API_KEY
-    session = stripe.checkout.Session.create(
-        payment_method_types=['card'],
-        line_items=[{
-            'price_data': {
-                'currency': 'usd',
-                'product_data': {
-                    'name': 'Credits Refill',
-                },
-                'unit_amount': 100,
-            },
-            'quantity': 1,
-        }],
-        mode='payment',
-        success_url=request.build_absolute_uri('/') + '?success=true',
-        cancel_url=request.build_absolute_uri('/') + '?canceled=true',
-        metadata={'user_id': request.user.id},
-    )
-    return HttpResponseRedirect(session.url)
