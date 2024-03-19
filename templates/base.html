@@ -82,7 +82,7 @@
                       <input type="number" class="form-control" id="creditsAmount" placeholder="100 Credits = $1" required>
                     </div>
                   </div>
-                  <button type="submit" class="btn btn-primary d-block w-100">Refill</button>
+                  <button type="submit" id="refillButton" class="btn btn-primary d-block w-100">Refill</button>
 
                 </form>
               </div>
@@ -90,6 +90,19 @@
           </div>
         </div>
         <script>
+        document.addEventListener('DOMContentLoaded', function() {
+          const creditsAmount = document.getElementById('creditsAmount');
+          const refillButton = document.getElementById('refillButton');
+
+          // Disable the button on page load
+          refillButton.disabled = true;
+
+          // Event listener for input on the credits amount field
+          creditsAmount.addEventListener('input', function() {
+            // Check if the input field has a value. If it does not, disable the button.
+            refillButton.disabled = this.value.length === 0 || isNaN(this.value) || parseInt(this.value, 10) <= 0;
+          });
+        });
         document.getElementById('refillCreditsForm').addEventListener('submit', function(event) {
           event.preventDefault();
           const amount = document.getElementById('creditsAmount').value;

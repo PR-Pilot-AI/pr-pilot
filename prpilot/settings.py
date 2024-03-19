@@ -220,17 +220,18 @@ CREDIT_MULTIPLIER = 2
 
 APPEND_SLASH = True  # Default is True
 
-sentry_sdk.init(
-    dsn="https://ada4f090ac744c5c947d9d9363d75a29@o4506900506279936.ingest.us.sentry.io/4506900507262976",
-    # Set traces_sample_rate to 1.0 to capture 100%
-    # of transactions for performance monitoring.
-    traces_sample_rate=1.0,
-    # Set profiles_sample_rate to 1.0 to profile 100%
-    # of sampled transactions.
-    # We recommend adjusting this value in production.
-    profiles_sample_rate=1.0,
-    debug=False
-)
+if not DEBUG:
+    sentry_sdk.init(
+        dsn="https://ada4f090ac744c5c947d9d9363d75a29@o4506900506279936.ingest.us.sentry.io/4506900507262976",
+        # Set traces_sample_rate to 1.0 to capture 100%
+        # of transactions for performance monitoring.
+        traces_sample_rate=1.0,
+        # Set profiles_sample_rate to 1.0 to profile 100%
+        # of sampled transactions.
+        # We recommend adjusting this value in production.
+        profiles_sample_rate=1.0,
+        debug=False
+    )
 
 STRIPE_API_KEY = os.getenv('STRIPE_API_KEY')
 STRIPE_WEBHOOK_SECRET = os.getenv('STRIPE_WEBHOOK_SECRET')
