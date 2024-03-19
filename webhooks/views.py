@@ -2,11 +2,11 @@ import hashlib
 import hmac
 import json
 import logging
-
+import stripe
 from django.conf import settings
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
-
+from django.urls import reverse
 from webhooks.handlers.app_deletion import handle_app_deletion
 from webhooks.handlers.app_installation import handle_app_installation
 from webhooks.handlers.handle_issue_comment import handle_issue_comment
@@ -59,3 +59,29 @@ def github_webhook(request):
 
     else:
         return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=405)
+
+
+@csrf_exempt
+def create_stripe_payment_link(request):
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('account_login'))
+
+    stripe.api_key = settings.STRIPE_API_KEY
+    session = stripe.checkout.Session.create(
+        payment_method_types=['card'],
+        line_items=[{
+            'price_data': {
+                'currency': 'usd',
+                'product_data': {
+                    'name': 'Credits Refill',
+                },
+                'unit_amount': 100,
+            },
+            'quantity': 1,
+        }],
+        mode='payment',
+        success_url=request.build_absolute_uri('/') + '?success=true',
+        cancel_url=request.build_absolute_uri('/') + '?canceled=true',
+        metadata={'user_id': request.user.id},
+    )
+    return HttpResponseRedirect(session.url)
