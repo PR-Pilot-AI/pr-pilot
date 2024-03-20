@@ -103,6 +103,13 @@ class TaskUndoView(LoginRequiredMixin, DetailView):
         context['event_table'] = EventUndoTable(task.events.all())
         return context
 
+    def post(self, request, *args, **kwargs):
+        task = self.get_object()
+        marked_events = request.POST.getlist('reversible')
+        # Process the marked events here
+        # Redirect to a confirmation page or back to the task detail page
+        return redirect('task_detail', pk=task.pk)
+
 
 @login_required
 def create_stripe_payment_link(request):
