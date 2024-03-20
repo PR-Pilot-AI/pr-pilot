@@ -11,7 +11,7 @@ import stripe
 from django.conf import settings
 
 from accounts.models import UserBudget
-from dashboard.tables import TaskTable, EventTable, CostItemTable
+from dashboard.tables import TaskTable, EventTable, CostItemTable, EventUndoTable
 from engine.models import Task
 
 
@@ -67,6 +67,40 @@ class TaskDetailView(LoginRequiredMixin, DetailView):
         context['cost_item_table'] = CostItemTable(task.cost_items.all())
         context['task_result'] = mark_safe(markdown.markdown(task.result))
         context['total_cost'] = sum([item.credits for item in task.cost_items.all()])
+        return context
+
+class TaskUndoView(LoginRequiredMixin, DetailView):
+    model = Task
+    template_name = 'task_undo.html'
+    context_object_name = 'task'
+
+    def get_queryset(self):
+        # Filter the queryset to only include tasks owned by the logged-in user
+        return Task.objects.filter(github_user=self.request.user.username)
+
+    def get_object(self, queryset=None):
+        """Override get_object to ensure task ownership."""
+        if queryset is None:
+            queryset = self.get_queryset()
+        # Make sure to catch the task based on the passed ID and check ownership
+        pk = self.kwargs.get(self.pk_url_kwarg)
+        task = get_object_or_404(queryset, pk=pk)
+
+        # Check if the task belongs to the logged-in user
+        if task.github_user != self.request.user.username:
+            raise Http404("You do not have permission to view this task.")
+
+        return task
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super().get_context_data(**kwargs)
+        # Get the task from the context
+        task = context['task']
+        # Create an EventTable instance with the task's events
+        budget = UserBudget.get_user_budget(self.request.user.username)
+        context['budget'] = budget.formatted
+        context['event_table'] = EventUndoTable(task.events.all())
         return context
 
 

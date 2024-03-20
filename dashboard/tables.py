@@ -63,6 +63,30 @@ class EventTable(tables.Table):
         attrs = {"class": "table table-striped table-hover"}
         fields = ['timestamp', 'action', 'target', 'message']
 
+
+class EventUndoTable(tables.Table):
+    message = MarkdownColumn()
+
+    def render_action(self, value):
+        return format_html('<span class="badge bg-primary">{}</span>', value.replace('_', ' '))
+
+
+    def render_reversible(self, value):
+        """Render a checkbox column for reversible actions."""
+        if value:
+            return format_html('<input type="checkbox" name="reversible" value="{}">', value)
+        else:
+            return format_html('<input type="checkbox" name="reversible" value="{}" disabled>', value)
+
+
+    class Meta:
+        model = TaskEvent  # Use the model associated with the events
+        template_name = "django_tables2/bootstrap5.html"
+        attrs = {"class": "table table-striped table-hover"}
+        fields = ['reversible', 'timestamp', 'action', 'target', 'message']
+
+
+
 class CostItemTable(tables.Table):
 
     def render_model_name(self, value):

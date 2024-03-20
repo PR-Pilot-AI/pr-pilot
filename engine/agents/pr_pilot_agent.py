@@ -43,7 +43,11 @@ All issues, PR, files and code you have access to are in the context of the `{gi
 - Reading files is EXPENSIVE. Only read the files you really need to solve the task
 - When writing files, ALWAYS write the entire file content, do not leave anything out.
 
-""" + AGENT_COMMUNICATION_RULES
+# How to handle Github issues and PRs
+- When creating a new issue, include a link back to the original issue or PR in the body
+- New issue titles should be descriptive, concise and have an emoji at the beginning
+
+"""
 
 template = """
 # Hints for you to better understand the project
@@ -100,6 +104,7 @@ def write_file(path: str, complete_entire_file_content: str, commit_message: str
     file_system.save(complete_entire_file_content, Path(path))
     Project.commit_all_changes(commit_message)
     return f"Successfully wrote content to `{path}`"
+
 
 @tool
 def read_files(file_paths: list[str]):

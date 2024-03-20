@@ -22,9 +22,5 @@
     </div>
     {% render_table event_table %}
 
-    <h3><i class="fa-solid fa-coins"></i> {{ total_cost|floatformat:1 }} Credits Used </h3>
-    {% render_table cost_item_table %}
-    <a class="btn btn-primary" title="View original comment on Github" href="{{task.comment_url}}"><i class="fa-brands fa-github"></i> Show on Github</a>
-<!-- Button with link to undo page -->
-    <a class="btn btn-danger" title="Undo marked events" href="{% url 'task_undo' task.id %}"><i class="fa-solid fa-rotate-left"></i> Undo</a>
+    <a class="btn btn-danger" title="Undo marked events" href="#"><i class="fa-solid fa-rotate-left"></i> Undo</a>
 {% endblock %}

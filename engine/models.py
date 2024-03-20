@@ -139,6 +139,11 @@ class TaskEvent(models.Model):
     target = models.CharField(max_length=200, blank=True, null=True)
     message = models.TextField(blank=True, null=True)
 
+    @property
+    def reversible(self):
+        reversible_actions = ["create_github_issue"]
+        return self.action in reversible_actions
+
     @staticmethod
     def add(actor: str, action: str, target: str = None, message="", transaction=None, changes=[]):
         if not settings.TASK_ID:
