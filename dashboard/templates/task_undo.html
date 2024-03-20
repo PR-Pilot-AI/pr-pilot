@@ -20,7 +20,9 @@
     <div class="lead p-3">
         {{ task_result }}
     </div>
-    {% render_table event_table %}
-
-    <a class="btn btn-danger" title="Undo marked events" href="#"><i class="fa-solid fa-rotate-left"></i> Undo</a>
+    <form method="post" action="{% url 'task_undo' task.id %}">
+        {% csrf_token %}
+        {% render_table event_table %}
+        <button type="submit" class="btn btn-danger" title="Undo marked events"><i class="fa-solid fa-rotate-left"></i> Undo</button>
+    </form>
 {% endblock %}
