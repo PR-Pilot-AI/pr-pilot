@@ -17,14 +17,20 @@
     <div class="">
 
     </div>
-    <div class="lead p-3">
+    <div class="lead p-3 mb-3">
         {{ task_result }}
+        <a class="btn btn-primary" title="View original comment on Github" href="{{task.comment_url}}"><i class="fa-brands fa-github"></i> Show on Github</a>
+        <!-- Button with link to undo page -->
+        {% if can_undo %}
+        <a class="btn btn-danger" title="Undo marked events" href="{% url 'task_undo' task.id %}"><i class="fa-solid fa-rotate-left"></i> Undo</a>
+        {% else %}
+        <button class="btn btn-danger" title="None of the task events are reversible" disabled><i class="fa-solid fa-rotate-left"></i> No reversible events</button>
+        {% endif %}
     </div>
+
     {% render_table event_table %}
 
-    <h3><i class="fa-solid fa-coins"></i> {{ total_cost|floatformat:1 }} Credits Used </h3>
+    <h3 class="mt-5"><i class="fa-solid fa-coins"></i> Used {{ total_cost|floatformat:1 }} Credits</h3>
     {% render_table cost_item_table %}
-    <a class="btn btn-primary" title="View original comment on Github" href="{{task.comment_url}}"><i class="fa-brands fa-github"></i> Show on Github</a>
-<!-- Button with link to undo page -->
-    <a class="btn btn-danger" title="Undo marked events" href="{% url 'task_undo' task.id %}"><i class="fa-solid fa-rotate-left"></i> Undo</a>
+
 {% endblock %}

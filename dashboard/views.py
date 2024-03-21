@@ -67,6 +67,7 @@ class TaskDetailView(LoginRequiredMixin, DetailView):
         context['cost_item_table'] = CostItemTable(task.cost_items.all())
         context['task_result'] = mark_safe(markdown.markdown(task.result))
         context['total_cost'] = sum([item.credits for item in task.cost_items.all()])
+        context['can_undo'] = len([event for event in task.events.all() if event.reversible and not event.reversed]) > 0
         return context
 
 class TaskUndoView(LoginRequiredMixin, DetailView):
@@ -100,7 +101,7 @@ class TaskUndoView(LoginRequiredMixin, DetailView):
         # Create an EventTable instance with the task's events
         budget = UserBudget.get_user_budget(self.request.user.username)
         context['budget'] = budget.formatted
-        context['event_table'] = EventUndoTable(task.events.all())
+        context['event_table'] = EventUndoTable(task.reversible_events)
         return context
 
     def post(self, request, *args, **kwargs):

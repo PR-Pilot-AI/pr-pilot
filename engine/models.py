@@ -51,6 +51,10 @@ class Task(models.Model):
         return Github(get_installation_access_token(self.installation_id))
 
     @property
+    def reversible_events(self):
+        return [event for event in self.events.filter(reversed=False) if event.reversible]
+
+    @property
     def response_comment(self):
         repo = self.github.get_repo(self.github_project)
         if self.pr_number:
@@ -139,6 +143,7 @@ class TaskEvent(models.Model):
     action = models.CharField(max_length=200)
     target = models.CharField(max_length=200, blank=True, null=True)
     message = models.TextField(blank=True, null=True)
+
 
     def undo(self):
         if self.action == "create_github_issue":

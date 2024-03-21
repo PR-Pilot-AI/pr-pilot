@@ -65,7 +65,7 @@ class EventTable(tables.Table):
         elif record.action == 'commit_changes':
             commit_url = f"https://github.com/{record.task.github_project}/commit/{record.target}"
             return format_html('<a href="{}" target="_blank">{}</a>', commit_url, record.target)
-        elif record.action == 'push_branch':
+        elif record.action in ['push_branch', 'checkout_pr_branch']:
             branch_url = f"https://github.com/{record.task.github_project}/tree/{record.target}"
             return format_html('<a href="{}" target="_blank">{}</a>', branch_url, record.target)
         else:
@@ -81,7 +81,7 @@ class EventTable(tables.Table):
         model = TaskEvent  # Use the model associated with the events
         template_name = "django_tables2/bootstrap5.html"
         attrs = {"class": "table table-striped table-hover"}
-        fields = ['timestamp', 'action', 'target', 'message']
+        fields = ['action', 'target', 'message']
 
 
 class EventUndoTable(EventTable):
@@ -96,25 +96,22 @@ class EventUndoTable(EventTable):
 
 
     class Meta(EventTable.Meta):
-        fields = ['reversible', 'timestamp', 'action', 'target', 'message']
-
+        fields = ['reversible', 'action', 'target', 'message']
 
 
 class CostItemTable(tables.Table):
 
-
-
     def render_title(self, value):
-        return format_html('<span class="badge bg-primary">{}</span>', value.replace('_', ' '))
+        return format_html('<span class="lead">{}</span>', value.replace('_', ' '))
 
     def render_model_name(self, value):
         return format_html('<span class="badge bg-secondary">{}</span>', value)
 
     def render_credits(self, value):
         usd_string = '{:.1f}'.format(value)
-        return usd_string
+        return format_html('<span class="badge rounded-pill bg-dark"><i class="fa-solid fa-coins"></i> {}</span>', usd_string)
 
     class Meta:
         model = CostItem
         template_name = "django_tables2/bootstrap5.html"
-        fields = ['title', 'model_name', 'credits']
+        fields = ['credits', 'title', 'model_name']
