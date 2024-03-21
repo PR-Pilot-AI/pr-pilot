@@ -23,6 +23,28 @@
     <form method="post" action="{% url 'task_undo' task.id %}">
         {% csrf_token %}
         {% render_table event_table %}
-        <button type="submit" class="btn btn-danger" title="Undo marked events"><i class="fa-solid fa-rotate-left"></i> Undo</button>
+        <button type="submit" class="btn btn-danger" id="undoButton" title="Undo marked events"><i class="fa-solid fa-rotate-left"></i> Undo</button>
     </form>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const undoButton = document.getElementById('undoButton');
+            const checkboxes = document.querySelectorAll('input[type="checkbox"][name="reversible"]');
+
+            function updateButtonState() {
+                const anyChecked = Array.from(checkboxes).some(checkbox => checkbox.checked);
+                undoButton.disabled = !anyChecked;
+            }
+
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', updateButtonState);
+            });
+
+            undoButton.addEventListener('click', function () {
+                undoButton.disabled = true;
+                undoButton.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Processing...';
+            });
+
+            updateButtonState();
+        });
+    </script>
 {% endblock %}
