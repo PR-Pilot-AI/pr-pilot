@@ -98,11 +98,14 @@ class Project(BaseModel):
     def create_pull_request(self, title, body, head, labels=[]):
         if not head:
             head = self.active_branch
-        g = Task.current().github
+        task = Task.current()
+        g = task.github
         # Get the repository where you want to create the pull request
-        repo = g.get_repo(Task.current().github_project)
+        repo = g.get_repo(task.github_project)
         logger.info(f"Creating pull request from {head} to {self.main_branch}")
         labels.append("pr-pilot")
+        issue = repo.get_issue(task.issue_number)
+        body += f"\n\nCreated from: [{issue.title}]({task.comment_url}) by [PR Pilot](https://www.pr-pilot.ai)"
         pr = repo.create_pull(title=title, body=body, head=head, base=self.main_branch)
         pr.set_labels(*labels)
         TaskEvent.add(actor="assistant", action="create_pull_request", target=pr.number,

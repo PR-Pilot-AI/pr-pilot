@@ -54,8 +54,27 @@ class TaskTable(tables.Table):
 class EventTable(tables.Table):
     message = MarkdownColumn()
 
+    def render_target(self, record):
+        github_issue_targets = ['create_github_issue', 'close_github_issue', 'read_github_issue', 'edit_github_issue', 'close_pull_request', 'read_pull_request', 'create_pull_request']
+        if record.action in github_issue_targets:
+            issue_url = f"https://github.com/{record.task.github_project}/issues/{record.target}"
+            return format_html('<a href="{}" target="_blank">#{}</a>', issue_url, record.target)
+        elif record.action == 'clone_repo':
+            repo_url = f"https://github.com/{record.task.github_project}"
+            return format_html('<a href="{}" target="_blank">{}</a>', repo_url, record.target)
+        elif record.action == 'commit_changes':
+            commit_url = f"https://github.com/{record.task.github_project}/commit/{record.target}"
+            return format_html('<a href="{}" target="_blank">{}</a>', commit_url, record.target)
+        elif record.action == 'push_branch':
+            branch_url = f"https://github.com/{record.task.github_project}/tree/{record.target}"
+            return format_html('<a href="{}" target="_blank">{}</a>', branch_url, record.target)
+        else:
+            return record.target
+
     def render_action(self, record):
         color = 'primary' if not record.reversed else 'danger'
+        if record.action in ['close_pull_request', 'close_github_issue']:
+            color = 'warning'
         return format_html('<span class="badge bg-{}">{}</span>', color, record.action.replace('_', ' '))
 
     class Meta:
@@ -65,14 +84,8 @@ class EventTable(tables.Table):
         fields = ['timestamp', 'action', 'target', 'message']
 
 
-class EventUndoTable(tables.Table):
+class EventUndoTable(EventTable):
     message = MarkdownColumn()
-
-    def render_action(self, record):
-        color = 'primary' if not record.reversed else 'danger'
-        if record.action in ['close_pull_request', 'close_issue']:
-            color = 'warning'
-        return format_html('<span class="badge bg-{}">{}</span>', color, record.action.replace('_', ' '))
 
     def render_reversible(self, record):
         """Render a checkbox column for reversible actions."""
@@ -82,15 +95,17 @@ class EventUndoTable(tables.Table):
             return format_html('<input type="checkbox" name="reversible" value="{}" disabled>', record.id)
 
 
-    class Meta:
-        model = TaskEvent  # Use the model associated with the events
-        template_name = "django_tables2/bootstrap5.html"
-        attrs = {"class": "table table-striped table-hover"}
+    class Meta(EventTable.Meta):
         fields = ['reversible', 'timestamp', 'action', 'target', 'message']
 
 
 
 class CostItemTable(tables.Table):
+
+
+
+    def render_title(self, value):
+        return format_html('<span class="badge bg-primary">{}</span>', value.replace('_', ' '))
 
     def render_model_name(self, value):
         return format_html('<span class="badge bg-secondary">{}</span>', value)

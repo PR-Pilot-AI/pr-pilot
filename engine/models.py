@@ -143,7 +143,7 @@ class TaskEvent(models.Model):
     def undo(self):
         if self.action == "create_github_issue":
             logger.info(f"Closing issue {self.target}")
-            self.task.github.get_repo(self.task.github_project).get_issue((self.target)).edit(state="closed")
+            self.task.github.get_repo(self.task.github_project).get_issue(int(self.target)).edit(state="closed")
             TaskEvent.add(actor="assistant", action="close_github_issue", target=self.target, message="Closed github issue", task_id=self.task.id)
             self.reversed = True
             self.save()

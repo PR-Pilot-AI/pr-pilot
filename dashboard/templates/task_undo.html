@@ -14,11 +14,8 @@
         {% endif %}
         <span class="text-muted">{{ task.created }}</span>
     </p>
-    <div class="">
-
-    </div>
     <div class="lead p-3">
-        {{ task_result }}
+        Select the events you'd like to undo.
     </div>
     <form method="post" action="{% url 'task_undo' task.id %}">
         {% csrf_token %}
@@ -38,10 +35,11 @@
             checkboxes.forEach(checkbox => {
                 checkbox.addEventListener('change', updateButtonState);
             });
-
             undoButton.addEventListener('click', function () {
-                undoButton.disabled = true;
-                undoButton.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Processing...';
+                setTimeout(() => {
+                    undoButton.disabled = true;
+                    undoButton.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Reverting Changes ...';
+                }, 0); // Executes after the form submission has been triggered
             });
 
             updateButtonState();
