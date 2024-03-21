@@ -134,7 +134,7 @@ def create_github_issue(issue_title: str, issue_body: str, labels: List[str] = [
         labels.append('pr-pilot')
     repo = g.get_repo(Task.current().github_project)
     issue = repo.create_issue(title=issue_title, body=issue_body, labels=labels)
-    TaskEvent.add(actor="assistant", action="create_github_issue", target=issue.title, message=f"Created issue [#{issue.number} {issue.title}]({issue.html_url})")
+    TaskEvent.add(actor="assistant", action="create_github_issue", target=issue.number, message=f"Created issue [#{issue.number} {issue.title}]({issue.html_url})")
     return f"Created issue [#{issue.number} {issue.title}]({issue.html_url})"
 
 

@@ -19,7 +19,8 @@ class Project(BaseModel):
     def commit_all_changes(message, push=False):
         repo = git.Repo(settings.REPO_DIR)
         repo.git.add(A=True)
-        repo.index.commit(message)
+        commit = repo.index.commit(message)
+        TaskEvent.add(actor="assistant", action="commit_changes", message=message, target=commit.hexsha)
         if push:
             origin = repo.remote(name='origin')
             origin.push(repo.active_branch.name, set_upstream=True)
@@ -104,7 +105,7 @@ class Project(BaseModel):
         labels.append("pr-pilot")
         pr = repo.create_pull(title=title, body=body, head=head, base=self.main_branch)
         pr.set_labels(*labels)
-        TaskEvent.add(actor="assistant", action="create_pull_request", target=head,
+        TaskEvent.add(actor="assistant", action="create_pull_request", target=pr.number,
                       message=f"Created [PR {pr.number}]({pr.html_url}) for branch `{head}`")
         return pr
 

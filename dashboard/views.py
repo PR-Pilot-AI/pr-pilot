@@ -2,7 +2,7 @@ import markdown
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import Http404, HttpResponseRedirect
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.utils.safestring import mark_safe
 from django.views.generic import DetailView
 from django_tables2 import SingleTableView
@@ -105,7 +105,12 @@ class TaskUndoView(LoginRequiredMixin, DetailView):
 
     def post(self, request, *args, **kwargs):
         task = self.get_object()
-        marked_events = request.POST.getlist('reversible')
+        marked_event_ids = request.POST.getlist('reversible')
+        for event_id in marked_event_ids:
+            event = task.events.get(pk=event_id)
+            if event.reversible:
+                # Process the reversible event
+                event.undo()
         # Process the marked events here
         # Redirect to a confirmation page or back to the task detail page
         return redirect('task_detail', pk=task.pk)

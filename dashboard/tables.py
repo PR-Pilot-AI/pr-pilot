@@ -54,8 +54,9 @@ class TaskTable(tables.Table):
 class EventTable(tables.Table):
     message = MarkdownColumn()
 
-    def render_action(self, value):
-        return format_html('<span class="badge bg-primary">{}</span>', value.replace('_', ' '))
+    def render_action(self, record):
+        color = 'primary' if not record.reversed else 'danger'
+        return format_html('<span class="badge bg-{}">{}</span>', color, record.action.replace('_', ' '))
 
     class Meta:
         model = TaskEvent  # Use the model associated with the events
@@ -67,16 +68,18 @@ class EventTable(tables.Table):
 class EventUndoTable(tables.Table):
     message = MarkdownColumn()
 
-    def render_action(self, value):
-        return format_html('<span class="badge bg-primary">{}</span>', value.replace('_', ' '))
+    def render_action(self, record):
+        color = 'primary' if not record.reversed else 'danger'
+        if record.action in ['close_pull_request', 'close_issue']:
+            color = 'warning'
+        return format_html('<span class="badge bg-{}">{}</span>', color, record.action.replace('_', ' '))
 
-
-    def render_reversible(self, value):
+    def render_reversible(self, record):
         """Render a checkbox column for reversible actions."""
-        if value:
-            return format_html('<input type="checkbox" name="reversible" value="{}">', value)
+        if record.reversible and not record.reversed:
+            return format_html('<input type="checkbox" name="reversible" value="{}" checked>', record.id)
         else:
-            return format_html('<input type="checkbox" name="reversible" value="{}" disabled>', value)
+            return format_html('<input type="checkbox" name="reversible" value="{}" disabled>', record.id)
 
 
     class Meta:
