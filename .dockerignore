@@ -12,3 +12,5 @@ local.env
 *.pem
 *.tgz
 nginx
+volumes
+embedEtcd.yaml

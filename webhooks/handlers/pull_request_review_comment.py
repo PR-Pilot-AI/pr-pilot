@@ -63,7 +63,7 @@ def handle_pull_request_review_comment(payload):
         Task.schedule(title=command, user_request=user_request, comment_id=comment_id,
                       comment_url=comment_url, pr_number=pr_number, head=head, base=base,
                       installation_id=installation_id, github_project=repository,
-                      github_user=commenter_username, branch="main")
+                      github_user=commenter_username, branch="main", pilot_command=command)
 
     else:
         command = None

@@ -49,7 +49,7 @@ Read the {issue_or_pr}, fulfill the user's request and return your response to t
         task_args = dict(title=f"Respond to {issue_or_pr} #{issue_number} in {repository}", user_request=user_request,
                          issue_number=issue_number, comment_id=comment_id, comment_url=comment_url,
                          installation_id=installation_id, github_project=repository,
-                         github_user=commenter_username, branch="main")
+                         github_user=commenter_username, branch="main", pilot_command=command)
         if issue.pull_request:
             pr = repo.get_pull(issue_number)
             task_args['pr_number'] = issue_number

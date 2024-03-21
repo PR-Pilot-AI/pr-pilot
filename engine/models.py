@@ -1,5 +1,6 @@
 import logging
 import os
+import re
 import threading
 import uuid
 from functools import lru_cache
@@ -35,6 +36,7 @@ class Task(models.Model):
     response_comment_id = models.IntegerField(blank=True, null=True)
     response_comment_url = models.CharField(max_length=200, blank=True, null=True)
     result = models.TextField(blank=True)
+    pilot_command = models.TextField(blank=True)
 
     def __str__(self):
         return self.title
@@ -53,6 +55,21 @@ class Task(models.Model):
     @property
     def reversible_events(self):
         return [event for event in self.events.filter(reversed=False) if event.reversible]
+
+    @property
+    def request_issue(self):
+        repo = self.github.get_repo(self.github_project)
+        if self.pr_number:
+            return repo.get_pull(self.pr_number)
+        else:
+            return repo.get_issue(self.issue_number)
+
+    @property
+    def request_comment(self):
+        if self.pr_number:
+            return self.request_issue.get_review_comment(self.comment_id)
+        else:
+            return self.request_issue.get_comment(self.comment_id)
 
     @property
     def response_comment(self):
@@ -114,8 +131,10 @@ class Task(models.Model):
             new_task.response_comment_url = comment.html_url
             new_task.save()
             return new_task
-        initial_response = f"⌛ I'm on it! Track my progress in the [Dashboard](https://app.pr-pilot.ai/dashboard/tasks/{str(new_task.id)}/). I'll update this comment when I'm done..."
-        new_task.create_response_comment(initial_response)
+        # Replace `/pilot <command>` with `**/pilot** <link_to_task>`
+        replaced = new_task.request_comment.body.replace(f"/pilot", f"**/pilot**")
+        replaced = replaced.replace(f"{new_task.pilot_command}", f"[{new_task.pilot_command}](https://app.pr-pilot.ai/dashboard/tasks/{str(new_task.id)}/)")
+        new_task.request_comment.edit(replaced)
         new_task.save()
         if settings.DEBUG:
             settings.TASK_ID = new_task.id

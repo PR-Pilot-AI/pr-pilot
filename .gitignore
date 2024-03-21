@@ -8,3 +8,5 @@ venv
 repo_workspace
 *.tgz
 static
+volumes
+embedEtcd.yaml
