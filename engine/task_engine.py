@@ -159,7 +159,10 @@ class TaskEngine:
                 budget.save()
             else:
                 logger.warning(f"No cost items found for task {self.task.title}")
-        self.task.response_comment.edit(final_response.strip().replace("/pilot", ""))
+        comment = self.task.response_comment
+        comment.edit(final_response.strip().replace("/pilot", ""))
+        TaskEvent.add(actor="assistant", action="comment_on_issue", target=comment.id,
+                      message=f"Commented on [Issue {self.task.issue_number}]({comment.html_url})")
         return final_response
 
     def clone_github_repo(self):

@@ -68,12 +68,15 @@ class EventTable(tables.Table):
         elif record.action in ['push_branch', 'checkout_pr_branch']:
             branch_url = f"https://github.com/{record.task.github_project}/tree/{record.target}"
             return format_html('<a href="{}" target="_blank">{}</a>', branch_url, record.target)
+        elif record.action == 'comment_on_issue':
+            issue_id = record.task.pr_number if record.task.pr_number else record.task.issue_number
+            return format_html('<a href="{}" target="_blank">#{}</a>', record.task.response_comment_url, issue_id)
         else:
             return record.target
 
     def render_action(self, record):
         color = 'primary' if not record.reversed else 'danger'
-        if record.action in ['close_pull_request', 'close_github_issue']:
+        if record.action in ['close_pull_request', 'close_github_issue', 'delete_github_comment']:
             color = 'warning'
         return format_html('<span class="badge bg-{}">{}</span>', color, record.action.replace('_', ' '))
 

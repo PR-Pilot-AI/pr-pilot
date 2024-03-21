@@ -105,7 +105,7 @@ class Project(BaseModel):
         logger.info(f"Creating pull request from {head} to {self.main_branch}")
         labels.append("pr-pilot")
         issue = repo.get_issue(task.issue_number)
-        body += f"\n\nCreated from: [{issue.title}]({task.comment_url}) by [PR Pilot](https://www.pr-pilot.ai)"
+        body += f"\n**Origin:** [{issue.title}]({task.comment_url})"
         pr = repo.create_pull(title=title, body=body, head=head, base=self.main_branch)
         pr.set_labels(*labels)
         TaskEvent.add(actor="assistant", action="create_pull_request", target=pr.number,

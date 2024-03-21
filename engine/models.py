@@ -158,10 +158,21 @@ class TaskEvent(models.Model):
             TaskEvent.add(actor="assistant", action="close_pull_request", target=self.target, message="Closed pull request", task_id=self.task.id)
             self.reversed = True
             self.save()
+        elif self.action == "comment_on_issue":
+            logger.info(f"Deleting comment {self.target}")
+            if self.task.pr_number:
+                pr = self.task.github.get_repo(self.task.github_project).get_pull(self.task.pr_number)
+                pr.get_issue_comment(int(self.target)).delete()
+            else:
+                issue = self.task.github.get_repo(self.task.github_project).get_issue(self.task.issue_number)
+                issue.get_comment(int(self.target)).delete()
+            TaskEvent.add(actor="assistant", action="delete_github_comment", target=self.target, message="Deleted github comment", task_id=self.task.id)
+            self.reversed = True
+            self.save()
 
     @property
     def reversible(self):
-        reversible_actions = ["create_github_issue", "create_pull_request"]
+        reversible_actions = ["create_github_issue", "create_pull_request", "comment_on_issue"]
         return self.action in reversible_actions
 
     @staticmethod
