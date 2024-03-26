@@ -1,13 +1,18 @@
-from functools import lru_cache
+import logging
+import time
 
 import jwt
-import time
 import requests
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import serialization
 from django.conf import settings
+
+logger = logging.getLogger(__name__)
+
+
 # Generate a JWT token
 def generate_jwt(app_id, private_key_path):
+    logger.info(f"Generating JWT for app ID {app_id}")
     # Read the private key file
     with open(private_key_path, 'rb') as key_file:
         private_key = serialization.load_pem_private_key(
@@ -37,6 +42,7 @@ def generate_jwt(app_id, private_key_path):
 
 
 def get_installation_access_token(installation_id):
+    logger.info(f"Getting installation token for installation ID {installation_id}")
     jwt_token = generate_jwt(int(settings.GITHUB_APP_ID), settings.PRIVATE_KEY_PATH)
     headers = {
         'Authorization': f'Bearer {jwt_token}',

@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
+import json
 import os
 from pathlib import Path
 
@@ -217,8 +218,11 @@ MAX_FILE_SEARCH_RESULTS = 50
 MAX_READ_FILES = 5
 IGNORE_FILE_PATH = Path(os.getcwd()) / ".pilotignore"
 CREDIT_MULTIPLIER = 2
-
+OPEN_SOURCE_CONTRIBUTOR_THRESHOLD = 5
+OPEN_SOURCE_COMMITS_THRESHOLD = 10
 APPEND_SLASH = True  # Default is True
+
+OSI_APPROVED_LICENSES = [l['licenseId'] for l in json.loads(Path(BASE_DIR / 'licenses.json').read_text()) if l['isOsiApproved']]
 
 if not DEBUG:
     sentry_sdk.init(

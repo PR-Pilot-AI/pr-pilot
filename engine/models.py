@@ -211,6 +211,19 @@ class TaskEvent(models.Model):
         return new_entry
 
 
+class TaskBill(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    task = models.OneToOneField(Task, on_delete=models.CASCADE)
+    discount_percent = models.FloatField(default=0)
+    total_credits_used = models.FloatField(default=0)
+    user_is_owner = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"Bill for {self.task.title}"
+
+
+
 class CostItem(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     timestamp = models.DateTimeField(auto_now_add=True)
@@ -221,6 +234,7 @@ class CostItem(models.Model):
     requests = models.IntegerField()
     total_cost_usd = models.FloatField()
     task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name="cost_items", null=True)
+    bill = models.ForeignKey(TaskBill, on_delete=models.CASCADE, related_name="cost_items", null=True)
 
     @property
     def credits(self):
@@ -228,4 +242,3 @@ class CostItem(models.Model):
 
     def __str__(self):
         return f"{self.title} - ${self.total_cost_usd}"
-

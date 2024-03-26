@@ -3,6 +3,7 @@ from pathlib import Path
 
 import git
 from django.conf import settings
+from github.Repository import Repository
 from pydantic import Field, BaseModel
 
 from engine.file_system import FileSystem
@@ -14,6 +15,22 @@ logger = logging.getLogger(__name__)
 class Project(BaseModel):
     name: str = Field(description="Name of the project")
     main_branch: str = Field(description="Name of the main branch")
+
+    def is_active_open_source_project(self):
+        task = Task.current()
+        gh = task.github
+        repo: Repository = gh.get_repo(self.name)
+        num_contributors = repo.get_contributors().totalCount
+        participation = repo.get_stats_participation()
+        commits_last_four_weeks = sum(participation.all[-4:])
+        is_open_source = repo.private is False and repo.license in settings.OSI_APPROVED_LICENSES
+        eligible = (num_contributors > settings.OPEN_SOURCE_CONTRIBUTOR_THRESHOLD
+                    and commits_last_four_weeks > settings.OPEN_SOURCE_COMMITS_THRESHOLD
+                    and is_open_source)
+        logger.info(f"{self.name} eligible for open source project: {eligible} ("
+                    f"{num_contributors} contributors, "
+                    f"{commits_last_four_weeks} commits, public={not repo.private}, license={repo.license})")
+        return eligible
 
     @staticmethod
     def commit_all_changes(message, push=False):
