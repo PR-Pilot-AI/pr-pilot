@@ -14,7 +14,7 @@ from accounts.models import UserBudget
 from engine.agents.pr_pilot_agent import create_pr_pilot_agent
 from engine.langchain.generate_pr_info import generate_pr_info, LabelsAndTitle
 from engine.langchain.generate_task_title import generate_task_title
-from engine.models import Task, TaskEvent, CostItem
+from engine.models import Task, TaskEvent, CostItem, TaskBill
 from engine.project import Project
 from engine.util import slugify
 from webhooks.jwt_tools import get_installation_access_token
@@ -149,19 +149,30 @@ class TaskEngine:
             final_response = f"I'm sorry, something went wrong, please check {dashboard_link} for details."
         finally:
             self.task.save()
-            total_cost = sum([item.credits for item in CostItem.objects.filter(task=self.task)])
-            if total_cost:
-                logger.info(f"Total cost of task: {total_cost} credits")
-                budget = UserBudget.get_user_budget(self.task.github_user)
-                budget.budget = budget.budget - Decimal(str(total_cost))
-                logger.info(f"Remaining budget for user {self.task.github_user}: {budget.budget} credits")
-                budget.save()
-            else:
-                logger.warning(f"No cost items found for task {self.task.title}")
         comment = self.task.create_response_comment(final_response.strip().replace("/pilot", ""))
         TaskEvent.add(actor="assistant", action="comment_on_issue", target=comment.id,
                       message=f"Commented on [Issue {self.task.issue_number}]({comment.html_url})")
+        self.create_bill()
         return final_response
+
+    def create_bill(self):
+        if self.project.is_active_open_source_project():
+            discount = settings.OPEN_SOURCE_CONTRIBUTOR_DISCOUNT_PERCENT
+        else:
+            discount = 0.0
+        bill = TaskBill(task=self.task,
+                        discount_percent=discount,
+                        project_is_open_source=self.project.is_active_open_source_project(),
+                        total_credits_used=sum([c.credits for c in CostItem.objects.filter(task=self.task)]),
+                        user_is_owner=self.github_repo.owner.name == self.task.github_user)
+        bill.save()
+        logger.info(f"Discount applied: {discount}%")
+        logger.info(f"Total cost: {bill.final_cost} credits")
+        budget = UserBudget.get_user_budget(self.task.github_user)
+        budget.budget = budget.budget - Decimal(str(bill.final_cost))
+        logger.info(f"Remaining budget for user {self.task.github_user}: {budget.budget} credits")
+        budget.save()
+
 
     def clone_github_repo(self):
         TaskEvent.add(actor="assistant", action="clone_repo", target=self.task.github_project, message="Cloning repository")

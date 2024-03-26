@@ -49,6 +49,7 @@ class Task(models.Model):
         return Task.objects.get(id=settings.TASK_ID)
 
     @property
+    @lru_cache()
     def github(self) -> Github:
         return Github(get_installation_access_token(self.installation_id))
 
@@ -218,6 +219,14 @@ class TaskBill(models.Model):
     discount_percent = models.FloatField(default=0)
     total_credits_used = models.FloatField(default=0)
     user_is_owner = models.BooleanField(default=False)
+    project_is_open_source = models.BooleanField(default=False)
+
+    @property
+    def final_cost(self):
+        """Final amounts of credits billed to the user after discounts"""
+        if self.user_is_owner and self.project_is_open_source:
+            return 0
+        return self.total_credits_used * (1 - self.discount_percent)
 
     def __str__(self):
         return f"Bill for {self.task.title}"
@@ -234,7 +243,6 @@ class CostItem(models.Model):
     requests = models.IntegerField()
     total_cost_usd = models.FloatField()
     task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name="cost_items", null=True)
-    bill = models.ForeignKey(TaskBill, on_delete=models.CASCADE, related_name="cost_items", null=True)
 
     @property
     def credits(self):

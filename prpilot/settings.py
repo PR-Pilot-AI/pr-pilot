@@ -219,10 +219,13 @@ MAX_READ_FILES = 5
 IGNORE_FILE_PATH = Path(os.getcwd()) / ".pilotignore"
 CREDIT_MULTIPLIER = 2
 OPEN_SOURCE_CONTRIBUTOR_THRESHOLD = 5
+OPEN_SOURCE_CONTRIBUTOR_DISCOUNT_PERCENT = 20.0
 OPEN_SOURCE_COMMITS_THRESHOLD = 10
 APPEND_SLASH = True  # Default is True
 
-OSI_APPROVED_LICENSES = [l['licenseId'] for l in json.loads(Path(BASE_DIR / 'licenses.json').read_text()) if l['isOsiApproved']]
+license_json = json.loads(Path(BASE_DIR / 'licenses.json').read_text())
+OSI_APPROVED_LICENSES = [l['licenseId'] for l in license_json['licenses'] if l['isOsiApproved']]
+
 
 if not DEBUG:
     sentry_sdk.init(
