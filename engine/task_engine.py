@@ -156,13 +156,14 @@ class TaskEngine:
         return final_response
 
     def create_bill(self):
-        if self.project.is_active_open_source_project():
+        is_open_source = self.project.is_active_open_source_project()
+        if is_open_source:
             discount = settings.OPEN_SOURCE_CONTRIBUTOR_DISCOUNT_PERCENT
         else:
             discount = 0.0
         bill = TaskBill(task=self.task,
                         discount_percent=discount,
-                        project_is_open_source=self.project.is_active_open_source_project(),
+                        project_is_open_source=is_open_source,
                         total_credits_used=sum([c.credits for c in CostItem.objects.filter(task=self.task)]),
                         user_is_owner=self.github_repo.owner.name == self.task.github_user)
         bill.save()

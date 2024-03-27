@@ -90,7 +90,7 @@ def read_pull_request(pr_number: int):
         TaskEvent.add(actor="assistant", action="read_pull_request", message=f"Pull request #{pr_number} not found")
         return f"Pull request #{pr_number} not found"
 
-    TaskEvent.add(actor="assistant", action="read_pull_request", target=pr.title, message=f"Reading pull request [{pr.title}]({pr.html_url})")
+    TaskEvent.add(actor="assistant", action="read_pull_request", target=str(pr.number), message=f"Reading pull request [{pr.title}]({pr.html_url})")
     labels = ','.join([label.name for label in pr.labels])
 
     markdown_output = f"# [{pr.number}] {pr.title}\n"

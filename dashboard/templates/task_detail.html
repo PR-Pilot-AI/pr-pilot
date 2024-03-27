@@ -30,7 +30,22 @@
 
     {% render_table event_table %}
 
-    <h3 class="mt-5"><i class="fa-solid fa-coins"></i> Used {{ total_cost|floatformat:1 }} Credits</h3>
-    {% render_table cost_item_table %}
+    {% if bill %}
+        {% if bill.project_is_open_source and bill.user_is_owner %}
+        <h3 class="mt-5"><i class="fa-solid fa-coins"></i> This task was <span class="text-success">free</span> for you! Thank you for supporting the open source community.</h3>
+        {% elif bill.discount_percent > 0 %}
+        <h3 class="mt-5"><i class="fa-solid fa-coins"></i> {{ bill.total_credits_used|floatformat:1 }} <span class="text-success">- {{ discount_credits|floatformat:1 }}</span>  credits. You got a <span class="text-success">{{ bill.discount_percent|floatformat:0 }}% discount</span> for your open source contribution! </h3>
+        {% render_table cost_item_table %}
+        {% else %}
+        <h3 class="mt-5"><i class="fa-solid fa-coins"></i> {{ bill.total_credits_used|floatformat:1 }} credits</h3>
+        {% render_table cost_item_table %}
+        {% endif %}
+    {% else %}
+        <h3 class="mt-5"><i class="fa-solid fa-coins"></i> Used {{ total_cost|floatformat:1 }} Credits</h3>
+        {% render_table cost_item_table %}
+    {% endif %}
+
+
+
 
 {% endblock %}
