@@ -13,10 +13,36 @@ For serving static files, PR Pilot employs an nginx server, known for its high p
 To get PR Pilot up and running, follow these steps:
 
 1. Install pip dependencies from `requirements.txt`.
+```shell
+pip install -r requirements.txt
+```
 2. Spin up a Postgres database for data persistence.
+```shell
+# Example using Docker
+docker run --name postgres-pr-pilot -e POSTGRES_PASSWORD=mysecretpassword -d postgres
+```
 3. Start ngrok to expose your local server to the internet and set the GitHub app webhook endpoint and OAuth login callback accordingly.
-4. Set the following environment variables: `GITHUB_APP_CLIENT_ID`, `GITHUB_APP_SECRET`, `GITHUB_WEBHOOK_SECRET`, `GITHUB_APP_ID`, `OPENAI_API_KEY`, `REPO_DIR`, `TAVILY_API_KEY`, `STRIPE_API_KEY`, `STRIPE_WEBHOOK_SECRET`.
+```shell
+ngrok http 8000
+```
+4. Set the following environment variables:
+
+| Variable                | Description                                   |
+|-------------------------|-----------------------------------------------|
+| `GITHUB_APP_CLIENT_ID`  | GitHub App Client ID                          |
+| `GITHUB_APP_SECRET`     | GitHub App Secret                             |
+| `GITHUB_WEBHOOK_SECRET` | Secret for securing webhooks                  |
+| `GITHUB_APP_ID`         | GitHub App ID                                 |
+| `OPENAI_API_KEY`        | API key for OpenAI services                   |
+| `REPO_DIR`              | Directory for storing repository data         |
+| `TAVILY_API_KEY`        | API key for Tavily search engine              |
+| `STRIPE_API_KEY`        | Stripe API key for handling payments          |
+| `STRIPE_WEBHOOK_SECRET` | Secret for securing Stripe webhook endpoints  |
+
 5. Run the Django application using the command `python manage.py runserver`.
+```shell
+python manage.py runserver
+```
 
 ## Contributing 🤝
 
