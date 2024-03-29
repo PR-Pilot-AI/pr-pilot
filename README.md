@@ -4,13 +4,9 @@ PR Pilot is a GitHub bot designed to autonomously understand and execute tasks b
 
 ## Architecture 🏗️
 
-PR Pilot operates on a robust architecture that includes:
+The architecture of PR Pilot is designed for robustness and efficiency. At its core, it utilizes a GitHub app, registered according to GitHub's guidelines, to facilitate interactions with GitHub repositories. The backbone of PR Pilot is a Django application, which is deployed to handle GitHub webhooks. This application processes commands found in issue comments and pull requests, ensuring that tasks are executed as intended.
 
-- A registered [GitHub app](https://docs.github.com/en/apps/creating-github-apps/about-creating-github-apps/about-creating-github-apps) to interact with GitHub repositories.
-- A Django application deployed to receive GitHub webhooks, processing commands found in issue comments and pull requests.
-- An nginx server for serving static files efficiently.
-- Jobs triggered by webhooks to execute `/pilot` commands within the GitHub environment.
-- A Kubernetes cluster that orchestrates the deployment of the Django app, nginx server, and job execution.
+For serving static files, PR Pilot employs an nginx server, known for its high performance and stability. The system also includes jobs that are triggered by webhooks to carry out `/pilot` commands directly within the GitHub environment. To manage the deployment of the Django application, the nginx server, and the execution of jobs, PR Pilot relies on a Kubernetes cluster. This setup ensures that the application is scalable, resilient, and can efficiently manage the workload.
 
 ## How to Run 🚀
 
