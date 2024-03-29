@@ -21,9 +21,6 @@ Pull requests are the best way to propose changes to the codebase. We actively w
 5. Make sure your code lints.
 6. Issue that pull request!
 
-## Any contributions you make will be under the MIT Software License
-In short, when you submit code changes, your submissions are understood to be under the same [MIT License](https://choosealicense.com/licenses/mit/) that covers the project. Feel free to contact the maintainers if that's a concern.
-
 ## Report bugs using Github's [issues](https://github.com/PR-Pilot-AI/pr-pilot/issues)
 We use GitHub issues to track public bugs. Report a bug by [opening a new issue](https://github.com/PR-Pilot-AI/pr-pilot/issues/new); it's that easy!
 
@@ -38,11 +35,5 @@ We use GitHub issues to track public bugs. Report a bug by [opening a new issue]
 - What actually happens
 - Notes (possibly including why you think this might be happening, or stuff you tried that didn't work)
 
-People *love* thorough bug reports. I'm not even kidding.
-
-## Use a Consistent Coding Style
-* 2 spaces for indentation rather than tabs
-* You can try running `python -m black your_file.py` for auto-formatting
-
 ## License
-By contributing, you agree that your contributions will be licensed under its MIT License.
+By contributing, you agree that your contributions will be licensed under its GPL-3 License.
