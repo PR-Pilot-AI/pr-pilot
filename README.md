@@ -54,6 +54,16 @@ ngrok http 8000
 python manage.py runserver
 ```
 
+## Unit Tests 🧪
+
+PR Pilot uses `tox` for managing unit tests. The test setup is configured in the `tox.ini` file, and tests are written using `pytest`.
+
+To run the tests, execute the following command in your shell:
+```shell
+tox
+```
+
+This will run all the tests defined in the project, ensuring that your changes do not break existing functionality.
 
 ## Architecture 🏗️
 
