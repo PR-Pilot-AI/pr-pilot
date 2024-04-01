@@ -6,7 +6,6 @@ from unittest.mock import patch, MagicMock
 from engine.task_engine import TaskEngine
 from engine.models import Task
 from engine.project import Project
-from engine.langchain.generate_pr_info import LabelsAndTitle
 
 
 @pytest.fixture
