@@ -21,7 +21,9 @@ An open source Github bot that allows developers to generate code, issues and pu
 
 * 🌐 [**Use PR Pilot to work on PRs**](https://docs.pr-pilot.ai/how_it_works.html#collaborate)
 * 📊 [**Monitor its activities in a dashboard**](https://docs.pr-pilot.ai/how_it_works.html#monitor)
-* 🤖 [**Automate your GitHub workflow**](https://docs.pr-pilot.ai/how_it_works.html#automate)
+* [**Ask questions about your issue/PR**](https://docs.pr-pilot.ai/how_it_works.html#have-a-conversation)
+* [**Rollback changes easily**](https://docs.pr-pilot.ai/how_it_works.html#rollback)
+* [**Teach it about your project**](https://docs.pr-pilot.ai/how_it_works.html#teach)
 
 See [how it works in detail](https://docs.pr-pilot.ai/how_it_works.html) and check out more [usage examples](https://docs.pr-pilot.ai/how_it_works.html)!
 
