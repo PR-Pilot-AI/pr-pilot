@@ -1,3 +1,14 @@
+<div align="center">
+<img src="https://avatars.githubusercontent.com/ml/17635?s=140&v=" width="100" alt="PR Pilot Logo">
+</div>
+
+<p align="center">
+  <a href="https://github.com/marketplace/pr-pilot-a">Install</a> |
+  <a href="https://docs.pr-pilot.ai">Documentation</a> | 
+  <a href="https://www.pr-pilot.ai">Website</a>
+</p>
+
+
 # 🤖 PR Pilot
 
 An open source Github bot that allows developers to generate code, issues and pull requests directly from comments.
