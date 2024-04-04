@@ -92,13 +92,9 @@ tox
 
 This will run all the tests defined in the project, ensuring that your changes do not break existing functionality.
 
-## 🏗️ Architecture
+## 📚 Code Documentation
 
-At its core, it utilizes a **GitHub app** to facilitate interactions with GitHub repositories. 
-The backbone of PR Pilot is a **Django** application, which is deployed to handle **GitHub webhooks**. 
-For serving static files, PR Pilot employs an **nginx** server. To manage the deployment of the Django application, 
-nginx server, and the execution of jobs, PR Pilot relies on a **Kubernetes cluster**.
-
+For more information on the code structure and documentation, please visit [docs/code](docs/code).
 
 ## 🤝 Contributing
 
