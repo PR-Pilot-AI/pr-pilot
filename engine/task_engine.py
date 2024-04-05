@@ -5,9 +5,8 @@ from decimal import Decimal
 
 import git
 from django.conf import settings
-from django.db.models import Sum
 from git import Repo
-from github import Github, GithubException
+from github import Github
 from github.PullRequest import PullRequest
 
 from accounts.models import UserBudget
