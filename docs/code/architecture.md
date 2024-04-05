@@ -6,11 +6,10 @@ At its core, PR Pilot utilizes a **GitHub app** to facilitate interactions with 
 
 ```mermaid
 graph TD
-    A[GitHub] -->|Webhooks| B[Django App]
-    B -->|Manages| C[Kubernetes Cluster]
-    C -->|Deploys| D[Nginx Server]
-    B -->|Interacts with| E[External Services]
-    E -->|Includes| F[GitHub, OpenAI, Tavily, Stripe]
+    A[GitHub] -->|Webhooks| B[Django App]    
+    C[Kubernetes Cluster] -->|Deploys| D[Nginx Server]
+    C -->|Deploys| B
+    B -->|Interacts with| E[GitHub, OpenAI, Tavily, Stripe]
 ```
 
-This diagram illustrates the flow of interactions within the PR Pilot architecture, highlighting the central role of the Django application in managing webhooks, deploying services, and interacting with external services.
+This diagram illustrates the flow of interactions within the PR Pilot architecture, highlighting the central role of the Django application in managing webhooks and interacting with external services
