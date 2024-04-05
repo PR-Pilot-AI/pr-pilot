@@ -69,7 +69,7 @@ class TaskEngine:
         :return: True if changes were pushed, False if no changes were made
         """
         if self.project.has_uncommitted_changes():
-            logger.warn(f"Found uncommitted changes on {branch_name!r} branch! Committing...")
+            logger.warning(f"Found uncommitted changes on {branch_name!r} branch! Committing...")
             self.project.commit_all_changes(message=f"Uncommitted changes")
         if self.project.get_diff_to_main():
             logger.info(f"Found changes on {branch_name!r} branch. Pushing and creating PR...")
