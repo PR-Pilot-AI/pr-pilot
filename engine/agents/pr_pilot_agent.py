@@ -25,7 +25,6 @@ logger = logging.getLogger(__name__)
 
 
 
-
 system_message = """
 You are PR Pilot, an AI collaborator on the `{github_project}` Github Project.
 You will receive a user request related to an issue or PR on the project.
@@ -221,9 +220,15 @@ class PRPilotSearch(TavilySearchResults):
         return super()._run(query, run_manager)
 
 
+@tool
+def fork_issue(github_project: str, issue_number: int):
+    """Copies the original issue into the forked repository and distills the existing discussion."""
+    # Implementation will be added here
+
+
 def create_pr_pilot_agent():
     llm = ChatOpenAI(model="gpt-4-turbo-preview", temperature=0, callbacks=[CostTrackerCallback("gpt-4-turbo-preview", "conversation")])
-    tools = [read_github_issue, read_pull_request, create_github_issue, write_file, read_files, search_with_ripgrep, search_github_issues, edit_github_issue, copy_file, move_file, delete_file, PRPilotSearch(), scrape_website]
+    tools = [read_github_issue, read_pull_request, create_github_issue, write_file, read_files, search_with_ripgrep, search_github_issues, edit_github_issue, copy_file, move_file, delete_file, PRPilotSearch(), scrape_website, fork_issue]
     prompt = ChatPromptTemplate.from_messages(
         [SystemMessagePromptTemplate(prompt=PromptTemplate(input_variables=['github_project', 'project_info'], template=system_message)),
          HumanMessagePromptTemplate(prompt=PromptTemplate(input_variables=['user_request'], template=template)),
@@ -232,4 +237,5 @@ def create_pr_pilot_agent():
     )
     agent = create_openai_functions_agent(llm, tools, prompt)
     return AgentExecutor(agent=agent, tools=tools, verbose=settings.DEBUG)
+
 
