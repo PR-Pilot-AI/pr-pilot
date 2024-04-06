@@ -9,8 +9,7 @@ from langchain.agents import create_openai_functions_agent, AgentExecutor
 from langchain_community.tools.tavily_search import TavilySearchResults
 from langchain_core.callbacks import CallbackManagerForToolRun
 from langchain_core.messages import SystemMessage
-from langchain_core.prompts import ChatPromptTemplate, SystemMessagePromptTemplate, MessagesPlaceholder, \
-    HumanMessagePromptTemplate, PromptTemplate
+from langchain_core.prompts import ChatPromptTemplate, SystemMessagePromptTemplate, MessagesPlaceholder,     HumanMessagePromptTemplate, PromptTemplate
 from langchain_core.tools import tool
 from langchain_openai import ChatOpenAI
 
@@ -155,7 +154,10 @@ def search_github_code(query: str, sort: Optional[str], order: Optional[str]):
         if result.text_matches:
             for match in result.text_matches:
                 response += f"**Match in `{result.path}`**\n"
-                response += f"```\n{match['fragment']}\n```\n\n"
+                response += f"```
+{match['fragment']}
+```
+\n"
         else:
             response += f"**File `{result.path}`**\n"
     TaskEvent.add(actor="assistant", action="search_code", message=f"Searched code with query: `{query}`. Found {results.totalCount} results:\n\n{relevant_files}")
@@ -229,6 +231,16 @@ def fork_issue(github_project: str, issue_number: int):
     - issue_number: The number of the issue to be forked.
     """
     # Implementation will be added here
+    github = Task.current().github
+    original_issue = github.get_issue(issue_number)
+    title = original_issue.title
+    body = original_issue.body
+    comments = [comment.body for comment in original_issue.get_comments()]
+    distilled_comments = '\n'.join(comments)  # This is a placeholder for actual distillation logic
+
+    # Create a new issue in the forked repository
+    forked_issue = github.create_issue(title=f"Forked: {title}", body=body + '\n\n---\n\n' + distilled_comments)
+    return f"Issue #{issue_number} has been successfully forked to {github_project} as Issue #{forked_issue.number}."
 
 
 def create_pr_pilot_agent():
