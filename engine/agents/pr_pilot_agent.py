@@ -229,7 +229,6 @@ def fork_issue(github_project: str, issue_number: int):
     - github_project: The Github project that contains the original issue.
     - issue_number: The number of the issue to be forked.
     """
-    # Implementation will be added here
     task = Task.current()
     original_repo = Github().get_repo(github_project)
     original_issue: Issue = original_repo.get_issue(issue_number)
