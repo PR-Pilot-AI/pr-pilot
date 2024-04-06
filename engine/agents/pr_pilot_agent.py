@@ -5,6 +5,8 @@ from pathlib import Path
 from typing import Optional, Union, List, Dict
 
 from django.conf import settings
+from github import Github
+from github.Issue import Issue
 from langchain.agents import create_openai_functions_agent, AgentExecutor
 from langchain_community.tools.tavily_search import TavilySearchResults
 from langchain_core.callbacks import CallbackManagerForToolRun
@@ -154,10 +156,7 @@ def search_github_code(query: str, sort: Optional[str], order: Optional[str]):
         if result.text_matches:
             for match in result.text_matches:
                 response += f"**Match in `{result.path}`**\n"
-                response += f"```
-{match['fragment']}
-```
-\n"
+                response += f"```{match['fragment']}```\n"
         else:
             response += f"**File `{result.path}`**\n"
     TaskEvent.add(actor="assistant", action="search_code", message=f"Searched code with query: `{query}`. Found {results.totalCount} results:\n\n{relevant_files}")
@@ -224,22 +223,23 @@ class PRPilotSearch(TavilySearchResults):
 
 @tool
 def fork_issue(github_project: str, issue_number: int):
-    """Copies the original issue into the forked repository and distills the existing discussion into only relevant content, adding it as a comment to the issue in the forked repo.
+    """'Forks' a Github issue from an upstream project into our current project.
 
     Parameters:
-    - github_project: The GitHub project where the issue will be forked to.
+    - github_project: The Github project that contains the original issue.
     - issue_number: The number of the issue to be forked.
     """
     # Implementation will be added here
-    github = Task.current().github
-    original_issue = github.get_issue(issue_number)
+    task = Task.current()
+    original_repo = Github().get_repo(github_project)
+    original_issue: Issue = original_repo.get_issue(issue_number)
     title = original_issue.title
     body = original_issue.body
-    comments = [comment.body for comment in original_issue.get_comments()]
-    distilled_comments = '\n'.join(comments)  # This is a placeholder for actual distillation logic
-
+    comments = [f"**User {comment.user.id}**:\n{comment.body}\n" for comment in original_issue.get_comments()]
+    distilled_comments = '\n'.join(comments)
+    body = f"**This is a copy of {original_issue.html_url}**\n\n---\n\n" + body + '\n\n---\n# Original Comments\n\n' + distilled_comments
     # Create a new issue in the forked repository
-    forked_issue = github.create_issue(title=f"Forked: {title}", body=body + '\n\n---\n\n' + distilled_comments)
+    forked_issue = task.github.get_repo(task.github_project).create_issue(title=f"Forked: {title}", body=body)
     return f"Issue #{issue_number} has been successfully forked to {github_project} as Issue #{forked_issue.number}."
 
 

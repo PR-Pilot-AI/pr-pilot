@@ -43,7 +43,7 @@ class Task(models.Model):
 
     @staticmethod
     @lru_cache()
-    def current():
+    def current() -> 'Task':
         if not settings.TASK_ID:
             raise ValueError("TASK_ID is not set")
         return Task.objects.get(id=settings.TASK_ID)
