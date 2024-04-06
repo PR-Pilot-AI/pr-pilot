@@ -156,7 +156,7 @@ def search_github_code(query: str, sort: Optional[str], order: Optional[str]):
         if result.text_matches:
             for match in result.text_matches:
                 response += f"**Match in `{result.path}`**\n"
-                response += f"```{match['fragment']}```\n"
+                response += f"```\n{match['fragment']}\n```\n\n"
         else:
             response += f"**File `{result.path}`**\n"
     TaskEvent.add(actor="assistant", action="search_code", message=f"Searched code with query: `{query}`. Found {results.totalCount} results:\n\n{relevant_files}")
