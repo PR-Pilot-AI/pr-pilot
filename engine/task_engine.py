@@ -118,8 +118,12 @@ class TaskEngine:
             # Make sure we never work directly on the main branch
             if self.project.active_branch == self.project.main_branch:
                 raise ValueError(f"Cannot work on the main branch {self.project.main_branch}.")
+            project_info = self.github_repo.description
+            if self.github_repo.fork:
+                project_info += f"\n\nThis project is a fork of [{self.github_repo.parent.full_name}]({self.github_repo.parent.html_url})."
             executor_result = self.executor.invoke({"user_request": self.task.user_request,
                                                     "github_project": self.task.github_project,
+                                                    "project_info": project_info,
                                                     "pilot_hints": self.project.load_pilot_hints()})
             self.task.result = executor_result['output']
             self.task.status = "completed"

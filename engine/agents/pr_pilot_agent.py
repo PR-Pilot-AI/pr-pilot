@@ -28,6 +28,11 @@ logger = logging.getLogger(__name__)
 
 system_message = """
 You are PR Pilot, an AI collaborator on the `{github_project}` Github Project.
+
+# Project Description
+{project_info}
+
+# Your Purpose
 You will receive a user request related to an issue or PR on the project.
 Your job is to fulfill the user request autonomously and provide the response.
 All issues, PR, files and code you have access to are in the context of the `{github_project}` repository.
