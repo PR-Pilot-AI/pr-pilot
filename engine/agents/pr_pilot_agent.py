@@ -155,7 +155,10 @@ def search_github_code(query: str, sort: Optional[str], order: Optional[str]):
         if result.text_matches:
             for match in result.text_matches:
                 response += f"**Match in `{result.path}`**\n"
-                response += f"```\n{match['fragment']}\n```\n\n"
+                response += f"```
+{match['fragment']}
+```
+\n"
         else:
             response += f"**File `{result.path}`**\n"
     TaskEvent.add(actor="assistant", action="search_code", message=f"Searched code with query: `{query}`. Found {results.totalCount} results:\n\n{relevant_files}")
@@ -222,7 +225,12 @@ class PRPilotSearch(TavilySearchResults):
 
 @tool
 def fork_issue(github_project: str, issue_number: int):
-    """Copies the original issue into the forked repository and distills the existing discussion."""
+    """Copies the original issue into the forked repository and distills the existing discussion into only relevant content, adding it as a comment to the issue in the forked repo.
+
+    Parameters:
+    - github_project: The GitHub project where the issue will be forked to.
+    - issue_number: The number of the issue to be forked.
+    """
     # Implementation will be added here
 
 
@@ -237,5 +245,6 @@ def create_pr_pilot_agent():
     )
     agent = create_openai_functions_agent(llm, tools, prompt)
     return AgentExecutor(agent=agent, tools=tools, verbose=settings.DEBUG)
+
 
 
