@@ -42,13 +42,14 @@ Over multiple iterations and feedback from users, we've learned some important l
 
 ### Privacy Matters
 Developers are protective of their code - and rightly so. We aim for the highest standards of privacy:
-* **No persistence** - We never store code permanently. Every `/pilot` command is run in an ephemeral Docker container.
+* **No persistence** - We never store code permanently. Every task is run in an ephemeral Docker container.
 * **Minimal permissions** - You can enable/disable PR Pilot on a per-repository basis. It only has access to the repositories you allow it to access.
 
 ### Simplicity is Key
 We've learned that the simpler the interface, the more likely developers are to use it. By using Github issues
 and PRs as the user interface, we've made it easy for developers to interact with PR Pilot without leaving their familiar environment.
 
-## Keep the Flow
+
+### Keep the Flow
 Flow is a state of mind where you are fully immersed in a task. Switching between different tools and interfaces can break your flow.
 With PR Pilot, you can stay in the flow and get things done without interruptions.

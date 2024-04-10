@@ -1,5 +1,9 @@
 # How it works
-**PR Pilot** behaves like any other user on GitHub. It reads and writes to issues and PRs, and communicates with you through comments.
+
+**PR Pilot** behaves like any other user on GitHub. It reads and writes to issues and PRs and can interact with your code.
+
+For now, you interact with it using a `/pilot` command in Github issue comments.
+In the future, you will be able to trigger tasks via the API or other integrations.
 
 
 ## First: Let's set expectations

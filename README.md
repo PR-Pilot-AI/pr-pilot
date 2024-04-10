@@ -12,19 +12,21 @@
 
 # 🤖 PR Pilot
 
-An open source platform that enables GitHub developers to trigger small, AI-driven development tasks in their repositories from anywhere.
+A platform that enables GitHub developers to trigger AI-driven development tasks in their repositories from anywhere.
 
 ![PR Pilot](docs/source/img/overview.png)
 
 
-### 🌟 Automate Small Tasks with Confidence
+### 🌟 Supercharge Your GitHub Workflow
 
-* 🪄 [Quickly Generate Intial Implemenation / Fixes for Issues](https://github.com/PR-Pilot-AI/pr-pilot/issues/39#issuecomment-2028989177)
-* 🌐 [Automate Code Changes in PRs](https://docs.pr-pilot.ai/how_it_works.html#collaborate)
-* 📊 [Monitor PR Pilot in the Dashboard](https://docs.pr-pilot.ai/how_it_works.html#monitor)
-* 🤔 [Ask questions about your issue/PR](https://docs.pr-pilot.ai/how_it_works.html#have-a-conversation)
-* ⏪ [Roll Back Changes](https://docs.pr-pilot.ai/how_it_works.html#rollback)
-* 🎓 [Teach It](https://docs.pr-pilot.ai/how_it_works.html#teach)
+* [x] 🪄 [Quickly Generate Intial Implemenation / Fixes for Issues](https://github.com/PR-Pilot-AI/pr-pilot/issues/39#issuecomment-2028989177)
+* [x] 🌐 [Automate Code Changes in PRs](https://docs.pr-pilot.ai/how_it_works.html#collaborate)
+* [x] 🤔 [Ask questions about your issue/PR](https://docs.pr-pilot.ai/how_it_works.html#have-a-conversation)
+* [x] 📝 [Generate Code Documentation](https://github.com/PR-Pilot-AI/pr-pilot/issues/51)
+* [ ] Create PRs based on ChatGPT Conversations
+* [ ] Create a Slack Bot for your Github Repo
+* [ ] Trigger Code Changes from Zapier Workflows
+* [ ] Create a New Task from a Python Script
 
 
 Check out the [Demo Issues & PRs](https://github.com/PR-Pilot-AI/pr-pilot/issues?q=label:demo+is:closed+). PR Pilot is actively involved in writing its own code! 

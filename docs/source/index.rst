@@ -8,7 +8,7 @@ PR Pilot Documentation
 
 .. note:: PR Pilot is still in **early development**. Its future is shaped by your feedback. Please let us know what you think and what you would like to see next.
 
-PR Pilot is an AI collaborator for Github issues and pull requests. Once installed in your repository, you can use  `/pilot <command>` in any issue/PR comment to collaborate. PR Pilot will interpret the command in the context of your code and do research, answer questions or write code for you.
+PR Pilot is a platform that enables GitHub developers to trigger AI-driven development tasks in their repositories from anywhere.
 
 
 .. toctree::
@@ -21,7 +21,6 @@ PR Pilot is an AI collaborator for Github issues and pull requests. Once install
    examples
    vision
    roadmap
-   comparison
    pricing
    privacy_notice
    support

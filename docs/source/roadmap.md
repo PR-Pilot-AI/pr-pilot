@@ -8,12 +8,6 @@ This page roughly outlines the main goals we want to achieve in the near future.
 The quality of the results is a top priority. In order to be a useful 
 companion for developers, PR Pilot needs to be reliable and provide high-quality results. 
 
-## Improve the User Experience
-We want to make using PR Pilot as easy and intuitive as possible. This includes:
-* Providing an "Undo" functionality to quickly rollback changes you didn't want
-* More transparent error reporting in case something goes wrong
-* Better continuity of conversations across different issues and PRs
-
 ## Implement Continuous Learning
 As you use PR Pilot, it should be able to learn from your interactions and improve its performance over time, this includes:
 * Learning from the feedback you provide
