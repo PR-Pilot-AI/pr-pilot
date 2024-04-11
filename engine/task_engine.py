@@ -104,7 +104,8 @@ class TaskEngine:
             TaskEvent.add(actor="assistant", action="budget_exceeded", target=self.task.github_user, message="Budget exceeded. Please add credits to your account.")
             self.task.status = "failed"
             self.task.result = "Budget exceeded. Please add credits to your account."
-            self.task.response_comment.edit(self.task.result)
+            self.task.context.respond_to_user(self.task.result)
+            self.task.save()
             return self.task.result
         self.generate_task_title()
         self.clone_github_repo()

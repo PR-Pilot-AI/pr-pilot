@@ -101,41 +101,6 @@ class Task(models.Model):
         else:
             return self.request_issue.get_comment(self.comment_id)
 
-    @property
-    def response_comment(self):
-        repo = self.github.get_repo(self.github_project)
-        if self.pr_number:
-            pr = repo.get_pull(self.pr_number)
-            try:
-                return pr.get_review_comment(self.response_comment_id)
-            except GithubException as e:
-                if e.status == 404:
-                    return pr.get_issue_comment(self.response_comment_id)
-                else:
-                    raise
-        else:
-            issue = repo.get_issue(self.issue_number)
-            return issue.get_comment(self.response_comment_id)
-
-    def create_response_comment(self, message):
-        repo = self.github.get_repo(self.github_project)
-        if self.pr_number:
-            pr = repo.get_pull(self.pr_number)
-            try:
-                comment = pr.create_review_comment_reply(self.comment_id, message)
-            except GithubException as e:
-                if e.status == 404:
-                    comment = pr.create_issue_comment(message)
-                else:
-                    raise
-        else:
-            issue = repo.get_issue(self.issue_number)
-            comment = issue.create_comment(message)
-        self.response_comment_id = comment.id
-        self.response_comment_url = comment.html_url
-        self.save()
-        return comment
-
     def user_budget_empty(self):
         budget = UserBudget.get_user_budget(self.github_user)
         return budget.budget <= 0
