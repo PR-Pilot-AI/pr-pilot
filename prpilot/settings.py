@@ -222,6 +222,7 @@ OPEN_SOURCE_CONTRIBUTOR_THRESHOLD = 5
 OPEN_SOURCE_CONTRIBUTOR_DISCOUNT_PERCENT = 20.0
 OPEN_SOURCE_COMMITS_THRESHOLD = 10
 APPEND_SLASH = True  # Default is True
+# Defines where jobs are executed: kubernetes, thread or log
 JOB_STRATEGY = os.getenv('JOB_STRATEGY', 'kubernetes')
 
 license_json = json.loads(Path(BASE_DIR / 'licenses.json').read_text())

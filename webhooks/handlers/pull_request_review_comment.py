@@ -57,7 +57,7 @@ def handle_pull_request_review_comment(payload):
         task = Task.objects.create(title=command, user_request=user_request, comment_id=comment_id,
                                    comment_url=comment_url, pr_number=pr_number, head=head, base=base,
                                    installation_id=installation_id, github_project=repository,
-                                   task_type=TaskType.GITHUB_PR_REVIEW_COMMENT,
+                                   task_type=TaskType.GITHUB_PR_REVIEW_COMMENT.value,
                                    github_user=commenter_username, branch="main", pilot_command=command)
         task.schedule()
 

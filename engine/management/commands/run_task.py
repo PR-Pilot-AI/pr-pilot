@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand
 from sentry_sdk import configure_scope
 
-from engine.models import Task
+from engine.models.task import Task
 from engine.task_engine import TaskEngine
 
 
