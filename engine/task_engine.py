@@ -17,6 +17,8 @@ from engine.models import Task, TaskEvent, CostItem, TaskBill
 from engine.project import Project
 from engine.util import slugify
 from webhooks.jwt_tools import get_installation_access_token
+from engine.prompt import Prompt
+from engine.task_result import TaskResult
 
 logger = logging.getLogger(__name__)
 
