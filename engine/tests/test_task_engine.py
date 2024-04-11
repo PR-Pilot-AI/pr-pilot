@@ -88,19 +88,6 @@ def mock_create_response_comment():
         yield
 
 
-@pytest.fixture
-def task():
-    task = Task.objects.create(
-        issue_number=123,
-        installation_id=123,
-        comment_id=123,
-        pilot_command="this is a test",
-        github_user="test_user",
-        github_project="test_project")
-    settings.TASK_ID = task.id
-    return task
-
-
 @pytest.mark.django_db
 def test_bill_creation_correctness(mock_generate_pr_info, mock_project_from_github, mock_task_project, task):
     task_engine = TaskEngine(task)

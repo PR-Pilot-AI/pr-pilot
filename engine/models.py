@@ -1,12 +1,10 @@
 import logging
 import os
-import re
 import threading
 import uuid
 from functools import lru_cache
 
 from django.conf import settings
-from django.core.management import call_command
 from django.db import models
 from github import Github, GithubException
 
@@ -113,46 +111,45 @@ class Task(models.Model):
         self.save()
         return comment
 
-    @staticmethod
-    def schedule(**kwargs):
-        new_task = Task(**kwargs, status="scheduled")
-        repo = new_task.github.get_repo(new_task.github_project)
+    def acknowledge_user_prompt(self):
+        """Acknowledge the user's prompt so they know we've received their request. This behavior can be overridden
+        by subclasses in order to respond in a different way."""
+        pass
 
-        if not new_task.user_can_write():
-            message = f"Sorry @{new_task.github_user}, you must be a collaborator of `{new_task.github_project}` to run commands on this project."
-            if new_task.pr_number:
-                pr = repo.get_pull(new_task.pr_number)
-                try:
-                    comment = pr.create_review_comment_reply(new_task.comment_id, message)
-                except GithubException as e:
-                    if e.status == 404:
-                        comment = pr.create_issue_comment(message)
-                    else:
-                        raise
-            else:
-                issue = repo.get_issue(new_task.issue_number)
-                comment = issue.create_comment(message)
-            new_task.status = "failed"
-            new_task.result = message
-            new_task.response_comment_id = comment.id
-            new_task.response_comment_url = comment.html_url
-            new_task.save()
-            return new_task
-        # Replace `/pilot <command>` with `**/pilot** <link_to_task>`
-        replaced = new_task.request_comment.body.replace(f"/pilot", f"**/pilot**")
-        replaced = replaced.replace(f"{new_task.pilot_command}", f"[{new_task.pilot_command}](https://app.pr-pilot.ai/dashboard/tasks/{str(new_task.id)}/)")
-        new_task.request_comment.edit(replaced)
-        new_task.save()
-        if settings.DEBUG:
-            settings.TASK_ID = new_task.id
-            os.environ["TASK_ID"] = str(new_task.id)
-            logger.info(f"Running task in debug mode: {new_task.id}")
-            thread = threading.Thread(target=run_task_in_background, args=(new_task.id,))
+    def respond_to_user(self, message):
+        """
+        Respond to the user's request. This behavior can be overridden by subclasses in order to respond in a different way.
+        :param message: The message to send to the user
+        """
+        pass
+
+    def schedule(self):
+        self.acknowledge_user_prompt()
+        if not self.user_can_write():
+            message = f"Sorry @{self.github_user}, you must be a collaborator of `{self.github_project}` to run commands on this project."
+            self.respond_to_user(message)
+            self.status = "failed"
+            self.save()
+            return
+
+        if settings.JOB_STRATEGY == 'thread':
+            # In local development, just run the task in a background thread
+            settings.TASK_ID = self.id
+            os.environ["TASK_ID"] = str(self.id)
+            logger.info(f"Running task in debug mode: {self.id}")
+            thread = threading.Thread(target=run_task_in_background, args=(self.id,))
             thread.start()
-        else:
-            job = KubernetesJob(new_task)
+        elif settings.JOB_STRATEGY == 'kubernetes':
+            # In production, run the task in a Kubernetes job
+            job = KubernetesJob(self)
             job.spawn()
-        return new_task
+        elif settings.JOB_STRATEGY == 'log':
+            # In testing, just log the task
+            logger.info(f"Running task in log mode: {self.id}")
+        else:
+            raise ValueError(f"Invalid JOB_STRATEGY: {settings.JOB_STRATEGY}")
+        self.status = "scheduled"
+        self.save()
 
     def user_can_write(self) -> bool:
         repo = self.github.get_repo(self.github_project)
