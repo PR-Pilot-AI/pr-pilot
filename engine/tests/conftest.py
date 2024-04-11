@@ -5,7 +5,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 from django.conf import settings
 
-from engine.models import Task
+from engine.models.task import Task
 
 
 @pytest.fixture(autouse=True)

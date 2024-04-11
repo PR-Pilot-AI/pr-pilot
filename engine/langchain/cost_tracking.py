@@ -9,7 +9,8 @@ from langchain_community.callbacks.openai_info import standardize_model_name, MO
     get_openai_token_cost_for_model, OpenAICallbackHandler
 from langchain_core.outputs import LLMResult
 
-from engine.models import CostItem, Task
+from engine.models.cost_item import CostItem
+from engine.models.task import Task
 
 logger = logging.getLogger(__name__)
 

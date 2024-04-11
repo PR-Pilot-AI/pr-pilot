@@ -13,12 +13,13 @@ from accounts.models import UserBudget
 from engine.agents.pr_pilot_agent import create_pr_pilot_agent
 from engine.langchain.generate_pr_info import generate_pr_info, LabelsAndTitle
 from engine.langchain.generate_task_title import generate_task_title
-from engine.models import Task, TaskEvent, CostItem, TaskBill
+from engine.models.cost_item import CostItem
+from engine.models.task import Task
+from engine.models.task_bill import TaskBill
+from engine.models.task_event import TaskEvent
 from engine.project import Project
 from engine.util import slugify
 from webhooks.jwt_tools import get_installation_access_token
-from engine.prompt import Prompt
-from engine.task_result import TaskResult
 
 logger = logging.getLogger(__name__)
 
@@ -154,9 +155,7 @@ class TaskEngine:
             final_response = f"I'm sorry, something went wrong, please check {dashboard_link} for details."
         finally:
             self.task.save()
-        comment = self.task.create_response_comment(final_response.strip().replace("/pilot", ""))
-        TaskEvent.add(actor="assistant", action="comment_on_issue", target=comment.id,
-                      message=f"Commented on [Issue {self.task.issue_number if self.task.issue_number else self.task.pr_number}]({comment.html_url})")
+        self.task.context.respond_to_user(final_response.strip().replace("/pilot", ""))
         self.create_bill()
         return final_response
 

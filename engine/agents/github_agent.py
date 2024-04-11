@@ -11,7 +11,8 @@ from langchain_core.tools import tool
 from langchain_openai import ChatOpenAI
 
 from engine.langchain.cost_tracking import CostTrackerCallback
-from engine.models import TaskEvent, Task
+from engine.models.task_event import TaskEvent
+from engine.models.task import Task
 
 logger = logging.getLogger(__name__)
 

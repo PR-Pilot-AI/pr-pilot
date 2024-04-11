@@ -2,9 +2,9 @@
 from unittest.mock import patch, MagicMock
 
 import pytest
-from django.conf import settings
 
-from engine.models import Task, TaskBill
+from engine.models.task import Task
+from engine.models.task_bill import TaskBill
 from engine.task_engine import TaskEngine
 
 

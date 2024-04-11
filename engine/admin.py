@@ -1,6 +1,7 @@
 from django.contrib import admin
 
-from engine.models import Task, CostItem
+from engine.models.cost_item import CostItem
+from engine.models.task import Task
 
 
 class TaskAdmin(admin.ModelAdmin):

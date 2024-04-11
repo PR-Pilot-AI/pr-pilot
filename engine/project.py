@@ -7,7 +7,8 @@ from github.Repository import Repository
 from pydantic import Field, BaseModel
 
 from engine.file_system import FileSystem
-from engine.models import Task, TaskEvent
+from engine.models.task_event import TaskEvent
+from engine.models.task import Task
 
 logger = logging.getLogger(__name__)
 

@@ -19,7 +19,8 @@ from engine.agents.github_agent import read_github_issue, read_pull_request, cre
 from engine.agents.web_search_agent import scrape_website
 from engine.file_system import FileSystem
 from engine.langchain.cost_tracking import CostTrackerCallback
-from engine.models import TaskEvent, Task
+from engine.models.task_event import TaskEvent
+from engine.models.task import Task
 from engine.project import Project
 
 logger = logging.getLogger(__name__)

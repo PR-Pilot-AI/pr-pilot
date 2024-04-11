@@ -3,7 +3,9 @@ from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 from django_tables2 import tables, A
 
-from engine.models import Task, TaskEvent, CostItem
+from engine.models.task import Task
+from engine.models.task_event import TaskEvent
+from engine.models.cost_item import CostItem
 
 
 class GithubProjectLinkColumn(tables.columns.Column):

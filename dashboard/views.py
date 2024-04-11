@@ -13,7 +13,8 @@ from django.conf import settings
 from accounts.models import UserBudget
 
 from dashboard.tables import TaskTable, EventTable, CostItemTable, EventUndoTable
-from engine.models import Task, TaskBill
+from engine.models.task import Task
+from engine.models.task_bill import TaskBill
 
 
 # Create your views here.

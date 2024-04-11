@@ -2,18 +2,18 @@ from unittest.mock import patch, MagicMock, PropertyMock
 
 import pytest
 
-from engine.models import CostItem
+from engine.models.cost_item import CostItem
 
 
 @pytest.fixture(autouse=True)
 def mock_get_installation_access_token():
-    with patch('engine.models.get_installation_access_token'):
+    with patch('engine.models.task.get_installation_access_token'):
         yield lambda: "test_token"
 
 
 @pytest.fixture(autouse=True)
 def mock_github_client(mock_get_installation_access_token):
-    with patch('engine.models.Github') as MockClass:
+    with patch('engine.models.task.Github') as MockClass:
         MockClass.return_value = MagicMock(
             get_repo=MagicMock(return_value=MagicMock(default_branch="main", full_name="test_user/test_project")),
         )
