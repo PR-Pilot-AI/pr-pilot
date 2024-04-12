@@ -36,13 +36,13 @@ html_theme_options = {
     'nav_title': 'PR Pilot',
     'google_analytics_account': 'G-86FJ02W45S',
     'logo_icon': '✈️',
-    'globaltoc_depth': 2,
+    'globaltoc_depth': 1,
     "master_doc": False,
     "nav_links": [
         {
             "href": "https://github.com/marketplace/pr-pilot-ai",
             "internal": False,
-            "title": "Get Started",
+            "title": "Install",
         },
         {
             "href": "https://app.pr-pilot.ai/dashboard/tasks/",
@@ -50,15 +50,15 @@ html_theme_options = {
             "title": "Dashboard",
         },
         {
-            "href": "https://github.com/mlamina/what-about-jobs",
+            "href": "https://www.pr-pilot.ai/blog/",
             "internal": False,
-            "title": "Demo",
+            "title": "Blog",
         },
     ],
     "heroes": {
-        "index": "Your AI collaborator for Github",
+        "index": "The text-to-task Platform for Github",
     },
 }
 html_sidebars = {
-    "**": ["globaltoc.html"]
+    "**": ["logo-text.html", "globaltoc.html", "localtoc.html", "searchbox.html"]
 }

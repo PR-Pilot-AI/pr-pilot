@@ -1,6 +1,6 @@
 # Capabilities
 
-PR Pilot can autonomously understand your command in the context of your issue/PR and do what you ask it to do.
+PR Pilot can autonomously understand your command in the context of your Github project and do what you ask it to do.
 Just say what you want to do in your own words and PR Pilot will use its capabilities to understand and execute your command.
 
 ## File Manipulation

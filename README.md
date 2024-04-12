@@ -17,6 +17,9 @@ A **text-to-task platform** that enables GitHub developers to trigger AI-driven 
 ![PR Pilot](docs/source/img/overview.png)
 
 
+Get started now with our [User Guide](https://docs.pr-pilot.ai/user_guide.html).
+
+
 ### 🌟 Use Natural Language Prompts to Automate Your GitHub Workflow
 
 * [x] 🪄 [Quickly Generate Intial Implemenation / Fixes for Issues](https://github.com/PR-Pilot-AI/pr-pilot/issues/39#issuecomment-2028989177)
@@ -29,7 +32,7 @@ A **text-to-task platform** that enables GitHub developers to trigger AI-driven 
 * [ ] Create a New Task from a Python Script
 
 
-Check out the [Demo Issues & PRs](https://github.com/PR-Pilot-AI/pr-pilot/issues?q=label:demo+is:closed+). PR Pilot is actively involved in writing its own code! 
+Check out the [Demo Issues & PRs](https://github.com/PR-Pilot-AI/pr-pilot/issues?q=label:demo+is:closed+) to see how you can create tasks directly in Github. PR Pilot is actively involved in writing its own code! 
 
 ## 🛠️ Installation
 
