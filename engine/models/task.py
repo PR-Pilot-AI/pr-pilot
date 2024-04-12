@@ -42,7 +42,7 @@ class Task(models.Model):
     user_request = models.TextField(blank=True)
     head = models.CharField(max_length=200, blank=True, null=True)
     base = models.CharField(max_length=200, blank=True, null=True)
-    comment_id = models.IntegerField()
+    comment_id = models.IntegerField(null=True)
     comment_url = models.CharField(max_length=200, blank=True, null=True)
     response_comment_id = models.IntegerField(blank=True, null=True)
     response_comment_url = models.CharField(max_length=200, blank=True, null=True)

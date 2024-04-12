@@ -13,6 +13,7 @@ from django.urls import reverse
 from accounts.models import UserBudget
 from webhooks.handlers.app_deletion import handle_app_deletion
 from webhooks.handlers.app_installation import handle_app_installation
+from webhooks.handlers.app_installation_change import handle_app_installation_change
 from webhooks.handlers.handle_issue_comment import handle_issue_comment
 from webhooks.handlers.pull_request_review_comment import handle_pull_request_review_comment
 
@@ -91,6 +92,10 @@ def github_webhook(request):
         elif event == 'installation' and payload['action'] == 'deleted':
             # Handle app deletion here
             return handle_app_deletion(payload)
+
+        elif event == 'installation_repositories':
+            # The user changed which repositories the app can access, need to update our DB
+            return handle_app_installation_change(payload)
 
         else:
             logger.info(f'Received unhandled event: {event}')

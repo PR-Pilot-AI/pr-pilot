@@ -11,6 +11,13 @@ class GitHubAccount(models.Model):
     def __str__(self):
         return self.login
 
+class GithubRepository(models.Model):
+    id = models.IntegerField(unique=True, primary_key=True)
+    full_name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255)
+    installation = models.ForeignKey('GitHubAppInstallation', on_delete=models.CASCADE, related_name='repositories')
+
+
 class GitHubAppInstallation(models.Model):
     installation_id = models.IntegerField(unique=True)
     account = models.OneToOneField(GitHubAccount, on_delete=models.CASCADE, related_name='installation')
