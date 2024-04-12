@@ -6,11 +6,14 @@
         Once you leave this page, you won't be able to view the key again.
     </div>
     <div class="mb-2">
-        <h5 class="text-muted">{{ api_key_name }}</h5>
+        <h5 class="text-muted">{{ api_key_name }} </h5>
     </div>
     <div>
         <button type="button" class="btn btn-secondary btn-sm me-1" onclick="copyApiKey('{{ api_key }}')"><i class="fa fa-copy"></i></button>
         <span class="lead"> {{ api_key }}</span>
+    </div>
+    <div class="mb-2 lead">
+        Try it out now in <a href="/api/swagger-ui/">Swagger</a> or <a href="/api/redoc/">ReDoc</a>.
     </div>
 </div>
 <script>

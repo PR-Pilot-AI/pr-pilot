@@ -55,6 +55,7 @@ def test_create_task_via_api(api_key, github_project):
     assert task.github_user == 'testuser'
     assert task.github_project == github_project
     assert task.installation_id == installation.installation_id
+    assert client.get('/api/tasks/' + str(task.id), headers={'X-Api-Key': api_key}).status_code == 200
 
 
 @pytest.mark.django_db

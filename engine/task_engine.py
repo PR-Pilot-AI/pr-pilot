@@ -14,7 +14,7 @@ from engine.agents.pr_pilot_agent import create_pr_pilot_agent
 from engine.langchain.generate_pr_info import generate_pr_info, LabelsAndTitle
 from engine.langchain.generate_task_title import generate_task_title
 from engine.models.cost_item import CostItem
-from engine.models.task import Task
+from engine.models.task import Task, TaskType
 from engine.models.task_bill import TaskBill
 from engine.models.task_event import TaskEvent
 from engine.project import Project
@@ -87,12 +87,14 @@ class TaskEngine:
             return False
 
     def generate_task_title(self):
-        if self.task.pr_number:
+        if self.task.task_type == TaskType.GITHUB_PR_REVIEW_COMMENT:
             pr = self.github_repo.get_pull(self.task.pr_number)
             self.task.title = generate_task_title(pr.body, self.task.user_request)
-        else:
+        elif self.task.task_type == TaskType.GITHUB_ISSUE:
             issue = self.github_repo.get_issue(self.task.issue_number)
             self.task.title = generate_task_title(issue.body, self.task.user_request)
+        else:
+            self.task.title = generate_task_title("", self.task.user_request)
         self.task.save()
 
 

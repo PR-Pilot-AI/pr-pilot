@@ -14,6 +14,7 @@ import os
 from pathlib import Path
 
 import sentry_sdk
+from corsheaders.defaults import default_headers
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -52,12 +53,15 @@ INSTALLED_APPS = [
     'dashboard',
     'rest_framework',
     'rest_framework_api_key',
+    'corsheaders',
+    'drf_spectacular',
     'api'
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -251,3 +255,47 @@ MILVIUS_HOST = os.getenv('MILVIUS_HOST')
 MILVIUS_PORT = os.getenv('MILVIUS_PORT')
 
 API_KEY_CUSTOM_HEADER = "HTTP_X_API_KEY"
+
+VERSION = Path(BASE_DIR / 'version.txt').read_text().strip()
+
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+    ],
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+    ],
+    'DEFAULT_PARSER_CLASSES': [
+        'rest_framework.parsers.JSONParser',
+    ],
+}
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'PR Pilot API',
+    'DESCRIPTION': 'API for creating PR Pilot tasks',
+    'VERSION': VERSION,
+    'SERVE_INCLUDE_SCHEMA': False,
+    'SECURITY': [
+        {'apiKeyAuth': []}
+    ],
+    'APPEND_COMPONENTS': {
+        'securitySchemes': {
+            'apiKeyAuth': {
+                'type': 'apiKey',
+                'in': 'header',
+                'name': 'X-Api-Key'
+            }
+        }
+    },
+    'URLCONF_INCLUDE_PATTERN': r'^/api/',
+    'SERVERS': [{
+        'url': 'http://localhost:8000/',
+        'description': 'Local development server',
+    },{
+        'url': 'https://api.pr-pilot.ai/',
+        'description': 'Production API',
+    }],
+}
+CORS_URLS_REGEX = r'^/api/.*$'
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    'X-Api-Key',
+]

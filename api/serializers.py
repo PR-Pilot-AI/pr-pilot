@@ -4,8 +4,8 @@ from engine.models.task import Task
 
 
 class PromptSerializer(serializers.Serializer):
-    prompt = serializers.CharField(required=True, allow_blank=False)
-    github_repo = serializers.CharField(required=True, allow_blank=False)
+    prompt = serializers.CharField(required=True, allow_blank=False, help_text="The prompt for the task")
+    github_repo = serializers.CharField(required=True, allow_blank=False, help_text="The full name of the Github repository, e.g. 'owner/repo'")
 
 
 class TaskSerializer(serializers.ModelSerializer):
