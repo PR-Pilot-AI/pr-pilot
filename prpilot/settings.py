@@ -49,7 +49,10 @@ INSTALLED_APPS = [
     'webhooks',
     'engine',
     'django_tables2',
-    'dashboard'
+    'dashboard',
+    'rest_framework',
+    'rest_framework_api_key',
+    'api'
 ]
 
 MIDDLEWARE = [
@@ -246,3 +249,5 @@ STRIPE_API_KEY = os.getenv('STRIPE_API_KEY')
 STRIPE_WEBHOOK_SECRET = os.getenv('STRIPE_WEBHOOK_SECRET')
 MILVIUS_HOST = os.getenv('MILVIUS_HOST')
 MILVIUS_PORT = os.getenv('MILVIUS_PORT')
+
+API_KEY_CUSTOM_HEADER = "HTTP_X_API_KEY"

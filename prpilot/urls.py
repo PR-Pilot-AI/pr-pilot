@@ -32,6 +32,7 @@ urlpatterns = [
     path('user/', include('accounts.urls')),
     path('webhooks/', include('webhooks.urls')),
     path('dashboard/', include('dashboard.urls')),
+    path('api/', include('api.urls')),
     path('healthz/', health_check, name='health_check'),
     path('', home, name='home'),
 ]
