@@ -12,12 +12,12 @@
 
 # 🤖 PR Pilot
 
-A platform that enables GitHub developers to trigger AI-driven development tasks in their repositories from anywhere.
+A **text-to-task platform** that enables GitHub developers to trigger AI-driven development tasks in their repositories from anywhere.
 
 ![PR Pilot](docs/source/img/overview.png)
 
 
-### 🌟 Supercharge Your GitHub Workflow
+### 🌟 Use Natural Language Prompts to Automate Your GitHub Workflow
 
 * [x] 🪄 [Quickly Generate Intial Implemenation / Fixes for Issues](https://github.com/PR-Pilot-AI/pr-pilot/issues/39#issuecomment-2028989177)
 * [x] 🌐 [Automate Code Changes in PRs](https://docs.pr-pilot.ai/how_it_works.html#collaborate)
