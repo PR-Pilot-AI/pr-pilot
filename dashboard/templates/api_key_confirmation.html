@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-3">
+    <div class="alert alert-success mb-5" role="alert">
+        Once you leave this page, you won't be able to view the key again.
+    </div>
+    <div class="mb-2">
+        <h5 class="text-muted">{{ api_key_name }}</h5>
+    </div>
+    <div>
+        <button type="button" class="btn btn-secondary btn-sm me-1" onclick="copyApiKey('{{ api_key }}')"><i class="fa fa-copy"></i></button>
+        <span class="lead"> {{ api_key }}</span>
+    </div>
+</div>
+<script>
+function copyApiKey(apiKey) {
+    navigator.clipboard.writeText(apiKey).then(() => {
+        alert('API Key copied to clipboard!');
+    }, (err) => {
+        console.error('Could not copy text: ', err);
+    });
+}
+</script>
+{% endblock %}
