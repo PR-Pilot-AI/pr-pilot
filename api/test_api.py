@@ -43,10 +43,10 @@ def test_create_task_via_api(api_key, github_project):
     account = GitHubAccount.objects.create(account_id=1, login='test', avatar_url='http://example.com/avatar', html_url='http://example.com')
     installation = GitHubAppInstallation.objects.create(installation_id=123, app_id=1, target_id=1, target_type='Organization', account=account)
     repo = GithubRepository.objects.create(id=1, full_name=github_project, name='hello-world', installation=installation)
-    response = client.post('/api/tasks/', headers={'X-Api-Key': api_key}, data={
+    response = client.post('/api/tasks/', {
         'prompt': 'Hello, World!',
         'github_repo': github_project,
-    })
+    }, headers={'X-Api-Key': api_key}, format='json')
     assert response.status_code == 201
     task = Task.objects.first()
     assert task is not None
@@ -55,14 +55,14 @@ def test_create_task_via_api(api_key, github_project):
     assert task.github_user == 'testuser'
     assert task.github_project == github_project
     assert task.installation_id == installation.installation_id
-    assert client.get('/api/tasks/' + str(task.id), headers={'X-Api-Key': api_key}).status_code == 200
+    assert client.get(f'/api/tasks/{str(task.id)}/', headers={'X-Api-Key': api_key}).status_code == 200
 
 
 @pytest.mark.django_db
 def test_create_task_via_api__repo_not_found(api_key):
-    response = client.post('/api/tasks/', headers={'X-Api-Key': api_key}, data={
+    response = client.post('/api/tasks/', {
         'prompt': 'Hello, World!',
         'github_repo': 'test/hello-world',
-    })
+    }, headers={'X-Api-Key': api_key}, format='json')
     assert response.status_code == 404
     assert not Task.objects.exists()

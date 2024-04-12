@@ -296,6 +296,11 @@ SPECTACULAR_SETTINGS = {
     }],
 }
 CORS_URLS_REGEX = r'^/api/.*$'
+CORS_ALLOW_METHODS = ("GET", "OPTIONS", "POST")
+CORS_ALLOWED_ORIGINS = [
+    "https://api.pr-pilot.ai",
+]
 CORS_ALLOW_HEADERS = list(default_headers) + [
     'X-Api-Key',
 ]
+CORS_ALLOW_ALL_ORIGINS = DEBUG
