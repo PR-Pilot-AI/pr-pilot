@@ -291,16 +291,13 @@ SPECTACULAR_SETTINGS = {
         'url': 'http://localhost:8000/',
         'description': 'Local development server',
     },{
-        'url': 'https://api.pr-pilot.ai/',
+        'url': 'https://app.pr-pilot.ai/api/',
         'description': 'Production API',
     }],
 }
 CORS_URLS_REGEX = r'^/api/.*$'
 CORS_ALLOW_METHODS = ("GET", "OPTIONS", "POST")
-CORS_ALLOWED_ORIGINS = [
-    "https://api.pr-pilot.ai",
-]
 CORS_ALLOW_HEADERS = list(default_headers) + [
     'X-Api-Key',
 ]
-CORS_ALLOW_ALL_ORIGINS = DEBUG
+CORS_ALLOW_ALL_ORIGINS = True
