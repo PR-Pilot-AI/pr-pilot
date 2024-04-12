@@ -38,7 +38,7 @@ The PR Pilot API allows you to trigger tasks using your own tools and integratio
 
 Example:
 ```bash
-curl -X POST 'https://api.pr-pilot.ai/tasks/' \
+curl -X POST 'https://app.pr-pilot.ai/api/tasks/' \
 -H 'Content-Type: application/json' \
 -H 'X-Api-Key: YOUR_API_KEY_HERE' \
 -d '{
