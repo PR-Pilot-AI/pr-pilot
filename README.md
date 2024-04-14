@@ -12,7 +12,7 @@
 
 # 🤖 PR Pilot
 
-A platform that enables developers to develop AI-driven automations for Github projects.
+A platform that enables developers to easily create AI-driven automations for Github projects.
 
 
 Get started now with our [User Guide](https://docs.pr-pilot.ai/user_guide.html).
