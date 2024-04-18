@@ -72,48 +72,45 @@ The Python SDK works great for creating [powerful Github Actions](https://github
 
 ### Github Actions
 
-You can create [powerful automations](https://github.com/PR-Pilot-AI/pr-pilot/blob/main/.github/workflows/ai_task_trigger.yml) by combining PR Pilot with Github Actions. Create a secret in your repository with your PR Pilot API Key, then add a new workflow file to your repository.
+You can create **[Smart Github Actions](https://github.com/PR-Pilot-AI/smart-actions)** by combining PR Pilot with Github Actions. 
+
+For example, you can use the `format-issue` action to ensure that every new issue is properly formatted and labeled:
 
 ```yaml
-name: AI Task Trigger
+# .github/workflows/issue_formatter.yaml`
+
+name: Ensure new issue is properly formatted and labeled
 
 on:
-  push:
-    branches:
-      - main
+  issues:
+    types: [opened]
 
 jobs:
-  trigger-ai-task:
+  format-issue:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Set up Python
-        uses: actions/setup-python@v2
+      - name: Format GitHub Issue
+        uses: PR-Pilot-AI/smart-actions/format-issue@v1
         with:
-          python-version: '3.8'
-      - name: Install PR Pilot SDK
-        run: pip install pr-pilot
-      - name: Execute AI Task
-        env:
-          COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
-          AUTHOR: ${{ github.event.head_commit.author.username }}
-          PR_PILOT_API_KEY: ${{ secrets.PR_PILOT_API_KEY }}
-        run: python .github/workflows/ai_task.py
+
+          # API key for PR Pilot must be defined as a secret in the repository
+          api-key: ${{ secrets.PR_PILOT_API_KEY }}
+
+          # Number of the issue to be formatted
+          issue-number: ${{ github.event.issue.number }}
+
+          # Customize the instructions to your needs
+          formatting-instructions: |
+            - Ensure the title begins with an appropriate emoji
+            - Issue body should be properly Markdown-formatted
+            - If the issue has no labels, add some
 ```
+
+For your convenience, the `PR_PILOT_API_KEY` secret is set automatically on every project that uses PR Pilot.
 
 ### Dashboard
 
 Soon you'll be able to create tasks directly from the [dashboard](https://app.pr-pilot.ai/dashboard/tasks/).
-
-
-### Slack
-
-Soon, we'll show you how to create tasks directly from Slack.
-
-### via Zapier
-
-Soon, we'll show you how to create tasks via Zapier.
 
 ## Monitoring Tasks
 
