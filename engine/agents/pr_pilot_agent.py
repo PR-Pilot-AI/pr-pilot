@@ -127,7 +127,7 @@ def list_directory(path: str):
         TaskEvent.add(actor="assistant", action="list_directory", target=path, message=f"Directory not found `{path}`")
         return f"Directory not found: `{path}`"
     directory_content = f"Content of `{path}`:\n\n"
-    for child in node.nodes:
+    for child in sorted(node.nodes, key=lambda x: x.path):
         # Replace the root path with an empty string
         clipped_path = str(child.path).replace(str(settings.REPO_DIR), "")
         # Replace the directory path with an empty string, leaving file name untouched

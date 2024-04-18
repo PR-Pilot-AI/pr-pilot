@@ -26,8 +26,8 @@ def test_list_directories(task):
     markdown_result = list_directory('subdir')
     assert markdown_result.strip() == f"""Content of `subdir`:
 
+- file1.yaml
 - file2.py
 - subdir.py
-- file1.yaml
-    """.strip()
+""".strip()
 
