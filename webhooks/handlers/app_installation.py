@@ -3,8 +3,8 @@ import logging
 from django.http import JsonResponse
 from django.utils.dateparse import parse_datetime
 
-from webhooks.models import GitHubAppInstallation, GitHubAccount, GithubRepository
-
+from webhooks.handlers.util import install_repository
+from webhooks.models import GitHubAppInstallation, GitHubAccount
 
 logger = logging.getLogger(__name__)
 
@@ -38,13 +38,8 @@ def handle_app_installation(payload: dict):
     repositories_data = payload['repositories']
     for repo_data in repositories_data:
         logger.info(f'User {account.login} installed PR Pilot for repository {repo_data["full_name"]}')
-        GithubRepository.objects.update_or_create(
-            id=repo_data['id'],
-            defaults={
-                'full_name': repo_data['full_name'],
-                'name': repo_data['name'],
-                'installation': installation,
-            }
-        )
+        install_repository(installation, repo_data, account.login)
 
     return JsonResponse({'status': 'success', 'installation_id': installation.installation_id})
+
+

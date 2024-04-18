@@ -6,12 +6,27 @@
 {% endblock head_title %}
 {% block content %}
 
-    {% element form method="post" no_visible_fields=True %}
-        {% slot actions %}
-            {% csrf_token %}
-            {% element button type="submit" class="btn btn-primary" %}
-                <i class="fab fa-github"></i> Login with Github
+    <div class="container mt-5">
+        <h2>Welcome to PR Pilot</h2>
+        <p>
+            PR Pilot lets you add agentic behavior to your Github projects.
+
+
+            {% element form method="post" no_visible_fields=True %}
+                {% slot actions %}
+                    {% csrf_token %}
+                    {% element button type="submit" class="btn btn-primary" %}
+                        <i class="fab fa-github"></i> Login with Github
+                    {% endelement %}
+                {% endslot %}
             {% endelement %}
-        {% endslot %}
-    {% endelement %}
+        </p>
+        <ul>
+            <li><a href="https://github.com/apps/pr-pilot-ai">Install Github App</a></li>
+            <li><a href="https://docs.pr-pilot.ai">Documentation</a></li>
+            <li><a href="https://www.pr-pilot.ai/blog">Blog</a></li>
+            <li><a href="https://www.pr-pilot.ai">Website</a></li>
+        </ul>
+    </div>
+
 {% endblock content %}
