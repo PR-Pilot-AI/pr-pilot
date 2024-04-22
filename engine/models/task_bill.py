@@ -17,8 +17,6 @@ class TaskBill(models.Model):
     @property
     def final_cost(self):
         """Final amounts of credits billed to the user after discounts"""
-        if self.user_is_owner and self.project_is_open_source:
-            return 0
         return self.total_credits_used * (1 - self.discount_percent)
 
     def __str__(self):
