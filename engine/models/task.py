@@ -49,15 +49,13 @@ class Task(models.Model):
     def __str__(self):
         return self.title
 
-
     def would_reach_rate_limit(self):
-        """Determine if the task would hit the rate limit for the project."""
+        """Determine if scheduling the task would hit the rate limit for the project."""
         tasks_created_in_last_10_minutes = Task.objects.filter(
             github_project=self.github_project,
             created__gte=timezone.now() - timedelta(minutes=settings.TASK_RATE_LIMIT_WINDOW)
         )
         return tasks_created_in_last_10_minutes.count() >= settings.TASK_RATE_LIMIT
-
 
     @property
     @lru_cache()
