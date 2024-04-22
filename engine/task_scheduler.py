@@ -53,6 +53,15 @@ class TaskScheduler:
             self.task.save()
             return
 
+        if self.task.would_reach_rate_limit():
+            message = (f"Sorry @{self.task.github_user}, the project `{self.task.github_project}` has reached the rate "
+                       f"limit of {settings.TASK_RATE_LIMIT} per {settings.TASK_RATE_LIMIT_WINDOW} minutes. Please "
+                       f"try again later.")
+            self.context.respond_to_user(message)
+            self.task.status = "failed"
+            self.task.save()
+            return
+
         if settings.JOB_STRATEGY == 'thread':
             # In local development, just run the task in a background thread
             settings.TASK_ID = self.task.id
