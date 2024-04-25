@@ -1,0 +1,27 @@
+name: "✍️ Write Technical Specification"
+
+on:
+  workflow_dispatch:
+    inputs:
+      user-story:
+        description: 'Issue number or text description of the user story'
+        required: true
+
+jobs:
+  generate_specification:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate Technical Specification
+        uses: PR-Pilot-AI/smart-actions/quick-task@v1
+        with:
+          api-key: ${{ secrets.PR_PILOT_API_KEY }}
+          agent-instructions: |
+            We have a user story (either issue number or text description):
+            ${{ inputs.user-story }}
+          
+            1. Read the user story from the input. If it's an issue number, use `functions.read_github_issue` to get the details. If it's a text description, proceed with that.
+            2. Based on the user story, identify keywords or phrases that describe the feature or bug fix.
+            3. Use `functions.search_with_ripgrep` to find relevant files in the codebase that might be related to the user story.
+            4. Read the identified files.
+            5. Synthesize the information from the user story and the code to draft a technical specification.
+            6. Open a new issue with the title 'Technical Specification for [User Story Title]' and tag it `specification`. The body should contain a structured description of the necessary code changes to implement the story.
