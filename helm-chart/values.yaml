@@ -4,3 +4,9 @@ image:
   repository: us-west2-docker.pkg.dev/darwin-407004/pr-pilot/pr-pilot-app
   nginx: us-west2-docker.pkg.dev/darwin-407004/pr-pilot/pr-pilot-static
   tag: 1.0.1
+
+redis:
+  enabled: true
+  architecture: standalone
+  auth:
+    enabled: false
