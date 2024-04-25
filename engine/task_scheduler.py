@@ -17,7 +17,7 @@ class TaskScheduler:
     def __init__(self, task):
         self.task = task
         self.context = self.task.context
-        self.redis_queue = redis.Redis(host='localhost', port=6379, db=0)
+        self.redis_queue = redis.Redis(host=settings.REDIS_ENDPOINT, port=settings.REDIS_PORT, db=0)
 
 
     def user_budget_empty(self):
@@ -63,10 +63,25 @@ class TaskScheduler:
             self.task.status = "failed"
             self.task.save()
             return
-
-        # Enqueue task to Redis queue
-        self.redis_queue.rpush('task_queue', self.task.id)
-
+                if settings.JOB_STRATEGY == 'thread':
+            # In local development, just run the task in a background thread
+            settings.TASK_ID = self.task.id
+            os.environ["TASK_ID"] = str(self.task.id)
+            logger.info(f"Running task in debug mode: {self.task.id}")
+            thread = threading.Thread(target=run_task_in_background, args=(self.task.id,))
+            thread.start()
+        elif settings.JOB_STRATEGY == 'kubernetes':
+            # In production, run the task in a Kubernetes job
+            job = KubernetesJob(self.task)
+            job.spawn()
+        elif settings.JOB_STRATEGY == 'log':
+            # In testing, just log the task
+            logger.info(f"Running task in log mode: {self.task.id}")
+        elif settings.JOB_STRATEGY == 'redis':
+            self.redis_queue.rpush('task_queue', str(self.task.id))            
+        else:
+            raise ValueError(f"Invalid JOB_STRATEGY: {settings.JOB_STRATEGY}")
+            
         self.task.status = "scheduled"
         self.task.save()
 
