@@ -61,6 +61,8 @@ spec:
         env:
         - name: GITHUB_APP_PRIVATE_KEY_PATH
           value: "/etc/ssl/certs/github_private_key.pem"
+        - name: REDIS_HOST
+          value: "redis"
         - name: POSTGRES_PASSWORD
           valueFrom:
             secretKeyRef:
