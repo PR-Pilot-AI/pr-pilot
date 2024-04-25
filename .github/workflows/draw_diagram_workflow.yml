@@ -1,0 +1,30 @@
+name: "📊 Draw Diagram"
+
+on:
+  workflow_dispatch:
+    inputs:
+      diagram-type:
+        description: 'Specify the type of diagram to create.'
+        required: true
+      what-to-visualize:
+        description: 'Describe what to visualize in the diagram.'
+        required: true
+
+jobs:
+  generate_diagram:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate Diagram
+        uses: PR-Pilot-AI/smart-actions/quick-task@v1
+        with:
+          api-key: ${{ secrets.PR_PILOT_API_KEY }}
+          agent-instructions: |
+            I want a Mermaid diagram for the following:
+            ${{ inputs.what-to-visualize }}
+
+            It should be a diagram of type:
+            ${{ inputs.diagram-type }}
+            
+            1. Search the repository to find code and read files relevant to what we want to visualize
+            2. Create a new issue titled "<type> Diagram of <Visualization>".
+            3. In the issue body, put the Mermaid diagram and a description
