@@ -17,7 +17,7 @@ class TaskScheduler:
     def __init__(self, task):
         self.task = task
         self.context = self.task.context
-        self.redis_queue = redis.Redis(host=settings.REDIS_ENDPOINT, port=settings.REDIS_PORT, db=0)
+        self.redis_queue = redis.Redis(host=settings.REDIS_HOST, port=settings.REDIS_PORT, db=0)
 
 
     def user_budget_empty(self):
@@ -63,7 +63,7 @@ class TaskScheduler:
             self.task.status = "failed"
             self.task.save()
             return
-                if settings.JOB_STRATEGY == 'thread':
+        if settings.JOB_STRATEGY == 'thread':
             # In local development, just run the task in a background thread
             settings.TASK_ID = self.task.id
             os.environ["TASK_ID"] = str(self.task.id)
@@ -78,7 +78,8 @@ class TaskScheduler:
             # In testing, just log the task
             logger.info(f"Running task in log mode: {self.task.id}")
         elif settings.JOB_STRATEGY == 'redis':
-            self.redis_queue.rpush('task_queue', str(self.task.id))            
+            logger.info(f"Scheduling task via Redis: {self.task.id}")
+            self.redis_queue.rpush(settings.REDIS_QUEUE, str(self.task.id))
         else:
             raise ValueError(f"Invalid JOB_STRATEGY: {settings.JOB_STRATEGY}")
             

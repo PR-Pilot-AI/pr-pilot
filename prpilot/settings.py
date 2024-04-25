@@ -303,3 +303,7 @@ CORS_ALLOW_ALL_ORIGINS = True
 
 TASK_RATE_LIMIT_WINDOW = 10  # Minutes
 TASK_RATE_LIMIT = 10  # per 10 minutes
+
+REDIS_HOST = os.getenv('REDIS_HOST', 'localhost')
+REDIS_PORT = os.getenv('REDIS_PORT', 6379)
+REDIS_QUEUE = os.getenv('REDIS_QUEUE', 'tasks')
