@@ -1,0 +1,23 @@
+name: "🛠 Help with Implementation"
+
+# Triggers the workflow when a `needs-work` label is added to an issue
+on:
+  issues:
+    types: [labeled]
+    
+jobs:
+  help-with-implementation:
+    runs-on: ubuntu-latest
+    if: "github.event.label.name == 'needs-work'"
+    steps:
+      - name: Assist with Implementation
+        uses: PR-Pilot-AI/smart-actions/quick-task@v1
+        with:
+          api-key: ${{ secrets.PR_PILOT_API_KEY }}
+          agent-instructions: |
+            1. Read the issue with ID `${{ github.event.issue.number }}`.
+            2. Understand what needs to be worked on by analyzing the issue description.
+            3. Search the codebase for files related to the issue.
+            4. Read the identified files.
+            5. Write the necessary changes to the files based on the issue requirements.
+            6. Commit the changes with a message that includes the issue ID and a brief description of the work done.
