@@ -1,0 +1,22 @@
+name: "🔍 Refine Issue"
+
+# Triggers the workflow when a `needs-refinement` label is added to an issue
+on:
+  issues:
+    types: [labeled]
+    
+jobs:
+  refine-issue:
+    runs-on: ubuntu-latest
+    if: "github.event.label.name == 'needs-refinement'"
+    steps:
+      - name: Refine Issue Content
+        uses: PR-Pilot-AI/smart-actions/quick-task@v1
+        with:
+          api-key: ${{ secrets.PR_PILOT_API_KEY }}
+          agent-instructions: |
+            1. Read the issue with ID `${{ github.event.issue.number }}`.
+            2. Analyze the issue description to identify keywords.
+            3. Search the codebase for files related to these keywords.
+            4. Read the identified files.
+            5. Edit the issue to add relevant context and acceptance criteria based on the issue content and the contents of the related files.
