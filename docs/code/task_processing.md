@@ -2,6 +2,23 @@
 
 The lifecycle of a task within the PR Pilot project involves several key components: `TaskEngine`, `TaskScheduler`, and `TaskWorker`. This detailed explanation expands on the sequence diagram provided in the issue.
 
+```mermaid
+sequenceDiagram
+    participant TE as TaskEngine
+    participant TS as TaskScheduler
+    participant TW as TaskWorker
+    
+    TE->>TS: Schedule Task
+    TS->>TW: Dispatch Task
+    TW->>TE: Execute Task
+    TE->>TE: Generate Task Title
+    TE->>TE: Clone GitHub Repo
+    TE->>TE: Setup Working Branch
+    TE->>TE: Finalize Working Branch
+    TE->>TE: Create Bill
+    TE->>TE: Respond to User
+```
+
 1. **TaskEngine Initialization**: The process begins with the `TaskEngine`, which is responsible for the overall management of tasks. It initiates the task lifecycle by scheduling a task based on user requests or automated triggers.
 
 2. **Scheduling the Task**: The `TaskEngine` communicates with the `TaskScheduler`, a component designed to manage the timing and dispatching of tasks. The `TaskScheduler` determines the appropriate time and worker for the task, ensuring efficient workload distribution.
