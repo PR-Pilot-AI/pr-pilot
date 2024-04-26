@@ -10,6 +10,8 @@ graph TD
     C[Kubernetes Cluster] -->|Deploys| D[Nginx Server]
     C -->|Deploys| B
     B -->|Interacts with| E[GitHub, OpenAI, Tavily, Stripe]
+    B -->|Enqueues tasks| F[Redis Queue]
+    F -->|Manages tasks| G[Task Worker]
 ```
 
-This diagram illustrates the flow of interactions within the PR Pilot architecture, highlighting the central role of the Django application in managing webhooks and interacting with external services
+This diagram illustrates the flow of interactions within the PR Pilot architecture, highlighting the central role of the Django application in managing webhooks and interacting with external services. Additionally, it introduces the **Redis Queue** as the mechanism for managing asynchronous tasks, with a **Task Worker** responsible for executing these tasks. This setup allows for efficient handling of operations that do not require immediate response times, improving the overall scalability and performance of the system.
