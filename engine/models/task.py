@@ -26,7 +26,11 @@ class TaskType(Enum):
 
 class Task(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    task_type = models.CharField(max_length=200, choices=[(tag, tag.value) for tag in TaskType], default=TaskType.STANDALONE.value)
+    task_type = models.CharField(
+        max_length=200,
+        choices=[(tag, tag.value) for tag in TaskType],
+        default=TaskType.STANDALONE.value,
+    )
     title = models.CharField(max_length=200)
     status = models.CharField(max_length=200)
     created = models.DateTimeField(auto_now_add=True)
@@ -53,7 +57,8 @@ class Task(models.Model):
         """Determine if scheduling the task would hit the rate limit for the project."""
         tasks_created_in_last_10_minutes = Task.objects.filter(
             github_project=self.github_project,
-            created__gte=timezone.now() - timedelta(minutes=settings.TASK_RATE_LIMIT_WINDOW)
+            created__gte=timezone.now()
+            - timedelta(minutes=settings.TASK_RATE_LIMIT_WINDOW),
         )
         return tasks_created_in_last_10_minutes.count() >= settings.TASK_RATE_LIMIT
 
@@ -70,14 +75,14 @@ class Task(models.Model):
             raise ValueError(f"Invalid task type: {self.task_type}")
 
     @staticmethod
-    def current() -> 'Task':
+    def current() -> "Task":
         if not settings.TASK_ID:
             raise ValueError("TASK_ID is not set")
         return Task.get(settings.TASK_ID)
 
     @staticmethod
     @lru_cache()
-    def get(task_id: str) -> 'Task':
+    def get(task_id: str) -> "Task":
         if not settings.TASK_ID:
             raise ValueError("TASK_ID is not set")
         return Task.objects.get(id=task_id)
@@ -89,7 +94,9 @@ class Task(models.Model):
 
     @property
     def reversible_events(self):
-        return [event for event in self.events.filter(reversed=False) if event.reversible]
+        return [
+            event for event in self.events.filter(reversed=False) if event.reversible
+        ]
 
     @property
     def request_issue(self):
@@ -111,7 +118,6 @@ class Task(models.Model):
                     raise
         else:
             return self.request_issue.get_comment(self.comment_id)
-
 
     def schedule(self):
         scheduler = TaskScheduler(self)

@@ -4,7 +4,7 @@ from .directory import Directory
 
 
 __all__ = [
-    'FileSystem',
-    'File',
-    'Directory',
+    "FileSystem",
+    "File",
+    "Directory",
 ]

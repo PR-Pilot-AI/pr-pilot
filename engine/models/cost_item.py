@@ -15,7 +15,9 @@ class CostItem(models.Model):
     completion_token_count = models.IntegerField()
     requests = models.IntegerField()
     total_cost_usd = models.FloatField()
-    task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name="cost_items", null=True)
+    task = models.ForeignKey(
+        Task, on_delete=models.CASCADE, related_name="cost_items", null=True
+    )
 
     @property
     def credits(self):

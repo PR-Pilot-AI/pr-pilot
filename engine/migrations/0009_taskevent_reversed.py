@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('engine', '0008_task_comment_url_task_response_comment_id_and_more'),
+        ("engine", "0008_task_comment_url_task_response_comment_id_and_more"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='taskevent',
-            name='reversed',
+            model_name="taskevent",
+            name="reversed",
             field=models.BooleanField(default=False),
         ),
     ]

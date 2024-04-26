@@ -10,9 +10,14 @@ logger = logging.getLogger(__name__)
 
 class FileSystemNode(BaseModel):
     """Represents a file in the file system."""
+
     path: Path = Field(description="Path of the node in the file system")
-    nodes: List['FileSystemNode'] = Field(description="List of files and directories in the directory", default=[])
-    parent: Optional['FileSystemNode'] = Field(description="Parent directory", default=None)
+    nodes: List["FileSystemNode"] = Field(
+        description="List of files and directories in the directory", default=[]
+    )
+    parent: Optional["FileSystemNode"] = Field(
+        description="Parent directory", default=None
+    )
 
     @property
     def path_relative_to_cwd(self):

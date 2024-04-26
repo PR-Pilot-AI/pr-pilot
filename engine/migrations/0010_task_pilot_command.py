@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('engine', '0009_taskevent_reversed'),
+        ("engine", "0009_taskevent_reversed"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='task',
-            name='pilot_command',
+            model_name="task",
+            name="pilot_command",
             field=models.TextField(blank=True),
         ),
     ]

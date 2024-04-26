@@ -22,7 +22,9 @@ class FileSystem:
             root_directory = Path(settings.REPO_DIR)
         self.root_directory = root_directory
         if not self.root_directory.exists():
-            raise FileNotFoundError(f"Root directory '{self.root_directory}' does not exist.")
+            raise FileNotFoundError(
+                f"Root directory '{self.root_directory}' does not exist."
+            )
         self.root_directory = self.root_directory
         self.tree = self._build_tree(self.root_directory)
 
@@ -30,16 +32,17 @@ class FileSystem:
         """Walk through tree in-order and collect paths of all files and directories."""
         return yaml.safe_dump(self.tree.simple_dict(filter))
 
-
     @property
     def ignore_list(self) -> Set[str]:
-        if not hasattr(self, '_ignore_list'):
+        if not hasattr(self, "_ignore_list"):
             # Create file if it doesn't exist
             if not os.path.exists(settings.IGNORE_FILE_PATH):
-                default_ignore_content = Path(os.path.join(os.path.dirname(__file__), "default_ignore.txt")).read_text()
-                with open(settings.IGNORE_FILE_PATH, 'w') as f:
+                default_ignore_content = Path(
+                    os.path.join(os.path.dirname(__file__), "default_ignore.txt")
+                ).read_text()
+                with open(settings.IGNORE_FILE_PATH, "w") as f:
                     f.write(default_ignore_content)
-            with open(settings.IGNORE_FILE_PATH, 'r') as f:
+            with open(settings.IGNORE_FILE_PATH, "r") as f:
                 self._ignore_list = set(f.read().splitlines())
         return self._ignore_list
 
@@ -63,14 +66,17 @@ class FileSystem:
         if isinstance(path, str):
             path = Path(path)
         if path.is_absolute():
-            relative_path = str(path.relative_to(settings.REPO_DIR)).rstrip('/')
+            relative_path = str(path.relative_to(settings.REPO_DIR)).rstrip("/")
         else:
-            relative_path = str(path).rstrip('/')
+            relative_path = str(path).rstrip("/")
 
         # Iterate over each pattern in the ignore list
         for pattern in self.ignore_list:
             # Check if the pattern matches the entire directory (including subdirectories and files)
-            if relative_path.startswith(pattern.rstrip('/') + '/') or relative_path == pattern:
+            if (
+                relative_path.startswith(pattern.rstrip("/") + "/")
+                or relative_path == pattern
+            ):
                 return True
 
             # Check both the file/directory name and the relative path against the ignore patterns
@@ -88,18 +94,22 @@ class FileSystem:
         for child in node.nodes:
             relative_path = os.path.join(parent_path, child.path.name)
             if child.is_directory:
-                tree.append({
-                    'id': relative_path,
-                    'text': child.path.name,
-                    'type': 'default',
-                    'children': self._build_tree_dict(child, relative_path),
-                })
+                tree.append(
+                    {
+                        "id": relative_path,
+                        "text": child.path.name,
+                        "type": "default",
+                        "children": self._build_tree_dict(child, relative_path),
+                    }
+                )
             else:
-                tree.append({
-                    'id': relative_path,
-                    'text': child.path.name,
-                    'type': 'file',
-                })
+                tree.append(
+                    {
+                        "id": relative_path,
+                        "text": child.path.name,
+                        "type": "file",
+                    }
+                )
         return tree
 
     def list_files(self) -> List[Path]:
@@ -121,7 +131,9 @@ class FileSystem:
             path = self.root_directory / path
         return self._get_node_recursive(self.tree, path)
 
-    def _get_node_recursive(self, tree: FileSystemNode, path: Path) -> Optional[FileSystemNode]:
+    def _get_node_recursive(
+        self, tree: FileSystemNode, path: Path
+    ) -> Optional[FileSystemNode]:
         """Recursively get the node at the given path."""
         if tree.path == path:
             return tree
@@ -176,7 +188,7 @@ class FileSystem:
         logger.info(f"File deleted: {path}")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     file_system = FileSystem()
     yaml_str = file_system.yaml()
     print(yaml_str)

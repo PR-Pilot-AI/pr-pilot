@@ -8,32 +8,54 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='GitHubAccount',
+            name="GitHubAccount",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('account_id', models.IntegerField(unique=True)),
-                ('login', models.CharField(max_length=255)),
-                ('avatar_url', models.URLField(max_length=2000)),
-                ('html_url', models.URLField(max_length=2000)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("account_id", models.IntegerField(unique=True)),
+                ("login", models.CharField(max_length=255)),
+                ("avatar_url", models.URLField(max_length=2000)),
+                ("html_url", models.URLField(max_length=2000)),
             ],
         ),
         migrations.CreateModel(
-            name='GitHubAppInstallation',
+            name="GitHubAppInstallation",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('installation_id', models.IntegerField(unique=True)),
-                ('installed_at', models.DateTimeField(auto_now_add=True)),
-                ('access_tokens_url', models.URLField(max_length=2000)),
-                ('repositories_url', models.URLField(max_length=2000)),
-                ('app_id', models.IntegerField()),
-                ('target_id', models.IntegerField()),
-                ('target_type', models.CharField(max_length=255)),
-                ('account', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='installation', to='webhooks.githubaccount')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("installation_id", models.IntegerField(unique=True)),
+                ("installed_at", models.DateTimeField(auto_now_add=True)),
+                ("access_tokens_url", models.URLField(max_length=2000)),
+                ("repositories_url", models.URLField(max_length=2000)),
+                ("app_id", models.IntegerField()),
+                ("target_id", models.IntegerField()),
+                ("target_type", models.CharField(max_length=255)),
+                (
+                    "account",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="installation",
+                        to="webhooks.githubaccount",
+                    ),
+                ),
             ],
         ),
     ]

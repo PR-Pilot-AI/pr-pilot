@@ -10,11 +10,15 @@ from langchain_openai import ChatOpenAI
 
 logger = logging.getLogger(__name__)
 
+
 class LabelsAndTitle(BaseModel):
     """Labels and title for a pull request"""
 
     title: str = Field(description="Title of the pull request")
-    labels: list[str] = Field(description="Labels for the pull request", example=["bug", "feature", "security"])
+    labels: list[str] = Field(
+        description="Labels for the pull request",
+        example=["bug", "feature", "security"],
+    )
 
 
 openai_functions = [convert_to_openai_function(LabelsAndTitle)]
@@ -30,7 +34,9 @@ prompt = PromptTemplate(
     input_variables=["description"],
 )
 parser = JsonOutputFunctionsParser()
-model = ChatOpenAI(model="gpt-3.5-turbo", openai_api_key=settings.OPENAI_API_KEY, temperature=0)
+model = ChatOpenAI(
+    model="gpt-3.5-turbo", openai_api_key=settings.OPENAI_API_KEY, temperature=0
+)
 chain = prompt | model.bind(functions=openai_functions) | parser
 
 
@@ -40,5 +46,5 @@ def generate_pr_info(pr_description: str) -> Optional[LabelsAndTitle]:
     try:
         return LabelsAndTitle(**response)
     except Exception as e:
-        logger.error(f"Error generating PR info", exc_info=e)
+        logger.error("Error generating PR info", exc_info=e)
         return None

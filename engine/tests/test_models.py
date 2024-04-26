@@ -8,15 +8,19 @@ from engine.models.task import Task
 
 @pytest.fixture(autouse=True)
 def mock_get_installation_access_token():
-    with patch('engine.models.task.get_installation_access_token'):
+    with patch("engine.models.task.get_installation_access_token"):
         yield lambda: "test_token"
 
 
 @pytest.fixture(autouse=True)
 def mock_github_client(mock_get_installation_access_token):
-    with patch('engine.models.task.Github') as MockClass:
+    with patch("engine.models.task.Github") as MockClass:
         MockClass.return_value = MagicMock(
-            get_repo=MagicMock(return_value=MagicMock(default_branch="main", full_name="test_user/test_project")),
+            get_repo=MagicMock(
+                return_value=MagicMock(
+                    default_branch="main", full_name="test_user/test_project"
+                )
+            ),
         )
         yield
 
@@ -35,7 +39,9 @@ def test_credits():
 
     # Assuming CREDIT_MULTIPLIER is set to 2 for this test
     expected_credits = 10.0 * 2 * 100
-    assert cost_item.credits == expected_credits, "The credits calculation did not match the expected value."
+    assert (
+        cost_item.credits == expected_credits
+    ), "The credits calculation did not match the expected value."
 
 
 @pytest.mark.django_db
@@ -67,7 +73,9 @@ def test_task_would_reach_rate_limit(task):
             user_request="Test Request",
         )
 
-    assert not task.would_reach_rate_limit(), "The task should not reach the rate limit with 9 tasks in the last 10 minutes."
+    assert (
+        not task.would_reach_rate_limit()
+    ), "The task should not reach the rate limit with 9 tasks in the last 10 minutes."
 
     # Create another task
     Task.objects.create(

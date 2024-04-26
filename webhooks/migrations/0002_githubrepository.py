@@ -7,17 +7,27 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('webhooks', '0001_initial'),
+        ("webhooks", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='GithubRepository',
+            name="GithubRepository",
             fields=[
-                ('id', models.IntegerField(primary_key=True, serialize=False, unique=True)),
-                ('full_name', models.CharField(max_length=255)),
-                ('name', models.CharField(max_length=255)),
-                ('installation', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='repositories', to='webhooks.githubappinstallation')),
+                (
+                    "id",
+                    models.IntegerField(primary_key=True, serialize=False, unique=True),
+                ),
+                ("full_name", models.CharField(max_length=255)),
+                ("name", models.CharField(max_length=255)),
+                (
+                    "installation",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="repositories",
+                        to="webhooks.githubappinstallation",
+                    ),
+                ),
             ],
         ),
     ]

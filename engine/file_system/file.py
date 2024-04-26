@@ -11,7 +11,6 @@ class File(FileSystemNode):
     def content(self) -> str:
         return self.path.read_text()
 
-
     def simple_dict(self, filter="") -> dict:
         """Return a simple dictionary representation of the node."""
         return {"path": str(self.path_relative_to_cwd)}

@@ -1,4 +1,9 @@
-from drf_spectacular.utils import extend_schema, OpenApiExample, OpenApiResponse, inline_serializer
+from drf_spectacular.utils import (
+    extend_schema,
+    OpenApiExample,
+    OpenApiResponse,
+    inline_serializer,
+)
 from github import Github
 from rest_framework import status, serializers
 from rest_framework.decorators import api_view, permission_classes
@@ -25,59 +30,79 @@ class HasUserAPIKey(BaseHasAPIKey):
                 name="NotFound",
                 fields={"error": serializers.CharField()},
             ),
-            examples=[OpenApiExample(
-                "Repository Not Found",
-                summary="Repository Not Found",
-                description="PR Pilot is not installed for this repository",
-                value={"error": "PR Pilot is not installed for this repository"},
-            )],
-            description='The specified repository does not exist.'
+            examples=[
+                OpenApiExample(
+                    "Repository Not Found",
+                    summary="Repository Not Found",
+                    description="PR Pilot is not installed for this repository",
+                    value={"error": "PR Pilot is not installed for this repository"},
+                )
+            ],
+            description="The specified repository does not exist.",
         ),
         status.HTTP_400_BAD_REQUEST: OpenApiResponse(
             response=inline_serializer(
                 name="BadRequest",
-                fields={"error": serializers.CharField(),
-                        "details": serializers.CharField()},
+                fields={
+                    "error": serializers.CharField(),
+                    "details": serializers.CharField(),
+                },
             ),
-            examples=[OpenApiExample(
-                "ValidationError",
-                summary="Validation Error",
-                description="Input validation failed",
-                value={"error": "Input validation failed", "details": "<validation_errors>"},
-            )],
-            description='The request data does not pass validation.'
+            examples=[
+                OpenApiExample(
+                    "ValidationError",
+                    summary="Validation Error",
+                    description="Input validation failed",
+                    value={
+                        "error": "Input validation failed",
+                        "details": "<validation_errors>",
+                    },
+                )
+            ],
+            description="The request data does not pass validation.",
         ),
     },
-    tags=['Task Creation'],
+    tags=["Task Creation"],
 )
-@api_view(['POST'])
+@api_view(["POST"])
 @permission_classes([HasUserAPIKey])
 def create_task(request):
-    api_key = UserAPIKey.objects.get_from_key(request.headers['X-Api-Key'])
+    api_key = UserAPIKey.objects.get_from_key(request.headers["X-Api-Key"])
     serializer = PromptSerializer(data=request.data)
     if serializer.is_valid():
         github_user = api_key.username
         try:
-            repo = GithubRepository.objects.get(full_name=serializer.validated_data['github_repo'])
+            repo = GithubRepository.objects.get(
+                full_name=serializer.validated_data["github_repo"]
+            )
         except GithubRepository.DoesNotExist:
-            return Response({'error': 'PR Pilot is not installed for this repository'},
-                            status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {"error": "PR Pilot is not installed for this repository"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
 
         pr_branch = None
         pr_base = None
-        if serializer.validated_data.get('pr_number'):
+        if serializer.validated_data.get("pr_number"):
             g = Github(get_installation_access_token(repo.installation.installation_id))
-            pr = g.get_repo(repo.full_name).get_pull(serializer.validated_data['pr_number'])
+            pr = g.get_repo(repo.full_name).get_pull(
+                serializer.validated_data["pr_number"]
+            )
             pr_branch = pr.head.ref
             pr_base = pr.base.ref
 
-        task = Task.objects.create(title="A title", user_request=serializer.validated_data['prompt'],
-                                   installation_id=repo.installation.installation_id, github_project=repo.full_name,
-                                   issue_number=serializer.validated_data.get('issue_number'),
-                                   pr_number=serializer.validated_data.get('pr_number'),
-                                   head=pr_branch, base=pr_base,
-                                   task_type=TaskType.STANDALONE.value,
-                                   github_user=github_user)
+        task = Task.objects.create(
+            title="A title",
+            user_request=serializer.validated_data["prompt"],
+            installation_id=repo.installation.installation_id,
+            github_project=repo.full_name,
+            issue_number=serializer.validated_data.get("issue_number"),
+            pr_number=serializer.validated_data.get("pr_number"),
+            head=pr_branch,
+            base=pr_base,
+            task_type=TaskType.STANDALONE.value,
+            github_user=github_user,
+        )
         task.schedule()
         serializer = TaskSerializer(task)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -92,23 +117,25 @@ def create_task(request):
                 name="NotFound",
                 fields={"error": serializers.CharField()},
             ),
-            examples=[OpenApiExample(
-                "TaskNotFound",
-                summary="Task Not Found",
-                description="The specified task does not exist",
-                value={"error": "Task not found"},
-            )],
-            description='The specified task does not exist.'
+            examples=[
+                OpenApiExample(
+                    "TaskNotFound",
+                    summary="Task Not Found",
+                    description="The specified task does not exist",
+                    value={"error": "Task not found"},
+                )
+            ],
+            description="The specified task does not exist.",
         ),
     },
-    tags=['Task Retrieval'],
+    tags=["Task Retrieval"],
 )
-@api_view(['GET'])
+@api_view(["GET"])
 @permission_classes([HasUserAPIKey])
 def get_task(request, pk):
-    api_key = UserAPIKey.objects.get_from_key(request.headers['X-Api-Key'])
+    api_key = UserAPIKey.objects.get_from_key(request.headers["X-Api-Key"])
     task = Task.objects.get(id=pk)
     if task.github_user != api_key.username:
-        return Response({'error': 'Task not found'}, status=status.HTTP_404_NOT_FOUND)
+        return Response({"error": "Task not found"}, status=status.HTTP_404_NOT_FOUND)
     serializer = TaskSerializer(task)
     return Response(serializer.data)

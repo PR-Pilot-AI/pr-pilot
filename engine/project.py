@@ -24,13 +24,19 @@ class Project(BaseModel):
         num_contributors = repo.get_contributors().totalCount
         participation = repo.get_stats_participation()
         commits_last_four_weeks = sum(participation.all[-4:])
-        is_open_source = repo.private is False and repo.license in settings.OSI_APPROVED_LICENSES
-        eligible = (num_contributors > settings.OPEN_SOURCE_CONTRIBUTOR_THRESHOLD
-                    and commits_last_four_weeks > settings.OPEN_SOURCE_COMMITS_THRESHOLD
-                    and is_open_source)
-        logger.info(f"{self.name} eligible for open source project: {eligible} ("
-                    f"{num_contributors} contributors, "
-                    f"{commits_last_four_weeks} commits, public={not repo.private}, license={repo.license})")
+        is_open_source = (
+            repo.private is False and repo.license in settings.OSI_APPROVED_LICENSES
+        )
+        eligible = (
+            num_contributors > settings.OPEN_SOURCE_CONTRIBUTOR_THRESHOLD
+            and commits_last_four_weeks > settings.OPEN_SOURCE_COMMITS_THRESHOLD
+            and is_open_source
+        )
+        logger.info(
+            f"{self.name} eligible for open source project: {eligible} ("
+            f"{num_contributors} contributors, "
+            f"{commits_last_four_weeks} commits, public={not repo.private}, license={repo.license})"
+        )
         return eligible
 
     @staticmethod
@@ -38,9 +44,14 @@ class Project(BaseModel):
         repo = git.Repo(settings.REPO_DIR)
         repo.git.add(A=True)
         commit = repo.index.commit(message)
-        TaskEvent.add(actor="assistant", action="commit_changes", message=message, target=commit.hexsha)
+        TaskEvent.add(
+            actor="assistant",
+            action="commit_changes",
+            message=message,
+            target=commit.hexsha,
+        )
         if push:
-            origin = repo.remote(name='origin')
+            origin = repo.remote(name="origin")
             origin.push(repo.active_branch.name, set_upstream=True)
 
     @staticmethod
@@ -56,7 +67,6 @@ class Project(BaseModel):
         repo = gh.get_repo(task.github_project)
         return Project(name=repo.full_name, main_branch=repo.default_branch)
 
-
     def load_pilot_hints(self):
         """Load pilot hints from the repository"""
         file_system = FileSystem()
@@ -70,7 +80,7 @@ class Project(BaseModel):
 
     def fetch_remote(self):
         repo = git.Repo(settings.REPO_DIR)
-        origin = repo.remote(name='origin')
+        origin = repo.remote(name="origin")
         origin.fetch()
 
     def checkout_latest_default_branch(self):
@@ -91,18 +101,20 @@ class Project(BaseModel):
     def create_new_branch(self, branch_name):
         logger.info(f"Creating new branch {branch_name}")
         repo = git.Repo(settings.REPO_DIR)
-        repo.git.checkout('-b', branch_name)
+        repo.git.checkout("-b", branch_name)
 
     def push_branch(self, branch):
         logger.info(f"Pushing branch {branch} to origin")
         repo = git.Repo(settings.REPO_DIR)
-        origin = repo.remote(name='origin')
-        origin.push(refspec='{}:refs/heads/{}'.format(branch, branch), set_upstream=True)
+        origin = repo.remote(name="origin")
+        origin.push(
+            refspec="{}:refs/heads/{}".format(branch, branch), set_upstream=True
+        )
 
     def delete_branch(self, branch):
         logger.info(f"Deleting branch {branch}")
         repo = git.Repo(settings.REPO_DIR)
-        repo.git.branch('-d', branch)
+        repo.git.branch("-d", branch)
 
     def get_diff_to_main(self):
         repo = git.Repo(settings.REPO_DIR)
@@ -127,7 +139,10 @@ class Project(BaseModel):
             body += f"\n**Origin:** [{issue.title}]({task.comment_url})"
         pr = repo.create_pull(title=title, body=body, head=head, base=self.main_branch)
         pr.set_labels(*labels)
-        TaskEvent.add(actor="assistant", action="create_pull_request", target=pr.number,
-                      message=f"Created [PR {pr.number}]({pr.html_url}) for branch `{head}`")
+        TaskEvent.add(
+            actor="assistant",
+            action="create_pull_request",
+            target=pr.number,
+            message=f"Created [PR {pr.number}]({pr.html_url}) for branch `{head}`",
+        )
         return pr
-

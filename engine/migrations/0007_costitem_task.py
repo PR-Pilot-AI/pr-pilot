@@ -7,13 +7,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('engine', '0006_alter_taskevent_task'),
+        ("engine", "0006_alter_taskevent_task"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='costitem',
-            name='task',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='cost_items', to='engine.task'),
+            model_name="costitem",
+            name="task",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="cost_items",
+                to="engine.task",
+            ),
         ),
     ]

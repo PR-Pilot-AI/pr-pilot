@@ -7,10 +7,9 @@ from jinja2 import FileSystemLoader, Environment, select_autoescape
 from kubernetes import config
 from kubernetes.client import BatchV1Api
 
-from engine.util import slugify
-
 
 logger = logging.getLogger(__name__)
+
 
 class KubernetesJob:
 
@@ -21,7 +20,9 @@ class KubernetesJob:
         parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         version_txt_path = Path(os.path.join(parent_dir, "version.txt"))
         version = version_txt_path.read_text().strip()
-        return f"us-west2-docker.pkg.dev/darwin-407004/pr-pilot/pr-pilot-worker:{version}"
+        return (
+            f"us-west2-docker.pkg.dev/darwin-407004/pr-pilot/pr-pilot-worker:{version}"
+        )
 
     def spawn(self):
         # Load kubeconfig
@@ -34,7 +35,7 @@ class KubernetesJob:
         this_dir = os.path.dirname(os.path.abspath(__file__))
         file_loader = FileSystemLoader(this_dir)
         env = Environment(loader=file_loader, autoescape=select_autoescape())
-        template = env.get_template('job_template.yaml.j2')
+        template = env.get_template("job_template.yaml.j2")
         # Render the template with variables
         github_project_org, github_project_name = self.task.github_project.split("/")
         job_name = "job-" + str(self.task.id)

@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
+
 import json
 import os
 from pathlib import Path
@@ -24,72 +25,72 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 
-SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG', 'false').lower() == 'true'
+DEBUG = os.getenv("DEBUG", "false").lower() == "true"
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'django.contrib.sites',
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.github',
-    'accounts',
-    'webhooks',
-    'engine',
-    'django_tables2',
-    'dashboard',
-    'rest_framework',
-    'rest_framework_api_key',
-    'corsheaders',
-    'drf_spectacular',
-    'api'
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+    "django.contrib.sites",
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    "allauth.socialaccount.providers.github",
+    "accounts",
+    "webhooks",
+    "engine",
+    "django_tables2",
+    "dashboard",
+    "rest_framework",
+    "rest_framework_api_key",
+    "corsheaders",
+    "drf_spectacular",
+    "api",
 ]
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'allauth.account.middleware.AccountMiddleware',
+    "django.middleware.security.SecurityMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "allauth.account.middleware.AccountMiddleware",
 ]
-ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'http'
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = "http"
 
-ROOT_URLCONF = 'prpilot.urls'
+ROOT_URLCONF = "prpilot.urls"
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [BASE_DIR / "templates"],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.debug",
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
             ],
         },
     },
 ]
 
-WSGI_APPLICATION = 'prpilot.wsgi.application'
+WSGI_APPLICATION = "prpilot.wsgi.application"
 
 
 # Database
@@ -97,20 +98,22 @@ WSGI_APPLICATION = 'prpilot.wsgi.application'
 
 if DEBUG:
     DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
         }
     }
 else:
     DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': 'postgres',  # Default is 'postgres'
-            'USER': 'postgres',
-            'PASSWORD': os.getenv('POSTGRES_PASSWORD'),  # Use the password obtained above
-            'HOST': 'pr-pilot-db-postgresql.default.svc.cluster.local',  # Use your PostgreSQL service name
-            'PORT': '5432',
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": "postgres",  # Default is 'postgres'
+            "USER": "postgres",
+            "PASSWORD": os.getenv(
+                "POSTGRES_PASSWORD"
+            ),  # Use the password obtained above
+            "HOST": "pr-pilot-db-postgresql.default.svc.cluster.local",  # Use your PostgreSQL service name
+            "PORT": "5432",
         }
     }
 
@@ -120,16 +123,16 @@ else:
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
 
@@ -137,9 +140,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = "UTC"
 
 USE_I18N = True
 
@@ -149,77 +152,79 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
-STATIC_ROOT = BASE_DIR / 'nginx' / 'static'
+STATIC_URL = "static/"
+STATIC_ROOT = BASE_DIR / "nginx" / "static"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 SITE_ID = 1
 
 AUTHENTICATION_BACKENDS = (
-    'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backends.AuthenticationBackend',
+    "django.contrib.auth.backends.ModelBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
 )
 
-OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY')
+OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
 
-GITHUB_CLIENT_ID = os.getenv('GITHUB_APP_CLIENT_ID')
-GITHUB_CLIENT_SECRET = os.getenv('GITHUB_APP_SECRET')
-GITHUB_WEBHOOK_SECRET = os.getenv('GITHUB_WEBHOOK_SECRET')
-GITHUB_APP_ID = os.getenv('GITHUB_APP_ID')
+GITHUB_CLIENT_ID = os.getenv("GITHUB_APP_CLIENT_ID")
+GITHUB_CLIENT_SECRET = os.getenv("GITHUB_APP_SECRET")
+GITHUB_WEBHOOK_SECRET = os.getenv("GITHUB_WEBHOOK_SECRET")
+GITHUB_APP_ID = os.getenv("GITHUB_APP_ID")
 
 # Add at the end of the file
-LOGIN_REDIRECT_URL = '/dashboard/tasks/'  # Redirect to home after login
+LOGIN_REDIRECT_URL = "/dashboard/tasks/"  # Redirect to home after login
 SOCIALACCOUNT_AUTO_SIGNUP = True
 ACCOUNT_ALLOW_REGISTRATION = False
 SOCIALACCOUNT_PROVIDERS = {
-    'github': {
+    "github": {
         # 'VERIFIED_EMAIL': True,
         # 'EMAIL_AUTHENTICATION': True,
         # 'EMAIL_AUTHENTICATION_AUTO_CONNECT': True,
-        'SCOPE': [
-            'read:user',
+        "SCOPE": [
+            "read:user",
         ],
-        'APP': {
-            'client_id': GITHUB_CLIENT_ID,
-            'secret': GITHUB_CLIENT_SECRET,
-        }
+        "APP": {
+            "client_id": GITHUB_CLIENT_ID,
+            "secret": GITHUB_CLIENT_SECRET,
+        },
     }
 }
 
-AUTH_USER_MODEL = 'accounts.PilotUser'
+AUTH_USER_MODEL = "accounts.PilotUser"
 
 LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'formatters': {
-        'verbose': {
-            'format': '[{asctime}] {levelname} {message}',
-            'style': '{',
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {
+            "format": "[{asctime}] {levelname} {message}",
+            "style": "{",
         },
     },
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
-            'formatter': 'verbose',
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "verbose",
         },
     },
-    'loggers': {
-        '': {  # root logger
-            'handlers': ['console'],
-            'level': 'INFO',
-            'propagate': True,
+    "loggers": {
+        "": {  # root logger
+            "handlers": ["console"],
+            "level": "INFO",
+            "propagate": True,
         },
     },
 }
 
-SOCIAL_AUTH_URL_NAMESPACE = 'social'
-PRIVATE_KEY_PATH = os.getenv('GITHUB_APP_PRIVATE_KEY_PATH', os.path.join(BASE_DIR, 'github_app_private_key.pem'))
-TASK_ID = os.getenv('TASK_ID')
-REPO_DIR = os.getenv('REPO_DIR', '/repo')
+SOCIAL_AUTH_URL_NAMESPACE = "social"
+PRIVATE_KEY_PATH = os.getenv(
+    "GITHUB_APP_PRIVATE_KEY_PATH", os.path.join(BASE_DIR, "github_app_private_key.pem")
+)
+TASK_ID = os.getenv("TASK_ID")
+REPO_DIR = os.getenv("REPO_DIR", "/repo")
 MAX_FILE_LINES = 600
 MAX_FILE_SEARCH_RESULTS = 50
 MAX_READ_FILES = 5
@@ -230,12 +235,14 @@ OPEN_SOURCE_CONTRIBUTOR_DISCOUNT_PERCENT = 20.0
 OPEN_SOURCE_COMMITS_THRESHOLD = 10
 APPEND_SLASH = True  # Default is True
 # Defines where jobs are executed: kubernetes, thread or log
-JOB_STRATEGY = os.getenv('JOB_STRATEGY', 'kubernetes')
+JOB_STRATEGY = os.getenv("JOB_STRATEGY", "kubernetes")
 
-license_json = json.loads(Path(BASE_DIR / 'licenses.json').read_text())
-OSI_APPROVED_LICENSES = [l['licenseId'] for l in license_json['licenses'] if l['isOsiApproved']]
+license_json = json.loads(Path(BASE_DIR / "licenses.json").read_text())
+OSI_APPROVED_LICENSES = [
+    l["licenseId"] for l in license_json["licenses"] if l["isOsiApproved"]
+]
 
-SENTRY_DSN = os.getenv('SENTRY_DSN', None)
+SENTRY_DSN = os.getenv("SENTRY_DSN", None)
 
 if SENTRY_DSN:
     sentry_sdk.init(
@@ -247,63 +254,59 @@ if SENTRY_DSN:
         # of sampled transactions.
         # We recommend adjusting this value in production.
         profiles_sample_rate=1.0,
-        debug=False
+        debug=False,
     )
 
-STRIPE_API_KEY = os.getenv('STRIPE_API_KEY')
-STRIPE_WEBHOOK_SECRET = os.getenv('STRIPE_WEBHOOK_SECRET')
+STRIPE_API_KEY = os.getenv("STRIPE_API_KEY")
+STRIPE_WEBHOOK_SECRET = os.getenv("STRIPE_WEBHOOK_SECRET")
 
 API_KEY_CUSTOM_HEADER = "HTTP_X_API_KEY"
 
-VERSION = Path(BASE_DIR / 'version.txt').read_text().strip()
+VERSION = Path(BASE_DIR / "version.txt").read_text().strip()
 
 REST_FRAMEWORK = {
-    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
-    'DEFAULT_AUTHENTICATION_CLASSES': [
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    "DEFAULT_AUTHENTICATION_CLASSES": [],
+    "DEFAULT_RENDERER_CLASSES": [
+        "rest_framework.renderers.JSONRenderer",
     ],
-    'DEFAULT_RENDERER_CLASSES': [
-        'rest_framework.renderers.JSONRenderer',
-    ],
-    'DEFAULT_PARSER_CLASSES': [
-        'rest_framework.parsers.JSONParser',
+    "DEFAULT_PARSER_CLASSES": [
+        "rest_framework.parsers.JSONParser",
     ],
 }
 SPECTACULAR_SETTINGS = {
-    'TITLE': 'PR Pilot API',
-    'DESCRIPTION': 'API for creating PR Pilot tasks',
-    'VERSION': VERSION,
-    'SERVE_INCLUDE_SCHEMA': False,
-    'SECURITY': [
-        {'apiKeyAuth': []}
-    ],
-    'APPEND_COMPONENTS': {
-        'securitySchemes': {
-            'apiKeyAuth': {
-                'type': 'apiKey',
-                'in': 'header',
-                'name': 'X-Api-Key'
-            }
+    "TITLE": "PR Pilot API",
+    "DESCRIPTION": "API for creating PR Pilot tasks",
+    "VERSION": VERSION,
+    "SERVE_INCLUDE_SCHEMA": False,
+    "SECURITY": [{"apiKeyAuth": []}],
+    "APPEND_COMPONENTS": {
+        "securitySchemes": {
+            "apiKeyAuth": {"type": "apiKey", "in": "header", "name": "X-Api-Key"}
         }
     },
-    'URLCONF_INCLUDE_PATTERN': r'^/api/',
-    'SERVERS': [{
-        'url': 'http://localhost:8000/',
-        'description': 'Local development server',
-    },{
-        'url': 'https://app.pr-pilot.ai/',
-        'description': 'Production API',
-    }],
+    "URLCONF_INCLUDE_PATTERN": r"^/api/",
+    "SERVERS": [
+        {
+            "url": "http://localhost:8000/",
+            "description": "Local development server",
+        },
+        {
+            "url": "https://app.pr-pilot.ai/",
+            "description": "Production API",
+        },
+    ],
 }
-CORS_URLS_REGEX = r'^/api/.*$'
+CORS_URLS_REGEX = r"^/api/.*$"
 CORS_ALLOW_METHODS = ("GET", "OPTIONS", "POST")
 CORS_ALLOW_HEADERS = list(default_headers) + [
-    'X-Api-Key',
+    "X-Api-Key",
 ]
 CORS_ALLOW_ALL_ORIGINS = True
 
 TASK_RATE_LIMIT_WINDOW = 10  # Minutes
 TASK_RATE_LIMIT = 10  # per 10 minutes
 
-REDIS_HOST = os.getenv('REDIS_HOST', 'localhost')
-REDIS_PORT = os.getenv('REDIS_PORT', 6379)
-REDIS_QUEUE = os.getenv('REDIS_QUEUE', 'tasks')
+REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
+REDIS_PORT = os.getenv("REDIS_PORT", 6379)
+REDIS_QUEUE = os.getenv("REDIS_QUEUE", "tasks")

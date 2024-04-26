@@ -14,13 +14,15 @@ logger = logging.getLogger(__name__)
 class TaskWorker:
 
     def __init__(self):
-        self.redis_queue = redis.Redis(host=settings.REDIS_HOST, port=settings.REDIS_PORT, db=0)
+        self.redis_queue = redis.Redis(
+            host=settings.REDIS_HOST, port=settings.REDIS_PORT, db=0
+        )
 
     def run(self):
-        logger.info('Running task worker')
+        logger.info("Running task worker")
         while True:
             _, task_id = self.redis_queue.blpop([settings.REDIS_QUEUE])
-            task_id = task_id.decode('utf-8')
+            task_id = task_id.decode("utf-8")
             settings.TASK_ID = task_id
             os.environ["TASK_ID"] = task_id
             logger.info(f"Received task {task_id}")

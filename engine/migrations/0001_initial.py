@@ -9,46 +9,74 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='CostItem',
+            name="CostItem",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('timestamp', models.DateTimeField(auto_now_add=True)),
-                ('title', models.CharField(max_length=200)),
-                ('model_name', models.CharField(max_length=200)),
-                ('prompt_token_count', models.IntegerField()),
-                ('completion_token_count', models.IntegerField()),
-                ('requests', models.IntegerField()),
-                ('total_cost_usd', models.FloatField()),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                    ),
+                ),
+                ("timestamp", models.DateTimeField(auto_now_add=True)),
+                ("title", models.CharField(max_length=200)),
+                ("model_name", models.CharField(max_length=200)),
+                ("prompt_token_count", models.IntegerField()),
+                ("completion_token_count", models.IntegerField()),
+                ("requests", models.IntegerField()),
+                ("total_cost_usd", models.FloatField()),
             ],
         ),
         migrations.CreateModel(
-            name='Task',
+            name="Task",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('title', models.CharField(max_length=200)),
-                ('status', models.CharField(max_length=200)),
-                ('created', models.DateTimeField(auto_now_add=True)),
-                ('installation_id', models.IntegerField()),
-                ('github_project', models.CharField(max_length=200)),
-                ('github_user', models.CharField(max_length=200)),
-                ('branch', models.CharField(max_length=200)),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                    ),
+                ),
+                ("title", models.CharField(max_length=200)),
+                ("status", models.CharField(max_length=200)),
+                ("created", models.DateTimeField(auto_now_add=True)),
+                ("installation_id", models.IntegerField()),
+                ("github_project", models.CharField(max_length=200)),
+                ("github_user", models.CharField(max_length=200)),
+                ("branch", models.CharField(max_length=200)),
             ],
         ),
         migrations.CreateModel(
-            name='TaskEvent',
+            name="TaskEvent",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('timestamp', models.DateTimeField(auto_now_add=True)),
-                ('actor', models.CharField(max_length=200)),
-                ('action', models.CharField(max_length=200)),
-                ('target', models.CharField(blank=True, max_length=200, null=True)),
-                ('message', models.TextField(blank=True, null=True)),
-                ('task', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='engine.task')),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                    ),
+                ),
+                ("timestamp", models.DateTimeField(auto_now_add=True)),
+                ("actor", models.CharField(max_length=200)),
+                ("action", models.CharField(max_length=200)),
+                ("target", models.CharField(blank=True, max_length=200, null=True)),
+                ("message", models.TextField(blank=True, null=True)),
+                (
+                    "task",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="engine.task"
+                    ),
+                ),
             ],
         ),
     ]

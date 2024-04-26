@@ -6,23 +6,23 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('engine', '0003_task_result'),
+        ("engine", "0003_task_result"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='task',
-            name='base',
+            model_name="task",
+            name="base",
             field=models.CharField(blank=True, max_length=200, null=True),
         ),
         migrations.AddField(
-            model_name='task',
-            name='head',
+            model_name="task",
+            name="head",
             field=models.CharField(blank=True, max_length=200, null=True),
         ),
         migrations.AddField(
-            model_name='task',
-            name='pr_number',
+            model_name="task",
+            name="pr_number",
             field=models.IntegerField(blank=True, null=True),
         ),
     ]

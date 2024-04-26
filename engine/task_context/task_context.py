@@ -1,7 +1,6 @@
 class TaskContext:
     """Represents the context in which the task is run."""
 
-
     def __init__(self, task):
         self.task = task
 

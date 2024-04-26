@@ -10,8 +10,9 @@ from engine.models.task import Task
 
 @pytest.fixture(autouse=True)
 def mock_chat_openai():
-    with patch('langchain_openai.ChatOpenAI', new_callable=MagicMock) as mock:
+    with patch("langchain_openai.ChatOpenAI", new_callable=MagicMock) as mock:
         yield mock
+
 
 @pytest.fixture
 def task():
@@ -21,7 +22,7 @@ def task():
         comment_id=123,
         pilot_command="this is a test",
         github_user="test_user",
-        github_project="test_project")
+        github_project="test_project",
+    )
     settings.TASK_ID = task.id
     return task
-

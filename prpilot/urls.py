@@ -14,6 +14,7 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
 from allauth.socialaccount.providers.github.views import oauth2_login
 from django.contrib import admin
 from django.urls import path, include
@@ -22,17 +23,22 @@ from django.views.generic import RedirectView
 from accounts.views import health_check, home
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path("admin/", admin.site.urls),
     # Redirect default account login to GitHub login URL
-    path('accounts/login/', RedirectView.as_view(url='/accounts/github/login/?process=login', permanent=True)),
+    path(
+        "accounts/login/",
+        RedirectView.as_view(
+            url="/accounts/github/login/?process=login", permanent=True
+        ),
+    ),
     # Include the allauth URLs
-    path('accounts/', include('allauth.urls')),
+    path("accounts/", include("allauth.urls")),
     # Explicitly add a path for GitHub OAuth2 login for clarity
-    path('accounts/github/login/', oauth2_login, name='github_login'),
-    path('user/', include('accounts.urls')),
-    path('webhooks/', include('webhooks.urls')),
-    path('dashboard/', include('dashboard.urls')),
-    path('api/', include('api.urls')),
-    path('healthz/', health_check, name='health_check'),
-    path('', home, name='home'),
+    path("accounts/github/login/", oauth2_login, name="github_login"),
+    path("user/", include("accounts.urls")),
+    path("webhooks/", include("webhooks.urls")),
+    path("dashboard/", include("dashboard.urls")),
+    path("api/", include("api.urls")),
+    path("healthz/", health_check, name="health_check"),
+    path("", home, name="home"),
 ]

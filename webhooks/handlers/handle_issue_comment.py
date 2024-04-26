@@ -12,23 +12,23 @@ logger = logging.getLogger(__name__)
 
 def handle_issue_comment(payload: dict):
     # Extract commenter's username
-    commenter_username = payload['comment']['user']['login']
-    issue_number = payload['issue']['number']
-    comment_id = payload['comment']['id']
-    comment_url = payload['comment']['html_url']
-    repository = payload['repository']['full_name']
-    installation_id = payload['installation']['id']
+    commenter_username = payload["comment"]["user"]["login"]
+    issue_number = payload["issue"]["number"]
+    comment_id = payload["comment"]["id"]
+    comment_url = payload["comment"]["html_url"]
+    repository = payload["repository"]["full_name"]
+    installation_id = payload["installation"]["id"]
 
     # Extract comment text
-    comment_text = payload['comment']['body']
+    comment_text = payload["comment"]["body"]
 
     # Look for slash command pattern
-    match = re.search(r'/pilot\s+(.+)', comment_text)
+    match = re.search(r"/pilot\s+(.+)", comment_text)
 
     # If a slash command is found, extract the command
     if match:
         command = match.group(1)
-        logger.info(f'Found command: {command} by {commenter_username}')
+        logger.info(f"Found command: {command} by {commenter_username}")
         g = Github(get_installation_access_token(installation_id))
         repo = g.get_repo(repository)
         issue = repo.get_issue(number=issue_number)
@@ -47,22 +47,30 @@ User comment:
 Read the {issue_or_pr}, fulfill the user's request and return your response to the user's comment.
 Do NOT use your `comment_on_github_issue` function to respond to the user's comment, that will be done for you later.
 """
-        task_args = dict(title=f"Respond to {issue_or_pr} #{issue_number} in {repository}", user_request=user_request,
-                         issue_number=issue_number, comment_id=comment_id, comment_url=comment_url,
-                         installation_id=installation_id, github_project=repository,
-                         task_type=TaskType.GITHUB_ISSUE.value,
-                         github_user=commenter_username, branch="main", pilot_command=command)
+        task_args = dict(
+            title=f"Respond to {issue_or_pr} #{issue_number} in {repository}",
+            user_request=user_request,
+            issue_number=issue_number,
+            comment_id=comment_id,
+            comment_url=comment_url,
+            installation_id=installation_id,
+            github_project=repository,
+            task_type=TaskType.GITHUB_ISSUE.value,
+            github_user=commenter_username,
+            branch="main",
+            pilot_command=command,
+        )
         if issue.pull_request:
             pr = repo.get_pull(issue_number)
-            task_args['pr_number'] = issue_number
-            task_args['head'] = pr.head.ref
-            task_args['base'] = pr.base.ref
+            task_args["pr_number"] = issue_number
+            task_args["head"] = pr.head.ref
+            task_args["base"] = pr.base.ref
         else:
-            task_args['issue_number'] = issue_number
+            task_args["issue_number"] = issue_number
         task = Task.objects.create(**task_args)
         task.schedule()
 
     else:
         command = None
 
-    return JsonResponse({'status': 'ok', 'message': 'Issue comment processed'})
+    return JsonResponse({"status": "ok", "message": "Issue comment processed"})

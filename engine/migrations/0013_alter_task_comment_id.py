@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('engine', '0012_task_task_type'),
+        ("engine", "0012_task_task_type"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='task',
-            name='comment_id',
+            model_name="task",
+            name="comment_id",
             field=models.IntegerField(null=True),
         ),
     ]

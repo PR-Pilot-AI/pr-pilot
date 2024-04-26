@@ -7,13 +7,24 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('engine', '0011_taskbill'),
+        ("engine", "0011_taskbill"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='task',
-            name='task_type',
-            field=models.CharField(choices=[(engine.models.task.TaskType['GITHUB_ISSUE'], 'github_issue'), (engine.models.task.TaskType['GITHUB_PR_REVIEW_COMMENT'], 'github_review_comment'), (engine.models.task.TaskType['STANDALONE'], 'standalone')], default='standalone', max_length=200),
+            model_name="task",
+            name="task_type",
+            field=models.CharField(
+                choices=[
+                    (engine.models.task.TaskType["GITHUB_ISSUE"], "github_issue"),
+                    (
+                        engine.models.task.TaskType["GITHUB_PR_REVIEW_COMMENT"],
+                        "github_review_comment",
+                    ),
+                    (engine.models.task.TaskType["STANDALONE"], "standalone"),
+                ],
+                default="standalone",
+                max_length=200,
+            ),
         ),
     ]
