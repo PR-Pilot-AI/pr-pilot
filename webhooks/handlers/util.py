@@ -47,7 +47,7 @@ def install_repository(installation, repo_data, github_user):
     logger.info(
         f"Creating API key for user @{github_user} on repository {repo_data['full_name']}"
     )
-    key_name = repo_data['full_name'][:49]
+    key_name = repo_data["full_name"][:49]
     api_key, key = UserAPIKey.objects.create_key(
         name=key_name,
         github_project=repo_data["full_name"],
