@@ -18,6 +18,7 @@ class GithubIssueContext(TaskContext):
         self.task.response_comment_url = comment.html_url
         self.task.save()
         TaskEvent.add(
+            task_id=self.task.id,
             actor="assistant",
             action="comment_on_issue",
             target=comment.id,

@@ -178,6 +178,7 @@ GITHUB_APP_ID = os.getenv("GITHUB_APP_ID")
 LOGIN_REDIRECT_URL = "/dashboard/tasks/"  # Redirect to home after login
 SOCIALACCOUNT_AUTO_SIGNUP = True
 ACCOUNT_ALLOW_REGISTRATION = False
+ACCOUNT_EMAIL_VERIFICATION = "none"
 SOCIALACCOUNT_PROVIDERS = {
     "github": {
         # 'VERIFIED_EMAIL': True,
