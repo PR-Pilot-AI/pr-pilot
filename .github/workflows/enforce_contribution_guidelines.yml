@@ -1,0 +1,20 @@
+name: "📐 Enforce Contribution Guidelines"
+
+# Triggers the workflow when a new pull request is created
+on:
+  pull_request:
+    types: [opened]
+    
+jobs:
+  enforce-guidelines:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check PR Against Contribution Guidelines
+        uses: PR-Pilot-AI/smart-actions/quick-task@v1
+        with:
+          api-key: ${{ secrets.PR_PILOT_API_KEY }}
+          agent-instructions: |
+            1. Read `CONTRIBUTING.md` to understand the contribution guidelines.
+            2. Read the PR with ID `${{ github.event.pull_request.number }}` to understand its content and intent.
+            3. If the PR follows the contribution guidelines, do nothing.
+            4. Otherwise, comment on the PR explaining which parts of the contribution guidelines were not followed.
