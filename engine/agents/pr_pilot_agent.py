@@ -28,12 +28,14 @@ from engine.agents.github_agent import (
     create_github_issue,
     edit_github_issue,
     comment_on_github_issue,
+    add_label_to_issue,
+    remove_label_from_issue,
 )
 from engine.agents.web_search_agent import scrape_website
 from engine.file_system import FileSystem
 from engine.langchain.cost_tracking import CostTrackerCallback
-from engine.models.task_event import TaskEvent
 from engine.models.task import Task
+from engine.models.task_event import TaskEvent
 from engine.project import Project
 from engine.util import replace_string_in_directory_path
 
@@ -360,6 +362,8 @@ def create_pr_pilot_agent():
     )
     tools = [
         comment_on_github_issue,
+        add_label_to_issue,
+        remove_label_from_issue,
         read_github_issue,
         read_pull_request,
         create_github_issue,

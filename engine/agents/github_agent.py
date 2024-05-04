@@ -233,41 +233,41 @@ def read_github_issue(issue_number: int):
 
 
 @tool
-def add_label_to_issue(issue_number: int, label: str):
+def add_label_to_issue(issue_number: int, new_label: str):
     """Add a label to a Github issue."""
     g = Task.current().github
     repo = g.get_repo(Task.current().github_project)
     issue = repo.get_issue(issue_number)
-    if label not in [l.name for l in issue.labels]:
-        issue.add_to_labels(label)
+    if new_label not in [label.name for label in issue.labels]:
+        issue.add_to_labels(new_label)
         TaskEvent.add(
             actor="assistant",
             action="add_label_to_issue",
-            target=issue.number,
-            message=f"Added label '{label}' to issue [#{issue_number} {issue.title}]({issue.html_url})",
+            target=str(issue.number),
+            message=f"Added label '{new_label}' to issue [#{issue_number} {issue.title}]({issue.html_url})",
         )
-        return f"Added label '{label}' to issue #{issue_number}"
+        return f"Added label '{new_label}' to issue #{issue_number}"
     else:
-        return f"Label '{label}' already exists on issue #{issue_number}"
+        return f"Label '{new_label}' already exists on issue #{issue_number}"
 
 
 @tool
-def remove_label_from_issue(issue_number: int, label: str):
+def remove_label_from_issue(issue_number: int, label_to_delete: str):
     """Remove a label from a Github issue."""
     g = Task.current().github
     repo = g.get_repo(Task.current().github_project)
     issue = repo.get_issue(issue_number)
-    if label in [l.name for l in issue.labels]:
-        issue.remove_from_labels(label)
+    if label_to_delete in [label.name for label in issue.labels]:
+        issue.remove_from_labels(label_to_delete)
         TaskEvent.add(
             actor="assistant",
             action="remove_label_from_issue",
-            target=issue.number,
-            message=f"Removed label '{label}' from issue [#{issue_number} {issue.title}]({issue.html_url})",
+            target=str(issue.number),
+            message=f"Removed label '{label_to_delete}' from issue [#{issue_number} {issue.title}]({issue.html_url})",
         )
-        return f"Removed label '{label}' from issue #{issue_number}"
+        return f"Removed label '{label_to_delete}' from issue #{issue_number}"
     else:
-        return f"Label '{label}' does not exist on issue #{issue_number}"
+        return f"Label '{label_to_delete}' does not exist on issue #{issue_number}"
 
 
 def create_github_agent():
