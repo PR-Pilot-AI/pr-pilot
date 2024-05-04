@@ -232,6 +232,44 @@ def read_github_issue(issue_number: int):
     return markdown_output
 
 
+@tool
+def add_label_to_issue(issue_number: int, label: str):
+    """Add a label to a Github issue."""
+    g = Task.current().github
+    repo = g.get_repo(Task.current().github_project)
+    issue = repo.get_issue(issue_number)
+    if label not in [l.name for l in issue.labels]:
+        issue.add_to_labels(label)
+        TaskEvent.add(
+            actor="assistant",
+            action="add_label_to_issue",
+            target=issue.number,
+            message=f"Added label '{label}' to issue [#{issue_number} {issue.title}]({issue.html_url})",
+        )
+        return f"Added label '{label}' to issue #{issue_number}"
+    else:
+        return f"Label '{label}' already exists on issue #{issue_number}"
+
+
+@tool
+def remove_label_from_issue(issue_number: int, label: str):
+    """Remove a label from a Github issue."""
+    g = Task.current().github
+    repo = g.get_repo(Task.current().github_project)
+    issue = repo.get_issue(issue_number)
+    if label in [l.name for l in issue.labels]:
+        issue.remove_from_labels(label)
+        TaskEvent.add(
+            actor="assistant",
+            action="remove_label_from_issue",
+            target=issue.number,
+            message=f"Removed label '{label}' from issue [#{issue_number} {issue.title}]({issue.html_url})",
+        )
+        return f"Removed label '{label}' from issue #{issue_number}"
+    else:
+        return f"Label '{label}' does not exist on issue #{issue_number}"
+
+
 def create_github_agent():
     llm = ChatOpenAI(
         model="gpt-3.5-turbo",
