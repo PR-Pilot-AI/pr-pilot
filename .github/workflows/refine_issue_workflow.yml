@@ -22,10 +22,10 @@ jobs:
             3. Search the codebase for files related to these keywords.
             4. Read the identified files.
             5. Based on the issue content and the contents of the files you read, change the issue:
-
-            - Issue body should have a `User Story` part in the beginning in the format "As a <persona> I want <something> so that I can <value>"
+            
             - Issue body should have `Technical Details` part with bullet points that will make it easier to implement the issue
-            - Issue body should have a `Scope` part which clearly defines which files/code need to be changed and how
             - Issue body should have `Acceptance Criteria` part with concise, verifyable acceptance criteria
+            - Acceptance criteria must be Markdown checkboxes
+            - Acceptance criteria must be verifyable exclusively by reading files (no running scripts, tests, etc)
             - Issue title should start with an emoji 
             - Remove the `needs-refinement` label
