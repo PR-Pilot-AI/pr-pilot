@@ -2,5 +2,11 @@
 {% load render_table from django_tables2 %}
 {% block content %}
     <h1>Task Log</h1>
+    <form method="post">
+        {% csrf_token %}
+        <label for="taskDescription">Task Description:</label>
+        <input type="text" id="taskDescription" name="taskDescription" required>
+        <button type="submit">Create Task</button>
+    </form>
     {% render_table table %}
 {% endblock %}
