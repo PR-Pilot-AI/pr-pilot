@@ -1,0 +1,21 @@
+name: "👩‍💼 Product Owner"
+
+# Triggers the workflow when a `feature-request` label is added to an issue
+on:
+  issues:
+    types: [labeled]
+    
+jobs:
+  product-owner:
+    runs-on: ubuntu-latest
+    if: "github.event.label.name == 'feature-request'"
+    steps:
+      - name: Act as Product Owner
+        uses: PR-Pilot-AI/smart-actions/quick-task@v1
+        with:
+          api-key: ${{ secrets.PR_PILOT_API_KEY }}
+          agent-instructions: |
+            1. Read the issue with ID `${{ github.event.issue.number }}`.
+            2. Read the `README.md` file to understand the project.
+            3. Edit the issue to include sections for user story, functional and non-functional requirements, and out of scope.
+            4. Add label `needs-refinement` to the issue
