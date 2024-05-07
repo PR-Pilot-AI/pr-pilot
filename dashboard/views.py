@@ -17,6 +17,7 @@ from api.models import UserAPIKey
 from dashboard.tables import TaskTable, EventTable, CostItemTable, EventUndoTable
 from engine.models.task import Task
 from engine.models.task_bill import TaskBill
+from webhooks.handlers.handle_issue_comment import handle_issue_comment
 
 
 class APIKeyForm(forms.Form):
@@ -77,7 +78,32 @@ class TaskListView(LoginRequiredMixin, SingleTableView):
         context = super().get_context_data(**kwargs)
         budget = UserBudget.get_user_budget(self.request.user.username)
         context["budget"] = budget.formatted
+        # Add form to context
+        context['task_creation_form'] = TaskCreationForm()
         return context
+
+    def post(self, request, *args, **kwargs):
+        form = TaskCreationForm(request.POST)
+        if form.is_valid():
+            # Handle task creation logic here
+            description = form.cleaned_data['description']
+            # Simulate task scheduling similar to handle_issue_comment
+            handle_issue_comment({
+                'comment': {'body': description},
+                # Additional required fields for handle_issue_comment
+            })
+            # Redirect to task list view
+            return redirect('task_list')
+        else:
+            return self.get(request, *args, **kwargs)
+
+
+class TaskCreationForm(forms.Form):
+    description = forms.CharField(
+        label='Task Description',
+        widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+        required=True
+    )
 
 
 class TaskDetailView(LoginRequiredMixin, DetailView):
