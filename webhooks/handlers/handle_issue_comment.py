@@ -74,3 +74,21 @@ Do NOT use your `comment_on_github_issue` function to respond to the user's comm
         command = None
 
     return JsonResponse({"status": "ok", "message": "Issue comment processed"})
+
+
+def schedule_task(description: str, github_user: str = None, issue_number: int = None, comment_id: int = None, comment_url: str = None, installation_id: int = None, github_project: str = None, task_type: str = TaskType.CUSTOM.value, branch: str = 'main'):
+    task_args = {
+        'title': 'Custom Task',
+        'user_request': description,
+        'github_user': github_user,
+        'issue_number': issue_number,
+        'comment_id': comment_id,
+        'comment_url': comment_url,
+        'installation_id': installation_id,
+        'github_project': github_project,
+        'task_type': task_type,
+        'branch': branch,
+    }
+    task = Task.objects.create(**task_args)
+    task.schedule()
+    return JsonResponse({"status": "ok", "message": "Custom task scheduled"})
