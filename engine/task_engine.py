@@ -119,7 +119,7 @@ class TaskEngine:
             self.task.save()
             return self.task.result
         self.generate_task_title()
-        self.clone_github_repo()
+        # self.clone_github_repo() # Removed cloning here
 
         try:
             # If task is a PR, checkout the PR branch
@@ -215,17 +215,17 @@ class TaskEngine:
         )
         budget.save()
 
-    def clone_github_repo(self):
-        TaskEvent.add(
-            actor="assistant",
-            action="clone_repo",
-            target=self.task.github_project,
-            message="Cloning repository",
-        )
-        logger.info(f"Cloning repo {self.task.github_project} to {settings.REPO_DIR}")
-        if os.path.exists(settings.REPO_DIR):
-            logger.info("Deleting existing directory contents.")
-            shutil.rmtree(settings.REPO_DIR)
-        git_repo_url = f"https://x-access-token:{self.github_token}@github.com/{self.task.github_project}.git"
-        git.Repo.clone_from(git_repo_url, settings.REPO_DIR)
-        logger.info(f"Cloned repo {self.task.github_project} to {settings.REPO_DIR}")
+    # def clone_github_repo(self):
+    #     TaskEvent.add(
+    #         actor="assistant",
+    #         action="clone_repo",
+    #         target=self.task.github_project,
+    #         message="Cloning repository",
+    #     )
+    #     logger.info(f"Cloning repo {self.task.github_project} to {settings.REPO_DIR}")
+    #     if os.path.exists(settings.REPO_DIR):
+    #         logger.info("Deleting existing directory contents.")
+    #         shutil.rmtree(settings.REPO_DIR)
+    #     git_repo_url = f"https://x-access-token:{self.github_token}@github.com/{self.task.github_project}.git"
+    #     git.Repo.clone_from(git_repo_url, settings.REPO_DIR)
+    #     logger.info(f"Cloned repo {self.task.github_project} to {settings.REPO_DIR}")
