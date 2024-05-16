@@ -33,6 +33,7 @@ from engine.agents.github_agent import (
 )
 from engine.agents.web_search_agent import scrape_website
 from engine.file_system import FileSystem
+from engine.file_system.code_access import needs_code_access
 from engine.langchain.cost_tracking import CostTrackerCallback
 from engine.models.task import Task
 from engine.models.task_event import TaskEvent
@@ -83,6 +84,7 @@ template = """
 
 
 @tool
+@needs_code_access
 def delete_file(path: str):
     """Delete a file from the repository."""
     fs = FileSystem()
@@ -100,6 +102,7 @@ def delete_file(path: str):
 
 
 @tool
+@needs_code_access
 def copy_file(source: str, destination: str):
     """Copy a file from one location to another."""
     fs = FileSystem()
@@ -117,6 +120,7 @@ def copy_file(source: str, destination: str):
 
 
 @tool
+@needs_code_access
 def move_file(source: str, destination: str):
     """Move a file from one location to another."""
     fs = FileSystem()
@@ -134,6 +138,7 @@ def move_file(source: str, destination: str):
 
 
 @tool
+@needs_code_access
 def write_file(path: str, complete_entire_file_content: str, commit_message: str):
     """Write content to a file.
     :param path: Path to the file
@@ -148,7 +153,9 @@ def write_file(path: str, complete_entire_file_content: str, commit_message: str
     return f"Successfully wrote content to `{path}`"
 
 
+
 @tool
+@needs_code_access
 def list_directory(path: str):
     """List the contents of a directory."""
     path = path.lstrip("/")
@@ -180,7 +187,9 @@ def list_directory(path: str):
     return directory_content
 
 
+
 @tool
+@needs_code_access
 def read_files(file_paths: list[str]):
     """Read the content of the given files."""
     if len(file_paths) > settings.MAX_READ_FILES:
@@ -244,7 +253,9 @@ def search_github_code(query: str, sort: Optional[str], order: Optional[str]):
     return response
 
 
+
 @tool
+@needs_code_access
 def search_with_ripgrep(search_pattern: str, path: str, file_type: str = None) -> str:
     """
     Search for a pattern in files using ripgrep.
