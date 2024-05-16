@@ -36,7 +36,9 @@ prompt = PromptTemplate(
 
 parser = StrOutputParser()
 model = ChatOpenAI(
-    model=settings.DEFAULT_GPT_MODEL, openai_api_key=settings.OPENAI_API_KEY, temperature=0
+    model=settings.DEFAULT_GPT_MODEL,
+    openai_api_key=settings.OPENAI_API_KEY,
+    temperature=0,
 )
 chain = prompt | model | parser
 
