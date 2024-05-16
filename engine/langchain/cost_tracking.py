@@ -48,7 +48,11 @@ class CostTrackerCallback(OpenAICallbackHandler):
         encoding = tiktoken.get_encoding("cl100k_base")
         self.completion_tokens = len(encoding.encode(text_response))
         model_name = standardize_model_name(self.model_name)
-        if model_name in MODEL_COST_PER_1K_TOKENS:
+        if model_name == "gpt-4o":
+            # TODO Remove this once GPT-4o is added to the cost per 1k tokens
+            completion_cost = 0.015
+            prompt_cost = 0.005
+        elif model_name in MODEL_COST_PER_1K_TOKENS:
             completion_cost = get_openai_token_cost_for_model(
                 model_name, self.completion_tokens, is_completion=True
             )
@@ -56,8 +60,7 @@ class CostTrackerCallback(OpenAICallbackHandler):
                 model_name, self.prompt_tokens
             )
         else:
-            completion_cost = 0
-            prompt_cost = 0
+            raise ValueError(f"Model {model_name} not found in cost per 1k tokens")
 
         # update shared state behind lock
         with self._lock:
@@ -74,7 +77,7 @@ class CostTrackerCallback(OpenAICallbackHandler):
                 task=Task.current(),
             )
             logger.info(
-                f"Recording cost item for {cost_item} [prompt_tokens={self.prompt_tokens}, "
+                f"Recording cost item for {cost_item} [model={model_name}, prompt_tokens={self.prompt_tokens}, "
                 f"completion_tokens={self.completion_tokens}, cost=${self.total_cost}]"
             )
             self.prompt_tokens = 0

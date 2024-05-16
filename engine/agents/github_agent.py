@@ -2,7 +2,7 @@ import logging
 from typing import List
 
 from django.conf import settings
-from github import GithubException
+from github import GithubException, UnknownObjectException
 from github.PullRequest import PullRequest
 from langchain.agents import create_openai_functions_agent, AgentExecutor
 from langchain_core.prompts import (
@@ -16,8 +16,8 @@ from langchain_core.tools import tool
 from langchain_openai import ChatOpenAI
 
 from engine.langchain.cost_tracking import CostTrackerCallback
-from engine.models.task_event import TaskEvent
 from engine.models.task import Task
+from engine.models.task_event import TaskEvent
 
 logger = logging.getLogger(__name__)
 
@@ -109,15 +109,18 @@ def read_pull_request(pr_number: int):
     # Initialize GitHub client
     g = Task.current().github
     repo = g.get_repo(Task.current().github_project)
-    pr: PullRequest = repo.get_pull(pr_number)
-
-    if not pr:
-        TaskEvent.add(
-            actor="assistant",
-            action="read_pull_request",
-            message=f"Pull request #{pr_number} not found",
-        )
-        return f"Pull request #{pr_number} not found"
+    try:
+        pr: PullRequest = repo.get_pull(pr_number)
+    except UnknownObjectException as e:
+        if e.status == 404:
+            TaskEvent.add(
+                actor="assistant",
+                action="read_pull_request",
+                message=f"Pull request #{pr_number} not found",
+            )
+            return f"Pull request #{pr_number} not found"
+        else:
+            raise
 
     TaskEvent.add(
         actor="assistant",

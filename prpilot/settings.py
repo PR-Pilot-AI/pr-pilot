@@ -311,3 +311,5 @@ TASK_RATE_LIMIT = 10  # per 10 minutes
 REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
 REDIS_PORT = os.getenv("REDIS_PORT", 6379)
 REDIS_QUEUE = os.getenv("REDIS_QUEUE", "tasks")
+
+DEFAULT_GPT_MODEL = "gpt-4o"

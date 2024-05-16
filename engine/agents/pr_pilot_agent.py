@@ -356,9 +356,9 @@ def fork_issue(github_project: str, issue_number: int):
 
 def create_pr_pilot_agent():
     llm = ChatOpenAI(
-        model="gpt-4-turbo-preview",
+        model=settings.DEFAULT_GPT_MODEL,
         temperature=0,
-        callbacks=[CostTrackerCallback("gpt-4-turbo-preview", "conversation")],
+        callbacks=[CostTrackerCallback(settings.DEFAULT_GPT_MODEL, "conversation")],
     )
     tools = [
         comment_on_github_issue,

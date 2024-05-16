@@ -35,7 +35,7 @@ prompt = PromptTemplate(
 )
 parser = JsonOutputFunctionsParser()
 model = ChatOpenAI(
-    model="gpt-3.5-turbo", openai_api_key=settings.OPENAI_API_KEY, temperature=0
+    model=settings.DEFAULT_GPT_MODEL, openai_api_key=settings.OPENAI_API_KEY, temperature=0
 )
 chain = prompt | model.bind(functions=openai_functions) | parser
 

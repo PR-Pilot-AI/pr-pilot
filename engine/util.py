@@ -1,6 +1,7 @@
 import os
 import re
 
+from django.conf import settings
 from django.core.management import call_command
 
 
@@ -24,6 +25,8 @@ def clean_code_block_with_language_specifier(response):
 
 
 def run_task_in_background(task_id):
+    os.environ["TASK_ID"] = str(task_id)
+    settings.TASK_ID = str(task_id)
     call_command("run_task", task_id)
 
 
