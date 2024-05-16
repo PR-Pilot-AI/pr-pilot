@@ -49,5 +49,5 @@ def generate_task_title(issue_description: str, user_request: str) -> str:
             {"issue_description": issue_description, "user_request": user_request}
         )
         .lstrip('"')
-        .rstrip('"')
+        .rstrip('"')[:200]
     )
