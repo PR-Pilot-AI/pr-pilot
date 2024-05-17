@@ -124,6 +124,7 @@ def test_create_task_via_api_with_pr_number(
     assert task.github_project == github_repo.full_name
     assert task.head == "feature-branch"
     assert task.base == "main"
+    assert task.gpt_model == "gpt-4-turbo"
 
 
 @pytest.mark.django_db

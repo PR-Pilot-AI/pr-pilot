@@ -49,6 +49,7 @@ class Task(models.Model):
     response_comment_url = models.CharField(max_length=200, blank=True, null=True)
     result = models.TextField(blank=True)
     pilot_command = models.TextField(blank=True)
+    gpt_model = models.CharField(max_length=200, blank=True, null=True, default="gpt-4-turbo")
 
     def __str__(self):
         return self.title

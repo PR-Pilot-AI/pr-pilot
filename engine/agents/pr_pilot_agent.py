@@ -354,9 +354,9 @@ def fork_issue(github_project: str, issue_number: int):
     return f"Issue #{issue_number} has been successfully forked to {github_project} as Issue #{forked_issue.number}."
 
 
-def create_pr_pilot_agent():
+def create_pr_pilot_agent(gpt_model=settings.DEFAULT_GPT_MODEL):
     llm = ChatOpenAI(
-        model=settings.DEFAULT_GPT_MODEL,
+        model=gpt_model,
         temperature=0,
         callbacks=[CostTrackerCallback(settings.DEFAULT_GPT_MODEL, "conversation")],
     )
