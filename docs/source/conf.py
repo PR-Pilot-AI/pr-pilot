@@ -55,7 +55,7 @@ html_theme_options = {
         },
     ],
     "heroes": {
-        "index": "A simple, natural language interface for Github",
+        "index": "A natural language interface for Github",
     },
 }
 html_sidebars = {
