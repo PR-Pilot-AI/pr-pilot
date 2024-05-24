@@ -1,21 +1,32 @@
 (userguide)=
 # User Guide
 
-Welcome to PR Pilot!
+PR Pilot gives you a natural language interface for your Github projects. Given a prompt, it uses LLMs (Large Language Models) to autonomously interact with your code base and Github issues, enabling a wide variety of ground-breaking AI-assisted automation use cases.
 
-This guide will help you get started with PR Pilot and show you how to use it to automate your tasks.
-
+This guide will help you understand how to use PR Pilot with your Github project.
 ## Installation
 
 If you haven't done so, [install PR Pilot](https://github.com/apps/pr-pilot-ai/installations/new) into your repository.
 
-## Automating your Project
+## Where to Start
+
+PR Pilot's "text-to-action" approach allows you to interact with your Github project using natural language via our [API](https://app.pr-pilot.ai/api/swagger-ui/).
+
+![PR Pilot Architecture](img/overview.png)
+
+Built on top of the API, PR Pilot offers a variety of tools and integrations to help you automate your Github project.
+Which one is best for you highly depends on your specific use case. In our [blog](https://www.pr-pilot.ai/blog), 
+we provide examples of how to use PR Pilot in different scenarios, for example:
+
+- [Building a slash command for Slack](https://www.pr-pilot.ai/blog/a-natural-language-interface-between-slack-and-github)
+- [LLM-assisted technical refinements for JIRA tickets](https://www.pr-pilot.ai/blog/a-jira-integration-for-llm-assisted-technical-refinements)
+- [Creating Github Actions that interact with issues and PRs using natural language](https://www.pr-pilot.ai/blog/the-power-of-agentic-workflows)
 
 Depending on your needs and skill level, you can use PR Pilot in different ways:
 
 ### Zero-Config, No-Code
 
-If you're new to AI and automation, you can use your **[Smart Project Template](https://github.com/PR-Pilot-AI/smart-project-template)** to get started.
+If you're new to AI and automation, you can use your **[Smart Project Starter](https://github.com/PR-Pilot-AI/smart-project-starter)** to get started.
 It comes with fully-customizable, no-code [Github workflows](https://docs.github.com/en/actions/using-workflows) out-of-the-box.
 
 

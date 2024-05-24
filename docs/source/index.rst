@@ -6,7 +6,8 @@
 PR Pilot Documentation
 ======================
 
-A platform that enables developers to build agentic workflows for Github projects.
+PR Pilot gives you a natural language interface for your Github projects.
+Given a prompt, it uses LLMs (Large Language Models) to autonomously interact with your code base and Github issues, enabling a wide variety of ground-breaking AI-assisted automation use cases.
 
 .. image:: img/overview.png
    :alt: alternative text
@@ -19,7 +20,6 @@ A platform that enables developers to build agentic workflows for Github project
 
    user_guide
    capabilities
-   examples
    vision
    roadmap
    pricing

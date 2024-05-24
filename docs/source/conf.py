@@ -39,7 +39,7 @@ html_theme_options = {
     "master_doc": False,
     "nav_links": [
         {
-            "href": "https://github.com/apps/pr-pilot-ai",
+            "href": "https://github.com/apps/pr-pilot-ai/installations/new",
             "internal": False,
             "title": "Install",
         },
@@ -55,7 +55,7 @@ html_theme_options = {
         },
     ],
     "heroes": {
-        "index": "AI Automation for Github",
+        "index": "A simple, natural language interface for Github",
     },
 }
 html_sidebars = {
