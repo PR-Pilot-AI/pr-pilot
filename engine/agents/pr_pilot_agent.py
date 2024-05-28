@@ -358,7 +358,7 @@ def create_pr_pilot_agent(gpt_model=settings.DEFAULT_GPT_MODEL):
     llm = ChatOpenAI(
         model=gpt_model,
         temperature=0,
-        callbacks=[CostTrackerCallback(settings.DEFAULT_GPT_MODEL, "conversation")],
+        callbacks=[CostTrackerCallback(gpt_model, "conversation")],
     )
     tools = [
         comment_on_github_issue,

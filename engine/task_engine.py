@@ -1,6 +1,7 @@
 import logging
 import os
 import shutil
+import threading
 from decimal import Decimal
 
 import git
@@ -118,7 +119,9 @@ class TaskEngine:
             self.task.context.respond_to_user(self.task.result)
             self.task.save()
             return self.task.result
-        self.generate_task_title()
+        # Generate task title in the background
+        thread = threading.Thread(target=self.generate_task_title)
+        thread.start()
         self.clone_github_repo()
 
         try:
