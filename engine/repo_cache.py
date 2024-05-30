@@ -1,6 +1,7 @@
 import logging
 import os.path
 import shutil
+import subprocess
 
 import git
 from django.conf import settings
@@ -19,6 +20,7 @@ class RepoCache:
         self.workspace = workspace
         owner, repo = self.repo.split("/")
         self.cache_destination = str(os.path.join(settings.REPO_CACHE_DIR, owner, repo))
+        self.git_repo_url = f"https://x-access-token:{self.token}@github.com/{self.repo}.git"
 
     def is_cloned(self):
         """Check if the repository is cloned in the cache."""
@@ -33,11 +35,11 @@ class RepoCache:
         if os.path.exists(self.workspace):
             shutil.rmtree(self.workspace)
         shutil.copytree(self.cache_destination, self.workspace)
+        subprocess.run(["git", "remote", "set-url", "origin", self.git_repo_url], check=True, cwd=self.workspace)
 
     def clone(self, destination: str):
         """Clone the repository."""
-        git_repo_url = f"https://x-access-token:{self.token}@github.com/{self.repo}.git"
-        git.Repo.clone_from(git_repo_url, destination)
+        git.Repo.clone_from(self.git_repo_url, destination)
         logger.info(f"Cloned repo {self.repo} to {destination}")
 
     def setup_workspace(self):
