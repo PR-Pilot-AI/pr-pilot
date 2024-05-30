@@ -226,6 +226,7 @@ PRIVATE_KEY_PATH = os.getenv(
 )
 TASK_ID = os.getenv("TASK_ID")
 REPO_DIR = os.getenv("REPO_DIR", "/repo")
+REPO_CACHE_DIR = os.getenv("REPO_CACHE_DIR", "/repo_cache")
 MAX_FILE_LINES = 600
 MAX_FILE_SEARCH_RESULTS = 50
 MAX_READ_FILES = 5

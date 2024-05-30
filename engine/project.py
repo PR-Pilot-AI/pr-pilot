@@ -17,6 +17,14 @@ class Project(BaseModel):
     name: str = Field(description="Name of the project")
     main_branch: str = Field(description="Name of the main branch")
 
+    def caching_enabled(self):
+        """Determine if caching is enabled for the repository."""
+        task = Task.current()
+        gh = task.github
+        repo: Repository = gh.get_repo(self.name)
+        # Caching is enabled if the repository is public
+        return not repo.private
+
     def is_active_open_source_project(self):
         task = Task.current()
         gh = task.github
@@ -87,7 +95,6 @@ class Project(BaseModel):
         logger.info(f"Checking out latest {self.main_branch} branch")
         repo = git.Repo(settings.REPO_DIR)
         repo.git.checkout(self.main_branch)
-        repo.git.pull()
 
     def checkout_branch(self, branch):
         logger.info(f"Checking out branch {branch}")

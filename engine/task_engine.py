@@ -19,6 +19,7 @@ from engine.models.task import Task, TaskType
 from engine.models.task_bill import TaskBill
 from engine.models.task_event import TaskEvent
 from engine.project import Project
+from engine.repo_cache import RepoCache
 from engine.util import slugify
 from webhooks.jwt_tools import get_installation_access_token
 
@@ -60,7 +61,6 @@ class TaskEngine:
         """
 
         self.project.discard_all_changes()
-        self.project.fetch_remote()
         self.project.checkout_latest_default_branch()
         tool_branch = self.create_unique_branch_name(branch_name_basis)
         logger.info(f"Creating new local branch '{tool_branch}'...")
@@ -225,10 +225,14 @@ class TaskEngine:
             target=self.task.github_project,
             message="Cloning repository",
         )
-        logger.info(f"Cloning repo {self.task.github_project} to {settings.REPO_DIR}")
         if os.path.exists(settings.REPO_DIR):
             logger.info("Deleting existing directory contents.")
             shutil.rmtree(settings.REPO_DIR)
-        git_repo_url = f"https://x-access-token:{self.github_token}@github.com/{self.task.github_project}.git"
-        git.Repo.clone_from(git_repo_url, settings.REPO_DIR)
-        logger.info(f"Cloned repo {self.task.github_project} to {settings.REPO_DIR}")
+        cache = RepoCache(self.task.github_project, self.github_token)
+        if self.project.caching_enabled():
+            logger.info("Caching is enabled! Setting up workspace...")
+            cache.setup_workspace()
+        else:
+            # If caching is disabled, clone it directly into the workspace
+            logger.info("Caching is disabled! Cloning directly into workspace...")
+            cache.clone(settings.REPO_DIR)
