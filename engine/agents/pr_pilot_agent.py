@@ -251,7 +251,7 @@ def search_for_code_snippets(search_regex: str, glob: str) -> str:
     Search the code base for a specific regex pattern.
 
     Args:
-    - search_regex: Regex pattern used for searching file contents (e.g. 'def function_name', '\b\w*Controller\b')
+    - search_regex: Regex pattern used for searching file contents (e.g. 'def function_name', '\b\\w*Controller\b')
     - glob: Glob pattern to limit the search to specific files / directories (e.g., 'src' or '*.{c,h}').
 
     Returns:

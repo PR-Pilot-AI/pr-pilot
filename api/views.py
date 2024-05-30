@@ -102,7 +102,7 @@ def create_task(request):
             base=pr_base,
             task_type=TaskType.STANDALONE.value,
             github_user=github_user,
-            gpt_model=serializer.validated_data["gpt_model"]
+            gpt_model=serializer.validated_data["gpt_model"],
         )
         task.schedule()
         serializer = TaskSerializer(task)

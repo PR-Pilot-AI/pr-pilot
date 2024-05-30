@@ -11,7 +11,9 @@ logger = logging.getLogger(__name__)
 
 class RepoCache:
 
-    def __init__(self, github_repo: str, github_token: str, workspace=settings.REPO_DIR):
+    def __init__(
+        self, github_repo: str, github_token: str, workspace=settings.REPO_DIR
+    ):
         self.repo = github_repo
         self.token = github_token
         self.workspace = workspace
@@ -20,7 +22,10 @@ class RepoCache:
 
     def is_cloned(self):
         """Check if the repository is cloned in the cache."""
-        return os.path.exists(self.cache_destination) and not git.Repo(self.cache_destination).bare
+        return (
+            os.path.exists(self.cache_destination)
+            and not git.Repo(self.cache_destination).bare
+        )
 
     def copy_to_workspace(self):
         """Copy the repository to the workspace."""
@@ -40,7 +45,9 @@ class RepoCache:
         # If caching is enabled, clone the repository to the cache directory
         if not self.is_cloned():
             self.clone(self.cache_destination)
-        logger.info(f"Pulling latest changes for {self.repo} in {self.cache_destination}")
+        logger.info(
+            f"Pulling latest changes for {self.repo} in {self.cache_destination}"
+        )
         repo = git.Repo(self.cache_destination)
         origin = repo.remote(name="origin")
         origin.fetch()

@@ -4,7 +4,6 @@ import shutil
 import threading
 from decimal import Decimal
 
-import git
 from django.conf import settings
 from git import Repo
 from github import Github
