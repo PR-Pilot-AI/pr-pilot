@@ -45,7 +45,17 @@ spec:
           - name: pem-volume
             mountPath: /etc/ssl/certs/github_private_key.pem
             subPath: github_app_private_key.pem
+          - name: repo-cache
+            mountPath: /repo_cache
       volumes:
       - name: pem-volume
         secret:
           secretName: pr-pilot-private-key
+  volumeClaimTemplates:
+  - metadata:
+      name: repo-cache
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 20Gi
