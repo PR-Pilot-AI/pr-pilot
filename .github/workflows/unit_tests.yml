@@ -28,4 +28,5 @@ jobs:
       if: failure()
       env:
         PR_NUMBER: ${{ github.event.pull_request.number || 0 }}
+        PR_PILOT_API_KEY: ${{ secrets.PR_PILOT_API_KEY }}
       run: pilot -f prompts/analyze_test_results.md.jinja2
