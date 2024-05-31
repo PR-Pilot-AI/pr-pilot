@@ -13,14 +13,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-
-      - name: List changed files
-        run: |
-          echo "Changed files in the specified directory:"
-          git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep 'engine/' > changed_files.txt
-          - name: Analyze test results with PR Pilot
       - env:
           PR_PILOT_API_KEY: ${{ secrets.PR_PILOT_API_KEY }}
         run: |
           pip install pr-pilot-cli==1.3.4
-          pilot --raw -f prompts/update_engine_documentation.md.jinja2
+          pilot --raw --direct --model=gpt-4o -f prompts/task_processing_docs.md.jinja2 -o docs/code/task_processing.md

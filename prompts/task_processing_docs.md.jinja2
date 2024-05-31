@@ -1,0 +1,31 @@
+# Task Processing in PR Pilot
+
+The lifecycle of a task within PR Pilot involves several key components: `TaskEngine`, `TaskScheduler`, and `TaskWorker`.
+
+## Domain Model
+
+{% set domain_model_prompt %}
+Read the following files:
+- engine/task_engine.py
+- engine/task_scheduler.py
+- engine/task_worker.py
+- engine/task.py
+
+Generate a Mermaid class diagram to illustrate the domain model of the task processing in PR Pilot. Add a clear and concise text description.
+{% endset %}
+
+{{ subtask(domain_model_prompt) }}
+
+## Task Lifecycle
+
+{% set diagram_prompt %}
+Read the following files:
+- engine/task_engine.py
+- engine/task_scheduler.py
+- engine/task_worker.py
+
+Generate a Mermaid sequence diagram to illustrate how these components work together to execute a task. Add a clear and concise text description.
+{% endset %}
+
+{{ subtask(diagram_prompt) }}
+

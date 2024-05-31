@@ -1,36 +1,121 @@
 # Task Processing in PR Pilot
 
-The lifecycle of a task within the PR Pilot project involves several key components: `TaskEngine`, `TaskScheduler`, and `TaskWorker`. This detailed explanation expands on the sequence diagram provided in the issue.
+The lifecycle of a task within PR Pilot involves several key components: `TaskEngine`, `TaskScheduler`, and `TaskWorker`.
+
+## Domain Model
+
+```mermaid
+classDiagram
+    class TaskEngine {
+        -Task task
+        -int max_steps
+        -Executor executor
+        -str github_token
+        -Github github
+        -Repository github_repo
+        -Project project
+        +__init__(task: Task, max_steps=5)
+        +create_unique_branch_name(basis: str)
+        +setup_working_branch(branch_name_basis: str)
+        +finalize_working_branch(branch_name: str) bool
+        +generate_task_title()
+        +run() str
+        +create_bill()
+        +clone_github_repo()
+    }
+
+    class TaskScheduler {
+        -Task task
+        -Context context
+        -Redis redis_queue
+        +__init__(task)
+        +user_budget_empty() bool
+        +user_can_write() bool
+        +project_has_reached_rate_limit() bool
+        +schedule()
+    }
+
+    class TaskWorker {
+        -Redis redis_queue
+        +__init__()
+        +run()
+    }
+
+    class Task {
+        <<ORM Model>>
+        -int id
+        -str status
+        -str result
+        -str github_user
+        -str github_project
+        -str user_request
+        -str gpt_model
+        -int installation_id
+        -int pr_number
+        -int issue_number
+        -str head
+        -Context context
+        +save()
+    }
+
+    TaskEngine --> Task
+    TaskScheduler --> Task
+    TaskWorker --> TaskEngine
+    TaskWorker --> Task
+```
+
+The task processing in PR Pilot involves three main classes: `TaskEngine`, `TaskScheduler`, and `TaskWorker`.
+
+1. **TaskEngine**: This class is responsible for executing the tasks. It initializes with a `Task` object and sets up the environment for task execution. It handles branch creation, task execution, and finalization, including pushing changes and creating pull requests if necessary. It also manages billing and repository cloning.
+
+2. **TaskScheduler**: This class schedules tasks for execution. It checks the user's budget, permissions, and rate limits before scheduling a task. Depending on the job strategy (thread, Kubernetes, log, or Redis), it schedules the task accordingly.
+
+3. **TaskWorker**: This class continuously listens for tasks in the Redis queue and processes them using the `TaskEngine`. It sets up the necessary environment variables and logging context before running the task.
+
+4. **Task**: This is an ORM model representing a task. It contains various attributes related to the task, such as status, result, GitHub user, project, request, and context. It also provides a method to save the task state.
+
+The `TaskEngine` interacts with the `Task` to perform the actual task execution, while the `TaskScheduler` ensures that tasks are scheduled correctly. The `TaskWorker` listens for tasks and uses the `TaskEngine` to process them.
+
+## Task Lifecycle
 
 ```mermaid
 sequenceDiagram
-    participant TE as TaskEngine
-    participant TS as TaskScheduler
-    participant TW as TaskWorker
-    
-    TE->>TS: Schedule Task
-    TS->>TW: Dispatch Task
-    TW->>TE: Execute Task
-    TE->>TE: Generate Task Title
-    TE->>TE: Clone GitHub Repo
-    TE->>TE: Setup Working Branch
-    TE->>TE: Finalize Working Branch
-    TE->>TE: Create Bill
-    TE->>TE: Respond to User
+    participant User
+    participant TaskScheduler
+    participant TaskWorker
+    participant TaskEngine
+    participant GitHub
+
+    User->>TaskScheduler: Request Task Execution
+    TaskScheduler->>TaskScheduler: Validate User Budget
+    TaskScheduler->>TaskScheduler: Validate User Permissions
+    TaskScheduler->>TaskScheduler: Check Rate Limit
+    TaskScheduler->>TaskWorker: Schedule Task
+    TaskWorker->>TaskWorker: Fetch Task from Queue
+    TaskWorker->>TaskEngine: Initialize TaskEngine
+    TaskEngine->>GitHub: Clone Repository
+    TaskEngine->>TaskEngine: Setup Working Branch
+    TaskEngine->>TaskEngine: Execute Task
+    TaskEngine->>GitHub: Push Changes
+    TaskEngine->>GitHub: Create Pull Request
+    TaskEngine->>TaskEngine: Generate Bill
+    TaskEngine->>User: Respond with Result
 ```
 
-1. **TaskEngine Initialization**: The process begins with the `TaskEngine`, which is responsible for the overall management of tasks. It initiates the task lifecycle by scheduling a task based on user requests or automated triggers.
-
-2. **Scheduling the Task**: The `TaskEngine` communicates with the `TaskScheduler`, a component designed to manage the timing and dispatching of tasks. The `TaskScheduler` determines the appropriate time and worker for the task, ensuring efficient workload distribution.
-
-3. **Dispatching to TaskWorker**: Once scheduled, the task is dispatched to a `TaskWorker`. The `TaskWorker` is a dedicated process or thread responsible for executing the task. It performs the required operations, leveraging the project's resources and external APIs as necessary.
-
-4. **Execution and Processing**: After receiving the task, the `TaskWorker` executes it. Upon completion, the task's results are sent back to the `TaskEngine` for further processing. This includes:
-   - **Generating the Task Title**: Creating a descriptive title for the task, which is used for logging and monitoring purposes.
-   - **Cloning the GitHub Repository**: The `TaskEngine` clones the relevant GitHub repository to access the project's codebase and perform operations.
-   - **Setting Up the Working Branch**: It then sets up a working branch within the cloned repository. This branch is used to implement changes without affecting the main codebase directly.
-   - **Finalizing the Working Branch**: After the task's operations are completed, the `TaskEngine` finalizes the working branch, preparing it for review and integration into the main codebase.
-   - **Creating a Bill**: If applicable, the `TaskEngine` generates a bill for the task. This is relevant for operations that incur costs, ensuring transparency and accountability.
-   - **Responding to the User**: Finally, the `TaskEngine` communicates the outcome of the task to the user. This response may include a summary of the actions taken, any changes made, and the status of the task.
-
-This detailed process ensures that tasks are handled efficiently and transparently within the PR Pilot project, from initiation to completion.
+1. **User Request**: The user initiates a task execution request.
+2. **TaskScheduler**: 
+   - Validates the user's budget.
+   - Checks if the user has the necessary permissions.
+   - Ensures the project has not reached its rate limit.
+   - Schedules the task for execution.
+3. **TaskWorker**: 
+   - Fetches the task from the queue.
+   - Initializes the `TaskEngine`.
+4. **TaskEngine**: 
+   - Clones the GitHub repository.
+   - Sets up a working branch.
+   - Executes the task using the PR Pilot agent.
+   - Pushes any changes to the repository.
+   - Creates a pull request if necessary.
+   - Generates a bill for the task.
+5. **User Response**: The user is informed of the task result, including any pull requests created.
