@@ -163,7 +163,7 @@ def list_directory(path: str):
             message=f"Directory not found `{path}`",
         )
         return f"Directory not found: `{path}`"
-    directory_content = f"Content of `{path}`:\n\n"
+    directory_content = f"Content of directory `{path}`:\n\n"
     for child in sorted(node.nodes, key=lambda x: x.path):
         # Replace the root path with an empty string
         clipped_path = str(child.path).replace(str(settings.REPO_DIR), "")
