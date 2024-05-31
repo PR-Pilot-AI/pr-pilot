@@ -34,3 +34,7 @@ sequenceDiagram
    - **Responding to the User**: Finally, the `TaskEngine` communicates the outcome of the task to the user. This response may include a summary of the actions taken, any changes made, and the status of the task.
 
 This detailed process ensures that tasks are handled efficiently and transparently within the PR Pilot project, from initiation to completion.
+
+In addition to the above, the `TaskEngine` also has a `run` method that performs several steps including generating the task title in the background, checking out the PR branch if the task is a PR, and creating a pull request for the branch if there are changes to push. The `TaskEngine` also has a `create_bill` method that creates a bill for the task, and a `clone_github_repo` method that clones the GitHub repository.
+
+The `TaskWorker` class has a `run` method that continuously listens for tasks and executes them using the `TaskEngine`. This ensures that tasks are processed as soon as they are received.
