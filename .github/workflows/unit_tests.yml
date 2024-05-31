@@ -26,7 +26,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install tox
     - name: Run tests
-      run: tox
+      run: tox > tox_output.log 2>&1
     - name: Analyze test results with PR Pilot
       if: failure()
       env:
