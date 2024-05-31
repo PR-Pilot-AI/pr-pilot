@@ -31,4 +31,4 @@ jobs:
         PR_PILOT_API_KEY: ${{ secrets.PR_PILOT_API_KEY }}
       run: |
         pip install pr-pilot-cli==1.3.4
-        pilot --chatty --raw -f prompts/analyze_test_results.md.jinja2
+        echo $PR_NUMBER
