@@ -33,4 +33,26 @@ sequenceDiagram
    - **Creating a Bill**: If applicable, the `TaskEngine` generates a bill for the task. This is relevant for operations that incur costs, ensuring transparency and accountability.
    - **Responding to the User**: Finally, the `TaskEngine` communicates the outcome of the task to the user. This response may include a summary of the actions taken, any changes made, and the status of the task.
 
+### TaskEngine Class
+
+The `TaskEngine` class is responsible for managing the lifecycle of a task. Below are some key methods and their functionalities:
+
+- **create_unique_branch_name**: Creates a unique branch name based on a given string. If the branch exists, it adds increasing numbers at the end.
+- **setup_working_branch**: Creates a new branch based on the given branch name basis.
+- **finalize_working_branch**: Finalizes the working branch by committing and pushing changes.
+- **generate_task_title**: Generates a task title based on the task type and user request.
+- **run**: Executes the task, handles exceptions, and updates the task status.
+- **create_bill**: Generates a bill for the task, applying any applicable discounts.
+- **clone_github_repo**: Clones the GitHub repository to the local environment.
+
+For more details, refer to the [TaskEngine source code](../../engine/task_engine.py).
+
+### TaskWorker Class
+
+The `TaskWorker` class is responsible for fetching tasks from the Redis queue and executing them using the `TaskEngine`.
+
+- **run**: Continuously fetches tasks from the Redis queue and processes them.
+
+For more details, refer to the [TaskWorker source code](../../engine/task_worker.py).
+
 This detailed process ensures that tasks are handled efficiently and transparently within the PR Pilot project, from initiation to completion.
