@@ -1,6 +1,9 @@
 name: Unit Tests
 
-on: [push]
+on:
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build:
@@ -27,8 +30,7 @@ jobs:
         PR_NUMBER: ${{ github.event.pull_request.number }}
         PR_PILOT_API_KEY: ${{ secrets.PR_PILOT_API_KEY }}
       run: |
-        echo $PR_NUMBER
-        echo {{ secrets.PR_PILOT_API_KEY }}
+        echo "PR_NUMBER=${PR_NUMBER}"
 
 #    - name: Run tests
 #      run: tox
