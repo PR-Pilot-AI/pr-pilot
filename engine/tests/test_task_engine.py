@@ -95,12 +95,19 @@ def mock_create_response_comment():
         yield
 
 
+@pytest.fixture
+def engine(task):
+    engine = TaskEngine(task)
+    # Mock engine.generate_task_title
+    engine.generate_task_title = MagicMock()
+    return engine
+
+
 @pytest.mark.django_db
 def test_bill_creation_correctness(
-    mock_generate_pr_info, mock_project_from_github, mock_task_project, task
+    mock_generate_pr_info, mock_project_from_github, mock_task_project, task, engine
 ):
-    task_engine = TaskEngine(task)
-    task_engine.run()
+    engine.run()
     latest_bill = TaskBill.objects.filter(task=task).first()
     assert latest_bill is not None
     assert latest_bill.task == task
@@ -108,10 +115,9 @@ def test_bill_creation_correctness(
 
 @pytest.mark.django_db
 def test_task_status_set_correctly(
-    mock_generate_pr_info, mock_project_from_github, mock_task_project, task
+    mock_generate_pr_info, mock_project_from_github, mock_task_project, task, engine
 ):
-    task_engine = TaskEngine(task)
-    task_engine.run()
+    engine.run()
     task.refresh_from_db()
     assert task.status == "completed"
     # Additional assertions can be made for different scenarios, such as when an exception occurs

@@ -24,7 +24,7 @@ def test_list_directories(task):
     from django.conf import settings
 
     settings.REPO_DIR = temp_dir_name
-    markdown_result = list_directory("subdir")
+    markdown_result = list_directory.invoke("subdir")
     assert (
         markdown_result.strip()
         == """Content of `subdir`:
