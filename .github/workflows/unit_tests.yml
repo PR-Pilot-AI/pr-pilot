@@ -27,8 +27,8 @@ jobs:
     - name: Analyze test results with PR Pilot
       if: failure()
       env:
-        PR_NUMBER: ${{ github.event.pull_request.number || 0 }}
+        PR_NUMBER: ${{ github.event.pull_request.number }}
         PR_PILOT_API_KEY: ${{ secrets.PR_PILOT_API_KEY }}
       run: |
         pip install pr-pilot-cli==1.3.3
-        pilot -f prompts/analyze_test_results.md.jinja2
+        pilot --chatty --raw -f prompts/analyze_test_results.md.jinja2
