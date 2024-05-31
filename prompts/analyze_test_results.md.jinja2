@@ -6,8 +6,8 @@ We ran our unit tests, here's the output:
 
 If the tests are green, do nothing. Otherwise:
 1. Identify the parts of the code that are not working.
-2. Read the relevant files to get a better understanding of the problem.
-3. Write a short, concise, structured analysis of the test results.
+2. Read the relevant test files AND implementation files to get a better understanding of the problem.
+3. Pretend like you're a senior engineer and draft a comment that you would leave on the PR with the failing tests
 {% if env('PR_NUMBER') %}
-4. Comment on PR #{{ env('PR_NUMBER') }} with the analysis.
+4. Comment on PR #{{ env('PR_NUMBER') }}
 {% endif %}
