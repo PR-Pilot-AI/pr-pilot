@@ -1,0 +1,13 @@
+We ran our unit tests, here's the output:
+
+---
+{{ sh('tox') }}
+---
+
+If the tests are green, do nothing. Otherwise:
+1. Identify the parts of the code that are not working.
+2. Read the relevant files to get a better understanding of the problem.
+3. Write a short, concise, structured analysis of the test results.
+{% if env('PR_NUMBER') %}
+4. Comment on PR #{{ env('PR_NUMBER') }} with the analysis.
+{% endif %}

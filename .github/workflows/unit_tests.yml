@@ -14,6 +14,11 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install tox
+        pip install tox pr-pilot-cli
     - name: Run tests
       run: tox
+    - name: Analyze test results with PR Pilot
+      if: failure()
+      env:
+        PR_NUMBER: ${{ github.event.pull_request.number || 0 }}
+      run: pilot -f prompts/analyze_test_results.md.jinja2
