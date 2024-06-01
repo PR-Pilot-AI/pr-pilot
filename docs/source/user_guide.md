@@ -22,21 +22,36 @@ we provide examples of how to use PR Pilot in different scenarios, for example:
 - [LLM-assisted technical refinements for JIRA tickets](https://www.pr-pilot.ai/blog/a-jira-integration-for-llm-assisted-technical-refinements)
 - [Creating Github Actions that interact with issues and PRs using natural language](https://www.pr-pilot.ai/blog/the-power-of-agentic-workflows)
 
-Depending on your needs and skill level, you can use PR Pilot in different ways:
+You can use PR Pilot in different ways:
 
-### Zero-Config, No-Code
+### Command-Line Interface
+Our [CLI](https://github.com/PR-Pilot-AI/pr-pilot-cli) puts PR Pilot right at your fingertips:
 
-If you're new to AI and automation, you can use your **[Smart Project Starter](https://github.com/PR-Pilot-AI/smart-project-starter)** to get started.
-It comes with fully-customizable, no-code [Github workflows](https://docs.github.com/en/actions/using-workflows) out-of-the-box.
+```bash
+pip install pr-pilot-cli
+pilot -o README_German.md "translate the README into German"
+```
 
+By using [prompt templates](https://github.com/PR-Pilot-AI/pr-pilot-cli/tree/main/prompts), you can create powerful, 
+reusable commands:
 
-### Low-Code Smart Actions
+```markdown
+Our unit tests on {{ env('ENVIRONMENT' }} are failing:
 
-If you're comfortable with Github Actions and want to create your own automations, you can use our **[Smart Actions](https://github.com/PR-Pilot-AI/smart-actions)** to create your own workflows.
-These actions are hand-crafted using state-of-the-art prompt engineering techniques and let you automate your Github projects in powerful new ways.
+---
+{{ sh('pytest') }}  
+---
 
+Analyze the results, read relevant code files and drop a helpful comment on PR #{{ env('PR_NUMBER' }}.
+```
 
-### More Control: Python SDK
+You could run this as part of your CI/CD pipeline:
+
+```bash
+pilot --quiet -f analyze_test_results.md.jinja2
+```
+
+### Python SDK
 
 To use PR Pilot in your own tools and integrations, you can use the [Python SDK](https://github.com/PR-Pilot-AI/pr-pilot-python):
 
@@ -76,8 +91,6 @@ curl -X POST 'https://app.pr-pilot.ai/api/tasks/' \
 }'
 ```
 
-
-
 ### Talk to the Agent in Github Comments
 
 PR Pilot will create issues and PRs for you. To stay in the flow, just use the `/pilot` command followed by a description of the task you want to perform.
@@ -86,6 +99,12 @@ PR Pilot will create issues and PRs for you. To stay in the flow, just use the `
 ![First pilot command](img/first_command.png)
 
 The bot will turn your comment into a link to your [dashboard](https://app.pr-pilot.ai), where you can monitor the task's progress.
+
+### Smart Github Actions
+
+If you're comfortable with Github Actions and want to create your own automations, you can use our **[Smart Actions](https://github.com/PR-Pilot-AI/smart-actions)** to create your own workflows.
+These actions are hand-crafted using state-of-the-art prompt engineering techniques and let you automate your Github projects in powerful new ways.
+
 
 
 ## Monitoring Tasks
