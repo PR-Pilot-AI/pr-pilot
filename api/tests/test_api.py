@@ -1,3 +1,5 @@
+import base64
+import os
 from unittest.mock import patch, MagicMock
 
 import pytest
@@ -140,3 +142,24 @@ def test_create_task_via_api__repo_not_found(api_key):
     )
     assert response.status_code == 404
     assert not Task.objects.exists()
+
+
+@pytest.mark.django_db
+def test_image_upload(api_key, github_repo):
+    this_dir = os.path.dirname(os.path.abspath(__file__))
+    with open(os.path.join(this_dir, "fixtures/screenshot.png"), "rb") as image:
+        base_64_image = base64.b64encode(image.read()).decode()
+        response = client.post(
+            "/api/tasks/",
+            {
+                "prompt": "Hello, World!",
+                "github_repo": github_repo.full_name,
+                "image": base_64_image,
+            },
+            headers={"X-Api-Key": api_key},
+            format="json",
+        )
+        assert response.status_code == 201
+        task = Task.objects.first()
+        assert task.image is not None
+        assert base_64_image == base64.b64encode(task.image).decode()

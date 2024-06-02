@@ -1,6 +1,24 @@
+import base64
+
 from rest_framework import serializers
 
 from engine.models.task import Task
+
+
+class Base64BinaryField(serializers.Field):
+    def to_representation(self, value):
+        # Convert binary data to base64
+        return base64.b64encode(value).decode()
+
+    def to_internal_value(self, data):
+        # Convert base64 string to binary data
+        size_in_kb = len(data) / 1024
+        max_size = 200  # kb
+        if size_in_kb > max_size:
+            raise serializers.ValidationError(
+                f"Image size is too large. Max size is {max_size} KB"
+            )
+        return base64.b64decode(data)
 
 
 class PromptSerializer(serializers.Serializer):
@@ -24,6 +42,9 @@ class PromptSerializer(serializers.Serializer):
         required=False,
         default="gpt-4-turbo",
         help_text="The GPT model to use for the task",
+    )
+    image = Base64BinaryField(
+        required=False, help_text="An image to be used in the task"
     )
 
 

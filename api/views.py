@@ -103,6 +103,7 @@ def create_task(request):
             task_type=TaskType.STANDALONE.value,
             github_user=github_user,
             gpt_model=serializer.validated_data["gpt_model"],
+            image=serializer.validated_data.get("image"),
         )
         task.schedule()
         serializer = TaskSerializer(task)

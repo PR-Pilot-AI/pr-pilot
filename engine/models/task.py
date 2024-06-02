@@ -52,6 +52,9 @@ class Task(models.Model):
     gpt_model = models.CharField(
         max_length=200, blank=True, null=True, default="gpt-4-turbo"
     )
+    image = models.BinaryField(
+        blank=True, null=True, help_text="An image to be used in the task"
+    )
 
     def __str__(self):
         return self.title
