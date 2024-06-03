@@ -1,3 +1,4 @@
+import base64
 import logging
 import os
 import shutil
@@ -31,7 +32,9 @@ class TaskEngine:
         os.environ["GIT_COMMIT_HOOK"] = ""
         self.task = task
         self.max_steps = max_steps
-        self.executor = create_pr_pilot_agent(task.gpt_model)
+        self.executor = create_pr_pilot_agent(
+            task.gpt_model, image_support=self.task.image is not None
+        )
         self.github_token = get_installation_access_token(self.task.installation_id)
         self.github = Github(self.github_token)
         self.github_repo = self.github.get_repo(self.task.github_project)
@@ -144,8 +147,13 @@ class TaskEngine:
             project_info = self.github_repo.description
             if self.github_repo.fork:
                 project_info += f"\n\nThis project is a fork of [{self.github_repo.parent.full_name}]({self.github_repo.parent.html_url})."
+            if self.task.image:
+                image_base64 = base64.b64encode(self.task.image).decode()
+            else:
+                image_base64 = ""
             executor_result = self.executor.invoke(
                 {
+                    "encoded_image_url": f"data:image/png;base64,{image_base64}",
                     "user_request": self.task.user_request,
                     "github_project": self.task.github_project,
                     "project_info": project_info,

@@ -35,7 +35,10 @@ class HasUserAPIKey(BaseHasAPIKey):
                     "Repository Not Found",
                     summary="Repository Not Found",
                     description="PR Pilot is not installed for this repository",
-                    value={"error": "PR Pilot is not installed for this repository"},
+                    value={
+                        "error": "PR Pilot is not installed for this repository. "
+                        "Please go to https://github.com/apps/pr-pilot-ai/installations/new to install PR Pilot."
+                    },
                 )
             ],
             description="The specified repository does not exist.",
@@ -77,7 +80,10 @@ def create_task(request):
             )
         except GithubRepository.DoesNotExist:
             return Response(
-                {"error": "PR Pilot is not installed for this repository"},
+                {
+                    "error": "PR Pilot is not installed for this repository. "
+                    "Please go to https://github.com/apps/pr-pilot-ai/installations/new to install PR Pilot."
+                },
                 status=status.HTTP_404_NOT_FOUND,
             )
 

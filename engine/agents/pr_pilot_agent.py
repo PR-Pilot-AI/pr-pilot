@@ -357,7 +357,7 @@ def fork_issue(github_project: str, issue_number: int):
     return f"Issue #{issue_number} has been successfully forked to {github_project} as Issue #{forked_issue.number}."
 
 
-def create_pr_pilot_agent(gpt_model=settings.DEFAULT_GPT_MODEL):
+def create_pr_pilot_agent(gpt_model=settings.DEFAULT_GPT_MODEL, image_support=False):
     llm = ChatOpenAI(
         model=gpt_model,
         temperature=0,
@@ -383,25 +383,36 @@ def create_pr_pilot_agent(gpt_model=settings.DEFAULT_GPT_MODEL):
         scrape_website,
         fork_issue,
     ]
-    prompt = ChatPromptTemplate.from_messages(
-        [
-            SystemMessagePromptTemplate(
-                prompt=PromptTemplate(
-                    input_variables=["github_project", "project_info"],
-                    template=system_message,
-                )
-            ),
-            HumanMessagePromptTemplate(
-                prompt=PromptTemplate(
-                    input_variables=["user_request"], template=template
-                )
-            ),
-            MessagesPlaceholder(variable_name="agent_scratchpad"),
-            SystemMessage(
-                "Fulfill the user request autonomously and respond to them, "
-                "without asking for further input. If anything fails along the way, abort and provide a reason."
-            ),
+    primer = SystemMessagePromptTemplate(
+        prompt=PromptTemplate(
+            input_variables=["github_project", "project_info"],
+            template=system_message,
+        )
+    )
+    image_message = HumanMessagePromptTemplate.from_template(
+        template=[
+            {
+                "type": "image_url",
+                "image_url": "{encoded_image_url}",
+            }
         ]
     )
+    user_request = HumanMessagePromptTemplate(
+        prompt=PromptTemplate(input_variables=["user_request"], template=template)
+    )
+    scratchpad = MessagesPlaceholder(variable_name="agent_scratchpad")
+    final_system_message = SystemMessage(
+        "Fulfill the user request autonomously and respond to them, "
+        "without asking for further input. If anything fails along the way, abort and provide a reason."
+    )
+    all_messages = [
+        primer,
+        user_request,
+        scratchpad,
+        final_system_message,
+    ]
+    if image_support:
+        all_messages.insert(1, image_message)
+    prompt = ChatPromptTemplate.from_messages(all_messages)
     agent = create_openai_functions_agent(llm, tools, prompt)
     return AgentExecutor(agent=agent, tools=tools, verbose=settings.DEBUG)
