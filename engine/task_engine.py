@@ -186,6 +186,8 @@ class TaskEngine:
                     f"\n\n**PR**: [{pr.title}]({pr.html_url})\n\nIf you require further changes, "
                     f"continue our conversation over there!"
                 )
+                self.task.pr_number = pr.number
+                self.task.branch = working_branch
             final_response += f"\n\n---\n📋 **[Log](https://app.pr-pilot.ai/dashboard/tasks/{str(self.task.id)}/)**"
             final_response += f" ↩️ **[Undo](https://app.pr-pilot.ai/dashboard/tasks/{str(self.task.id)}/undo/)**"
         except Exception as e:
