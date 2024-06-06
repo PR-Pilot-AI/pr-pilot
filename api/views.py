@@ -87,15 +87,17 @@ def create_task(request):
                 status=status.HTTP_404_NOT_FOUND,
             )
 
-        pr_branch = None
+        branch = ''
         pr_base = None
         if serializer.validated_data.get("pr_number"):
             g = Github(get_installation_access_token(repo.installation.installation_id))
             pr = g.get_repo(repo.full_name).get_pull(
                 serializer.validated_data["pr_number"]
             )
-            pr_branch = pr.head.ref
+            branch = pr.head.ref
             pr_base = pr.base.ref
+        elif serializer.validated_data.get("branch"):
+            branch = serializer.validated_data["branch"]
 
         task = Task.objects.create(
             title="A title",
@@ -104,7 +106,8 @@ def create_task(request):
             github_project=repo.full_name,
             issue_number=serializer.validated_data.get("issue_number"),
             pr_number=serializer.validated_data.get("pr_number"),
-            head=pr_branch,
+            head=branch,
+            branch=branch,
             base=pr_base,
             task_type=TaskType.STANDALONE.value,
             github_user=github_user,

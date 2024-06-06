@@ -38,6 +38,10 @@ class PromptSerializer(serializers.Serializer):
         required=False,
         help_text="Number of the PR if task is triggered in the context of a PR",
     )
+    branch = serializers.CharField(
+        required=False,
+        help_text="A branch for PR Pilot to run this task on",
+    )
     gpt_model = serializers.CharField(
         required=False,
         default="gpt-4-turbo",
@@ -63,4 +67,5 @@ class TaskSerializer(serializers.ModelSerializer):
             "issue_number",
             "pr_number",
             "gpt_model",
+            "branch"
         ]

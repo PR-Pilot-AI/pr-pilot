@@ -163,3 +163,20 @@ def test_image_upload(api_key, github_repo):
         task = Task.objects.first()
         assert task.image is not None
         assert base_64_image == base64.b64encode(task.image).decode()
+
+
+@pytest.mark.django_db
+def test_create_task_via_api__branch_setting(api_key, github_repo):
+    response = client.post(
+        "/api/tasks/",
+        {
+            "prompt": "Hello, World!",
+            "github_repo": "test/hello-world",
+            "branch": "feature-branch",
+        },
+        headers={"X-Api-Key": api_key},
+        format="json",
+    )
+    assert response.status_code == 201
+    task = Task.objects.first()
+    assert task.branch == "feature-branch"
