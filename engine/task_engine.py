@@ -137,7 +137,11 @@ class TaskEngine:
                 )
                 self.project.checkout_branch(self.task.head)
                 working_branch = self.task.head
+            elif self.task.branch:
+                # If task is a standalone task, checkout the branch
+                working_branch = self.task.branch
             else:
+                # No branch or PR number provided, create a new branch
                 working_branch = self.setup_working_branch(self.task.title)
             # Make sure we never work directly on the main branch
             if self.project.active_branch == self.project.main_branch:
