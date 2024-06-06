@@ -87,7 +87,7 @@ def create_task(request):
                 status=status.HTTP_404_NOT_FOUND,
             )
 
-        branch = ''
+        branch = ""
         pr_base = None
         if serializer.validated_data.get("pr_number"):
             g = Github(get_installation_access_token(repo.installation.installation_id))

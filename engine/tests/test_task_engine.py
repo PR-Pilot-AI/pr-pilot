@@ -3,7 +3,6 @@
 from unittest.mock import patch, MagicMock
 
 import pytest
-from github.PullRequest import PullRequest
 
 from engine.models.task import Task
 from engine.models.task_bill import TaskBill
@@ -52,13 +51,15 @@ def mock_github_client(mock_get_installation_access_token):
 @pytest.fixture(autouse=True)
 def mock_project_class():
     with patch("engine.task_engine.Project") as MockClass:
-        mocked_pr = MagicMock(spec=['title', 'html_url', 'number'])
+        mocked_pr = MagicMock(spec=["title", "html_url", "number"])
         mocked_pr.title = "Test PR"
         mocked_pr.html_url = "http://example.com/pr"
         mocked_pr.number = 69
 
         mock_from_github = MagicMock()
-        mock_from_github.return_value.create_pull_request = MagicMock(return_value=mocked_pr)
+        mock_from_github.return_value.create_pull_request = MagicMock(
+            return_value=mocked_pr
+        )
         MockClass.from_github = mock_from_github
         MockClass.return_value = MagicMock(
             is_active_open_source_project=MagicMock(return_value=False),
@@ -89,7 +90,7 @@ def engine(task):
     # Mock engine.generate_task_title
     engine.generate_task_title = MagicMock()
     engine.finalize_working_branch = MagicMock(return_value=False)
-    engine.setup_working_branch = MagicMock(return_value='test-branch')
+    engine.setup_working_branch = MagicMock(return_value="test-branch")
     engine.clone_github_repo = MagicMock()
     engine.generate_task_title = MagicMock()
     return engine
@@ -109,7 +110,7 @@ def test_task_status_set_correctly(task, engine):
     task.refresh_from_db()
     assert task.status == "completed"
     assert task.pr_number is None
-    assert task.branch is ''
+    assert task.branch == ""
 
 
 @pytest.mark.django_db

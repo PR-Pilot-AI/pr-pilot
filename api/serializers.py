@@ -67,5 +67,5 @@ class TaskSerializer(serializers.ModelSerializer):
             "issue_number",
             "pr_number",
             "gpt_model",
-            "branch"
+            "branch",
         ]
