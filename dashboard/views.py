@@ -5,7 +5,8 @@ from django import forms
 from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.safestring import mark_safe
-from django.views.generic import DetailView, ListView
+from django.views import View
+from django.views.generic import DetailView, ListView, TemplateView
 from django_tables2 import SingleTableView
 from django.urls import reverse
 import stripe
@@ -215,3 +216,17 @@ def create_stripe_payment_link(request):
     )
 
     return HttpResponseRedirect(payment_link.url)
+
+
+class IntegrationView(LoginRequiredMixin, TemplateView):
+    template_name = "integrations.html"
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super().get_context_data(**kwargs)
+
+        budget = UserBudget.get_user_budget(self.request.user.username)
+        context["budget"] = budget.formatted
+        context["slack_api_key"] = self.request.user.slack_integration.api_key if self.request.user.slack_integration else None
+        context["linear_api_key"] = self.request.user.linear_integration.api_key if self.request.user.linear_integration else None
+        return context

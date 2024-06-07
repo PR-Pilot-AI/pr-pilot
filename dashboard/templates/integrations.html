@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Integrations</h1>
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fa fa-slack"></i> Slack Integration
+                    </div>
+                    <div class="card-body">
+                        {% if slack_api_key %}
+                            <p>API Key: ********</p>
+                            <form method="post" action="{% url 'integrations' %}">
+                                <input type="hidden" name="action" value="delete_slack_integration">
+                                <button type="submit" class="btn btn-danger">Delete Integration</button>
+                            </form>
+                        {% else %}
+                            <form method="post" action="{% url 'integrations' %}">
+                                <input type="hidden" name="action" value="save_slack_integration">
+                                <div class="form-group">
+                                    <label for="slackApiKey">Slack API Key</label>
+                                    <input type="text" class="form-control" id="slackApiKey" name="slack_api_key" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary mt-2">Save Integration</button>
+                            </form>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fa fa-bolt"></i> Linear Integration
+                    </div>
+                    <div class="card-body">
+                        {% if linear_api_key %}
+                            <p>API Key: ********</p>
+                            <form method="post" action="{% url 'integrations' %}">
+                                <input type="hidden" name="action" value="delete_linear_integration">
+                                <button type="submit" class="btn btn-danger">Delete Integration</button>
+                            </form>
+                        {% else %}
+                            <form method="post" action="{% url 'integrations' %}">
+                                <input type="hidden" name="action" value="save_linear_integration">
+                                <div class="form-group">
+                                    <label for="linearApiKey">Linear API Key</label>
+                                    <input type="text" class="form-control" id="linearApiKey" name="linear_api_key" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary mt-2">Save Integration</button>
+                            </form>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
