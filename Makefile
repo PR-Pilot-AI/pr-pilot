@@ -6,7 +6,7 @@ NGINX_IMAGE_NAME := pr-pilot-static
 REGISTRY_URL := us-west2-docker.pkg.dev/darwin-407004/pr-pilot
 
 # Phony Targets
-.PHONY: logs build-static build-docker docker-push deploy create-k8s-secrets
+.PHONY: logs build-static build-docker docker-push deploy create-k8s-secrets makemigrations
 
 # Logs
 logs:
@@ -47,3 +47,7 @@ create-private-key-secret:
 create-k8s-secrets:
 	kubectl delete secret pr-pilot-secret
 	kubectl create secret generic pr-pilot-secret --from-env-file=k8s.env
+
+# Make Migrations
+makemigrations:
+	env $(cat local.env | xargs) python manage.py makemigrations

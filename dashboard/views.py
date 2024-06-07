@@ -1,20 +1,19 @@
 import markdown
+import stripe
+from django import forms
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django import forms
 from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 from django.utils.safestring import mark_safe
-from django.views import View
 from django.views.generic import DetailView, ListView, TemplateView
 from django_tables2 import SingleTableView
-from django.urls import reverse
-import stripe
-from django.conf import settings
 
-from accounts.models import UserBudget
+from accounts.models import UserBudget, SlackIntegration, LinearIntegration
 from api.models import UserAPIKey
-
+from dashboard.cryptography import encrypt
 from dashboard.tables import TaskTable, EventTable, CostItemTable, EventUndoTable
 from engine.models.task import Task
 from engine.models.task_bill import TaskBill
@@ -227,6 +226,34 @@ class IntegrationView(LoginRequiredMixin, TemplateView):
 
         budget = UserBudget.get_user_budget(self.request.user.username)
         context["budget"] = budget.formatted
-        context["slack_api_key"] = self.request.user.slack_integration.api_key if self.request.user.slack_integration else None
+        context["slack_bot_token"] = self.request.user.slack_integration.bot_token if self.request.user.slack_integration else None
         context["linear_api_key"] = self.request.user.linear_integration.api_key if self.request.user.linear_integration else None
         return context
+
+    def post(self, request, *args, **kwargs):
+        action = request.POST.get("action")
+        if action == "save_slack_integration":
+            slack_bot_token = request.POST.get("slack_bot_token")
+            # Save the Slack API key to the user's profile
+            if not request.user.slack_integration:
+                request.user.slack_integration = SlackIntegration.objects.create()
+                request.user.save()
+            request.user.slack_integration.bot_token = encrypt(slack_bot_token)
+            request.user.slack_integration.save()
+        elif action == "delete_slack_integration":
+            # Delete the Slack API key from the user's profile
+            request.user.slack_integration.bot_token = None
+            request.user.slack_integration.save()
+        elif action == "save_linear_integration":
+            linear_api_key = request.POST.get("linear_api_key")
+            if not request.user.linear_integration:
+                request.user.linear_integration = LinearIntegration.objects.create()
+                request.user.save()
+            # Save the Linear API key to the user's profile
+            request.user.linear_integration.api_key = linear_api_key
+            request.user.linear_integration.save()
+        elif action == "delete_linear_integration":
+            # Delete the Linear API key from the user's profile
+            request.user.linear_integration.api_key = None
+            request.user.linear_integration.save()
+        return redirect("integrations")

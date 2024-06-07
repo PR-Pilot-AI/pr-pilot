@@ -3,13 +3,11 @@ from django.db import models
 
 
 class LinearIntegration(models.Model):
-    username = models.CharField(max_length=200)
-    api_key = models.TextField()
+    api_key = models.TextField(null=True, blank=False)
 
 
 class SlackIntegration(models.Model):
-    username = models.CharField(max_length=200)
-    bot_token = models.TextField()
+    bot_token = models.TextField(null=True, blank=False)
 
 
 class PilotUser(AbstractUser):

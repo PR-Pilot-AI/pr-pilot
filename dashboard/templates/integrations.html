@@ -1,30 +1,59 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Integrations</h1>
 
     <div class="container mt-4">
+
+        <div class="container mt-4">
+            <h1>Integrations</h1>
+            <p class="lead">
+                Integrations allow you to extend PR Pilot's functionality by connecting it to other services.
+            </p>
+        </div>
         <div class="row">
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-header">
-                        <i class="fa fa-slack"></i> Slack Integration
+                        <i class="fab fa-slack"></i> Slack
                     </div>
                     <div class="card-body">
-                        {% if slack_api_key %}
-                            <p>API Key: ********</p>
+                        {% if slack_bot_token %}
+                            <p>
+                                <i class="fa-solid fa-check"></i>
+                                 PR Pilot is connected to your Slack workspace.
+                            </p>
                             <form method="post" action="{% url 'integrations' %}">
+                                {% csrf_token %}
                                 <input type="hidden" name="action" value="delete_slack_integration">
-                                <button type="submit" class="btn btn-danger">Delete Integration</button>
+                                <button type="submit" class="btn btn-danger">Delete Slack Integration</button>
                             </form>
                         {% else %}
+
+                            <p>
+                                First, install PR Pilot into your Slack workspace:
+                            </p>
+                            <p>
+                                <a href="https://slack.com/oauth/v2/authorize?client_id=7136938584914.7136834826947&scope=chat:write,commands,channels:history&user_scope="><img alt="Add to Slack" height="40" width="139" src="https://platform.slack-edge.com/img/add_to_slack.png" srcSet="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x" /></a>
+                            </p>
+                            <p>
+                                Then, copy and enter your Slack Bot Token below. Once activated, this integration will:
+                                <ul>
+                                    <li>Allow PR Pilot to send messages to your Slack workspace</li>
+                                    <li>Enable you to use the <code>/pilot</code> command in Slack</li>
+                                    <li>Let PR Pilot search for messages in your Slack channels</li>
+                                </ul>
+                            </p>
                             <form method="post" action="{% url 'integrations' %}">
+                                {% csrf_token %}
                                 <input type="hidden" name="action" value="save_slack_integration">
                                 <div class="form-group">
-                                    <label for="slackApiKey">Slack API Key</label>
-                                    <input type="text" class="form-control" id="slackApiKey" name="slack_api_key" required>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="slackApiKey" name="slack_bot_token" aria-label="Slack Bot Token" placeholder="Slack Bot Token" required>
+                                        <div class="input-group-append">
+                                            <button type="submit" class="btn btn-success">Activate</button>
+                                        </div>
+                                    </div>
                                 </div>
-                                <button type="submit" class="btn btn-primary mt-2">Save Integration</button>
                             </form>
                         {% endif %}
                     </div>
@@ -33,23 +62,41 @@
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-header">
-                        <i class="fa fa-bolt"></i> Linear Integration
+                        <i class="fa fa-bolt"></i> Linear
                     </div>
                     <div class="card-body">
+
                         {% if linear_api_key %}
-                            <p>API Key: ********</p>
+                            <p>
+                                <i class="fa-solid fa-check"></i>
+                                PR Pilot is connected to your Linear workspace.
+                            </p>
                             <form method="post" action="{% url 'integrations' %}">
+                                {% csrf_token %}
                                 <input type="hidden" name="action" value="delete_linear_integration">
-                                <button type="submit" class="btn btn-danger">Delete Integration</button>
+                                <button type="submit" class="btn btn-danger">Delete Linear Integration</button>
                             </form>
                         {% else %}
+                            Get your API key:
+                            <ol>
+                                <li>Go to your <a href="https://linear.app/pr-pilot/settings/api" target="_blank">Account Settings</a></li>
+                                <li>Scroll down to "Personal API Keys"</li>
+                                <li>Click "Create new API key"</li>
+                            </ol>
+                            <p>
+                                Once activated, this integration will allow PR Pilot to access and update entities in your Linear workspace.
+                            </p>
                             <form method="post" action="{% url 'integrations' %}">
+                                {% csrf_token %}
                                 <input type="hidden" name="action" value="save_linear_integration">
                                 <div class="form-group">
-                                    <label for="linearApiKey">Linear API Key</label>
-                                    <input type="text" class="form-control" id="linearApiKey" name="linear_api_key" required>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="linearApiKey" name="linear_api_key" aria-label="Linear API Key" placeholder="Linear API Key" required>
+                                        <div class="input-group-append">
+                                            <button type="submit" class="btn btn-success">Activate</button>
+                                        </div>
+                                    </div>
                                 </div>
-                                <button type="submit" class="btn btn-primary mt-2">Save Integration</button>
                             </form>
                         {% endif %}
                     </div>
