@@ -29,6 +29,6 @@ def list_linear_tools(api_key: str):
             name="search_linear_workspace",
             func=linear_search_tool,
             description="Search the user's Linear workspace. Parameters: \n"
-                        "query (str): The GraphQL search query."
+            "query (str): The GraphQL search query.",
         )
     ]

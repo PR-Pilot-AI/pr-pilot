@@ -35,7 +35,9 @@ def create_task(prompt):
 
 
 def run_e2e_test():
-    task = create_task("Find all Linear tickets that were edited over the last 24 hours.")
+    task = create_task(
+        "Find all Linear tickets that were edited over the last 24 hours."
+    )
     settings.TASK_ID = str(task.id)
     os.environ["TASK_ID"] = str(task.id)
     engine = TaskEngine(task)
