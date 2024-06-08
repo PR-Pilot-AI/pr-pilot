@@ -12,4 +12,4 @@ def encrypt(value):
 
 
 def decrypt(value):
-    return fernet.decrypt(value.encode()).decode()
+    return fernet.decrypt(value).decode()

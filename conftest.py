@@ -5,6 +5,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 from django.conf import settings
 
+from accounts.models import PilotUser
 from engine.models.task import Task
 
 
@@ -15,14 +16,22 @@ def mock_chat_openai():
 
 
 @pytest.fixture
-def task():
+def task(user):
     task = Task.objects.create(
         issue_number=123,
         installation_id=123,
         comment_id=123,
         pilot_command="this is a test",
-        github_user="test_user",
+        github_user=user.username,
         github_project="test_project",
     )
     settings.TASK_ID = task.id
     return task
+
+
+@pytest.fixture
+def user():
+    return PilotUser.objects.create(
+        username="test_user",
+        email="test_user@pr-pilot.ai",
+    )

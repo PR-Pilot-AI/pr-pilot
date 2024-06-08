@@ -30,16 +30,17 @@ def create_task(prompt):
         pilot_command="Tell me what's in the image",
         github_user="mlamina",
         github_project=github_project,
-        image=load_image(),
+        # image=load_image(),
     )
 
 
 def run_e2e_test():
-    task = create_task("What do you see in the image?")
+    task = create_task("Find all Linear tickets that were edited over the last 24 hours.")
     settings.TASK_ID = str(task.id)
     os.environ["TASK_ID"] = str(task.id)
     engine = TaskEngine(task)
     engine.run()
+    print(task.result)
 
 
 if __name__ == "__main__":

@@ -43,6 +43,8 @@ logger = logging.getLogger(__name__)
 
 
 system_message = """
+Current date and time: {current_time}
+---
 You are PR Pilot, an AI collaborator on the `{github_project}` Github Project.
 
 # Project Description
@@ -357,7 +359,9 @@ def fork_issue(github_project: str, issue_number: int):
     return f"Issue #{issue_number} has been successfully forked to {github_project} as Issue #{forked_issue.number}."
 
 
-def create_pr_pilot_agent(gpt_model=settings.DEFAULT_GPT_MODEL, image_support=False):
+def create_pr_pilot_agent(
+    gpt_model=settings.DEFAULT_GPT_MODEL, image_support=False, additional_tools=()
+):
     llm = ChatOpenAI(
         model=gpt_model,
         temperature=0,
@@ -382,7 +386,7 @@ def create_pr_pilot_agent(gpt_model=settings.DEFAULT_GPT_MODEL, image_support=Fa
         PRPilotSearch(),
         scrape_website,
         fork_issue,
-    ]
+    ] + additional_tools
     primer = SystemMessagePromptTemplate(
         prompt=PromptTemplate(
             input_variables=["github_project", "project_info"],

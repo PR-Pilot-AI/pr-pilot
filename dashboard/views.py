@@ -1,3 +1,5 @@
+import logging
+
 import markdown
 import stripe
 from django import forms
@@ -13,10 +15,13 @@ from django_tables2 import SingleTableView
 
 from accounts.models import UserBudget, SlackIntegration, LinearIntegration
 from api.models import UserAPIKey
-from dashboard.cryptography import encrypt
+from engine.cryptography import encrypt
 from dashboard.tables import TaskTable, EventTable, CostItemTable, EventUndoTable
 from engine.models.task import Task
 from engine.models.task_bill import TaskBill
+
+
+logger = logging.getLogger(__name__)
 
 
 class APIKeyForm(forms.Form):
@@ -226,13 +231,22 @@ class IntegrationView(LoginRequiredMixin, TemplateView):
 
         budget = UserBudget.get_user_budget(self.request.user.username)
         context["budget"] = budget.formatted
-        context["slack_bot_token"] = self.request.user.slack_integration.bot_token if self.request.user.slack_integration else None
-        context["linear_api_key"] = self.request.user.linear_integration.api_key if self.request.user.linear_integration else None
+        context["slack_bot_token"] = (
+            self.request.user.slack_integration.bot_token
+            if self.request.user.slack_integration
+            else None
+        )
+        context["linear_api_key"] = (
+            self.request.user.linear_integration.api_key
+            if self.request.user.linear_integration
+            else None
+        )
         return context
 
     def post(self, request, *args, **kwargs):
         action = request.POST.get("action")
         if action == "save_slack_integration":
+            logger.info(f"Saving Slack integration for user {request.user.username}")
             slack_bot_token = request.POST.get("slack_bot_token")
             # Save the Slack API key to the user's profile
             if not request.user.slack_integration:
@@ -241,18 +255,21 @@ class IntegrationView(LoginRequiredMixin, TemplateView):
             request.user.slack_integration.bot_token = encrypt(slack_bot_token)
             request.user.slack_integration.save()
         elif action == "delete_slack_integration":
+            logger.info(f"Deleting Slack integration for user {request.user.username}")
             # Delete the Slack API key from the user's profile
             request.user.slack_integration.bot_token = None
             request.user.slack_integration.save()
         elif action == "save_linear_integration":
+            logger.info(f"Saving Linear integration for user {request.user.username}")
             linear_api_key = request.POST.get("linear_api_key")
             if not request.user.linear_integration:
                 request.user.linear_integration = LinearIntegration.objects.create()
                 request.user.save()
             # Save the Linear API key to the user's profile
-            request.user.linear_integration.api_key = linear_api_key
+            request.user.linear_integration.api_key = encrypt(linear_api_key)
             request.user.linear_integration.save()
         elif action == "delete_linear_integration":
+            logger.info(f"Deleting Linear integration for user {request.user.username}")
             # Delete the Linear API key from the user's profile
             request.user.linear_integration.api_key = None
             request.user.linear_integration.save()

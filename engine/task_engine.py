@@ -6,11 +6,13 @@ import threading
 from decimal import Decimal
 
 from django.conf import settings
+from django.utils import timezone
 from git import Repo
 from github import Github
 from github.PullRequest import PullRequest
 
-from accounts.models import UserBudget
+from accounts.models import UserBudget, PilotUser
+from engine.agents.integration_tools import integration_tools_for_user
 from engine.agents.pr_pilot_agent import create_pr_pilot_agent
 from engine.langchain.generate_pr_info import generate_pr_info, LabelsAndTitle
 from engine.langchain.generate_task_title import generate_task_title
@@ -33,7 +35,11 @@ class TaskEngine:
         self.task = task
         self.max_steps = max_steps
         self.executor = create_pr_pilot_agent(
-            task.gpt_model, image_support=self.task.image is not None
+            task.gpt_model,
+            image_support=self.task.image is not None,
+            additional_tools=integration_tools_for_user(
+                PilotUser.objects.get(username=task.github_user)
+            ),
         )
         self.github_token = get_installation_access_token(self.task.installation_id)
         self.github = Github(self.github_token)
@@ -81,9 +87,7 @@ class TaskEngine:
             )
             self.project.commit_all_changes(message="Uncommitted changes")
         if self.project.get_diff_to_main():
-            logger.info(
-                f"Found changes on {branch_name!r} branch. Pushing changes ..."
-            )
+            logger.info(f"Found changes on {branch_name!r} branch. Pushing changes ...")
             self.project.push_branch(branch_name)
             TaskEvent.add(actor="assistant", action="push_branch", target=branch_name)
             self.project.checkout_latest_default_branch()
@@ -122,8 +126,8 @@ class TaskEngine:
             self.task.save()
             return self.task.result
         # Generate task title in the background
-        thread = threading.Thread(target=self.generate_task_title)
-        thread.start()
+        task_title_thread = threading.Thread(target=self.generate_task_title)
+        task_title_thread.start()
         self.clone_github_repo()
 
         try:
@@ -143,6 +147,9 @@ class TaskEngine:
                 self.project.checkout_branch(self.task.branch)
             else:
                 # No branch or PR number provided, create a new branch
+                if not self.task.title:
+                    # Wait for task title to be generated
+                    task_title_thread.join()
                 working_branch = self.setup_working_branch(self.task.title)
             # Make sure we never work directly on the main branch
             if self.project.active_branch == self.project.main_branch:
@@ -163,6 +170,7 @@ class TaskEngine:
                     "github_project": self.task.github_project,
                     "project_info": project_info,
                     "pilot_hints": self.project.load_pilot_hints(),
+                    "current_time": timezone.now().isoformat(),
                 }
             )
             self.task.result = executor_result["output"]
@@ -181,7 +189,9 @@ class TaskEngine:
                     logger.info(f"Creating pull request for branch {working_branch}")
                     pr_info = generate_pr_info(final_response)
                     if not pr_info:
-                        pr_info = LabelsAndTitle(title=self.task.title, labels=["pr-pilot"])
+                        pr_info = LabelsAndTitle(
+                            title=self.task.title, labels=["pr-pilot"]
+                        )
                     pr: PullRequest = Project.from_github().create_pull_request(
                         title=pr_info.title,
                         body=final_response,

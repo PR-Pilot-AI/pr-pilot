@@ -11,8 +11,12 @@ class SlackIntegration(models.Model):
 
 
 class PilotUser(AbstractUser):
-    linear_integration = models.OneToOneField(LinearIntegration, on_delete=models.CASCADE, null=True, blank=True)
-    slack_integration = models.OneToOneField(SlackIntegration, on_delete=models.CASCADE, null=True, blank=True)
+    linear_integration = models.OneToOneField(
+        LinearIntegration, on_delete=models.CASCADE, null=True, blank=True
+    )
+    slack_integration = models.OneToOneField(
+        SlackIntegration, on_delete=models.CASCADE, null=True, blank=True
+    )
 
 
 class UserBudget(models.Model):
