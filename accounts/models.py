@@ -3,7 +3,7 @@ from django.db import models
 
 
 class LinearIntegration(models.Model):
-    api_key = models.TextField(null=True, blank=False)
+    access_token = models.TextField(null=True, blank=False)
 
 
 class SlackIntegration(models.Model):

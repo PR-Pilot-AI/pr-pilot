@@ -385,7 +385,6 @@ def create_pr_pilot_agent(
         delete_file,
         PRPilotSearch(),
         scrape_website,
-        fork_issue,
     ] + additional_tools
     primer = SystemMessagePromptTemplate(
         prompt=PromptTemplate(

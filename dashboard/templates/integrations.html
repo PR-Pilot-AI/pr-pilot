@@ -19,8 +19,12 @@
                     <div class="card-body">
                         {% if slack_bot_token %}
                             <p>
-                                <i class="fa-solid fa-check"></i>
-                                 PR Pilot is connected to your Slack workspace.
+                                PR Pilot is connected to your Slack workspace and can do the following:
+                                <ul class="list-group">
+                                    <li class="list-group-item d-flex align-items-center"><span class="badge bg-success rounded-pill me-2"><i class="fa-solid fa-comment"></i></span>Send messages to your Slack channels</li>
+                                    <li class="list-group-item d-flex align-items-center"><span class="badge bg-success rounded-pill me-2"><i class="fa-solid fa-search"></i></span>Search your Slack channels for messages</li>
+                                    <li class="list-group-item d-flex align-items-center"><span class="badge bg-success rounded-pill me-2"><i class="fa-solid fa-terminal"></i></span>React to the <code>/pilot</code> command in Slack</li>
+                                </ul>
                             </p>
                             <form method="post" action="{% url 'integrations' %}">
                                 {% csrf_token %}
@@ -33,14 +37,14 @@
                                 Install PR Pilot into your Slack workspace:
                             </p>
                             <p>
-                                <a href="https://slack.com/oauth/v2/authorize?client_id=7136938584914.7136834826947&scope=channels:history,chat:write,commands,team:read&user_scope=search:read"><img alt="Add to Slack" height="40" width="139" src="https://platform.slack-edge.com/img/add_to_slack.png" srcSet="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x" /></a>
+                                <a href="https://slack.com/oauth/v2/authorize?client_id=7136938584914.7136834826947&scope=channels:history,chat:write,commands,team:read&user_scope=search:read&redirect_uri=https%3A%2F%2F{{ site_host }}%2Fdashboard%2Fadd-slack-integration%2F"><img alt="Add to Slack" height="40" width="139" src="https://platform.slack-edge.com/img/add_to_slack.png" srcSet="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x" /></a>
                             </p>
                             <p>
                                 Once activated, this integration will:
-                                <ul>
-                                    <li>Allow PR Pilot to send messages to your Slack workspace</li>
-                                    <li>Enable you to use the <code>/pilot</code> command in Slack</li>
-                                    <li>Let PR Pilot search for messages in your Slack channels</li>
+                                <ul class="list-group">
+                                    <li class="list-group-item d-flex align-items-center"><span class="badge bg-success rounded-pill me-2"><i class="fa-solid fa-comment"></i></span>Allow PR Pilot to send messages to your Slack workspace</li>
+                                    <li class="list-group-item d-flex align-items-center"><span class="badge bg-success rounded-pill me-2"><i class="fa-solid fa-terminal"></i></span>Enable you to use the <code>/pilot</code> command in Slack</li>
+                                    <li class="list-group-item d-flex align-items-center"><span class="badge bg-success rounded-pill me-2"><i class="fa-solid fa-search"></i></span>Let PR Pilot search for messages in your Slack channels</li>
                                 </ul>
                             </p>
                         {% endif %}
@@ -54,10 +58,13 @@
                     </div>
                     <div class="card-body">
 
-                        {% if linear_api_key %}
+                        {% if linear_access_token %}
                             <p>
-                                <i class="fa-solid fa-check"></i>
-                                PR Pilot is connected to your Linear workspace.
+                                PR Pilot is connected to your Linear workspace and can do the following:
+                                <ul class="list-group">
+                                    <li class="list-group-item d-flex align-items-center"><span class="badge bg-success rounded-pill me-2"><i class="fa-solid fa-search"></i></span>Search your workspace for issues, comments</li>
+                                    <li class="list-group-item d-flex align-items-center"><span class="badge bg-success rounded-pill me-2"><i class="fa-solid fa-plus"></i></span>Create new issues in your workspace</li>
+                                </ul>
                             </p>
                             <form method="post" action="{% url 'integrations' %}">
                                 {% csrf_token %}
@@ -65,27 +72,15 @@
                                 <button type="submit" class="btn btn-danger">Delete Linear Integration</button>
                             </form>
                         {% else %}
-                            Get your API key:
-                            <ol>
-                                <li>Go to your <a href="https://linear.app/pr-pilot/settings/api" target="_blank">Account Settings</a></li>
-                                <li>Scroll down to "Personal API Keys"</li>
-                                <li>Click "Create new API key"</li>
-                            </ol>
+                            <p>
+                                Connect PR Pilot to your Linear workspace:
+                            </p>
+                            <p>
+                                <a href="https://linear.app/oauth/authorize?response_type=code&client_id=45e9dc13c8e3ab511e93e47fe0e8a869&scope=read,issues:create&state=SECURE_RANDOM&redirect_uri=https%3A%2F%2F{{ site_host }}%2Fdashboard%2Fadd-linear-integration%2F"><img alt="Add to Slack" height="40" width="139" src="https://platform.slack-edge.com/img/add_to_slack.png" srcSet="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x" /></a>
+                            </p>
                             <p>
                                 Once activated, this integration will allow PR Pilot to access and update entities in your Linear workspace.
                             </p>
-                            <form method="post" action="{% url 'integrations' %}">
-                                {% csrf_token %}
-                                <input type="hidden" name="action" value="save_linear_integration">
-                                <div class="form-group">
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" id="linearApiKey" name="linear_api_key" aria-label="Linear API Key" placeholder="Linear API Key" required>
-                                        <div class="input-group-append">
-                                            <button type="submit" class="btn btn-success">Activate</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
                         {% endif %}
                     </div>
                 </div>

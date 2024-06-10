@@ -35,7 +35,7 @@ def create_task(prompt, model):
 
 
 TIME_FRAME = "June 2024"
-PROMPT = f"""
+EXECUTIVE_SUMMARY = f"""
 I want an executive summary of activity in Slack, on Github and in Linear for {TIME_FRAME}.
 
 Collect the following information:
@@ -48,10 +48,15 @@ Respond with a report that includes:
 - An "Urgent Items" section with anything that requires immediate attention (include links)
 - A "Topics" section that lists the most discussed topics
 """
-
+COPY_ISSUE = """
+Find the latest Github issue labeled 'bug' and copy it to Linear.
+"""
+ALL_LINEAR_LISSUES = f"""
+Find all Linear issues of {TIME_FRAME}.
+"""
 
 def run_e2e_test():
-    task = create_task(PROMPT, model="gpt-4o")
+    task = create_task("Create a test issue in Linear for team PR Pilot", model="gpt-4o")
     settings.TASK_ID = str(task.id)
     os.environ["TASK_ID"] = str(task.id)
     engine = TaskEngine(task)
