@@ -15,7 +15,10 @@ def integration_tools_for_user(user: PilotUser):
         tools = tools + list_linear_tools(decrypt(user.linear_integration.api_key))
     if user.slack_integration and user.slack_integration.bot_token:
         logger.info(f"User {user.username} has a Slack integration.")
-        tools = tools + list_slack_tools(decrypt(user.slack_integration.bot_token))
+        tools = tools + list_slack_tools(
+            decrypt(user.slack_integration.bot_token),
+            decrypt(user.slack_integration.user_token),
+        )
     if not tools:
         logger.info(f"User {user.username} has no integrations.")
     return tools

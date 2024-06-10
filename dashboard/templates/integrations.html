@@ -30,31 +30,19 @@
                         {% else %}
 
                             <p>
-                                First, install PR Pilot into your Slack workspace:
+                                Install PR Pilot into your Slack workspace:
                             </p>
                             <p>
-                                <a href="https://slack.com/oauth/v2/authorize?client_id=7136938584914.7136834826947&scope=chat:write,commands,channels:history&user_scope="><img alt="Add to Slack" height="40" width="139" src="https://platform.slack-edge.com/img/add_to_slack.png" srcSet="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x" /></a>
+                                <a href="https://slack.com/oauth/v2/authorize?client_id=7136938584914.7136834826947&scope=channels:history,chat:write,commands,team:read&user_scope=search:read"><img alt="Add to Slack" height="40" width="139" src="https://platform.slack-edge.com/img/add_to_slack.png" srcSet="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x" /></a>
                             </p>
                             <p>
-                                Then, copy and enter your Slack Bot Token below. Once activated, this integration will:
+                                Once activated, this integration will:
                                 <ul>
                                     <li>Allow PR Pilot to send messages to your Slack workspace</li>
                                     <li>Enable you to use the <code>/pilot</code> command in Slack</li>
                                     <li>Let PR Pilot search for messages in your Slack channels</li>
                                 </ul>
                             </p>
-                            <form method="post" action="{% url 'integrations' %}">
-                                {% csrf_token %}
-                                <input type="hidden" name="action" value="save_slack_integration">
-                                <div class="form-group">
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" id="slackApiKey" name="slack_bot_token" aria-label="Slack Bot Token" placeholder="Slack Bot Token" required>
-                                        <div class="input-group-append">
-                                            <button type="submit" class="btn btn-success">Activate</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
                         {% endif %}
                     </div>
                 </div>

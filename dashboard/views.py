@@ -1,12 +1,13 @@
 import logging
 
 import markdown
+import requests
 import stripe
 from django import forms
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import Http404, HttpResponseRedirect
+from django.http import Http404, HttpResponseRedirect, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils.safestring import mark_safe
@@ -222,6 +223,51 @@ def create_stripe_payment_link(request):
     return HttpResponseRedirect(payment_link.url)
 
 
+@login_required
+def add_slack_integration(request):
+    """Callback for Slack Oauth flow."""
+    # Check if the user is authenticated
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse("account_login"))
+
+    code = request.GET.get('code')
+    if not code:
+        HttpResponse("Missing 'code' query parameter", status=400)
+
+    # Exchange the code for an access token
+    response = requests.post(
+        'https://slack.com/api/oauth.v2.access',
+        data={
+            'code': code,
+            'client_id': settings.SLACK_CLIENT_ID,
+            'client_secret': settings.SLACK_CLIENT_SECRET,
+        }
+    )
+
+    if response.status_code != 200:
+        HttpResponse(f"Failed to finish Slack integration: {str(response)} ", status=response.status_code)
+
+    json_response = response.json()
+    if not json_response.get('ok'):
+        return HttpResponse(f"Error: {json_response.get('error')}", 400)
+
+    # Create a new Slack integration for the user
+    bot_token = encrypt(json_response['access_token'])
+    user_token = encrypt(json_response['authed_user']['access_token'])
+
+    logger.info(f"Creating Slack integration for user {request.user.username}")
+    if not request.user.slack_integration:
+        request.user.slack_integration = SlackIntegration.objects.create(bot_token=bot_token, user_token=user_token)
+        request.user.save()
+    else:
+        request.user.slack_integration.bot_token = bot_token
+        request.user.slack_integration.user_token = user_token
+        request.user.slack_integration.save()
+
+    # Redirect to the integrations page
+    return redirect("integrations")
+
+
 class IntegrationView(LoginRequiredMixin, TemplateView):
     template_name = "integrations.html"
 
@@ -245,16 +291,7 @@ class IntegrationView(LoginRequiredMixin, TemplateView):
 
     def post(self, request, *args, **kwargs):
         action = request.POST.get("action")
-        if action == "save_slack_integration":
-            logger.info(f"Saving Slack integration for user {request.user.username}")
-            slack_bot_token = request.POST.get("slack_bot_token")
-            # Save the Slack API key to the user's profile
-            if not request.user.slack_integration:
-                request.user.slack_integration = SlackIntegration.objects.create()
-                request.user.save()
-            request.user.slack_integration.bot_token = encrypt(slack_bot_token)
-            request.user.slack_integration.save()
-        elif action == "delete_slack_integration":
+        if action == "delete_slack_integration":
             logger.info(f"Deleting Slack integration for user {request.user.username}")
             # Delete the Slack API key from the user's profile
             request.user.slack_integration.bot_token = None

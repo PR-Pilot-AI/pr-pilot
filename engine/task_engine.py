@@ -144,6 +144,12 @@ class TaskEngine:
             elif self.task.branch:
                 # If task is a standalone task, checkout the branch
                 working_branch = self.task.branch
+                TaskEvent.add(
+                    actor="assistant",
+                    action="checkout_branch",
+                    target=self.task.branch,
+                    message=f"Checking out PR branch `{self.task.branch}`",
+                )
                 self.project.checkout_branch(self.task.branch)
             else:
                 # No branch or PR number provided, create a new branch
@@ -163,6 +169,7 @@ class TaskEngine:
                 image_base64 = base64.b64encode(self.task.image).decode()
             else:
                 image_base64 = ""
+            date_and_time = timezone.now().isoformat() + " " + str(timezone.get_current_timezone())
             executor_result = self.executor.invoke(
                 {
                     "encoded_image_url": f"data:image/png;base64,{image_base64}",
@@ -170,7 +177,7 @@ class TaskEngine:
                     "github_project": self.task.github_project,
                     "project_info": project_info,
                     "pilot_hints": self.project.load_pilot_hints(),
-                    "current_time": timezone.now().isoformat(),
+                    "current_time": date_and_time,
                 }
             )
             self.task.result = executor_result["output"]

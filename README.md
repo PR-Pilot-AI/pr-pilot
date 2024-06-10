@@ -141,6 +141,10 @@ Set the following environment variables:
 | `REDIS_PORT`            | (Optional) Redis port for job scheduling                        |
 | `REPO_CACHE_DIR`        | (Optional) Directory for storing repository cache               |
 | `REPO_DIR`              | (Optional) Workspace for storing repo in worker                 |
+| `SLACK_APP_ID`          | Slack App ID               |
+| `SLACK_CLIENT_ID`       | Slack Client ID            |
+| `SLACK_CLIENT_SECRET`   | Slack Client Secret        |
+| `SLACK_SIGNING_SECRET`  | Slack Signing Secret       |
 
 To get PR Pilot up and running on your own machine, follow these steps:
 

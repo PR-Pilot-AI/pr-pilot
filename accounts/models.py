@@ -8,6 +8,7 @@ class LinearIntegration(models.Model):
 
 class SlackIntegration(models.Model):
     bot_token = models.TextField(null=True, blank=False)
+    user_token = models.TextField(null=True, blank=False)
 
 
 class PilotUser(AbstractUser):

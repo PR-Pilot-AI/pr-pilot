@@ -51,3 +51,6 @@ create-k8s-secrets:
 # Make Migrations
 makemigrations:
 	env $(cat local.env | xargs) python manage.py makemigrations
+
+ngrok:
+	ngrok http --domain=helping-willing-seasnail.ngrok-free.app 8000

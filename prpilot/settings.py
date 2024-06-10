@@ -160,7 +160,7 @@ STATIC_ROOT = BASE_DIR / "nginx" / "static"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-SITE_ID = 1
+SITE_ID = int(os.getenv("SITE_ID", "1"))
 
 AUTHENTICATION_BACKENDS = (
     "django.contrib.auth.backends.ModelBackend",
@@ -314,3 +314,15 @@ REDIS_PORT = os.getenv("REDIS_PORT", 6379)
 REDIS_QUEUE = os.getenv("REDIS_QUEUE", "tasks")
 
 DEFAULT_GPT_MODEL = "gpt-4-turbo"
+
+SLACK_APP_ID = os.getenv("SLACK_APP_ID")
+SLACK_CLIENT_ID = os.getenv("SLACK_CLIENT_ID")
+SLACK_CLIENT_SECRET = os.getenv("SLACK_CLIENT_SECRET")
+SLACK_SIGNING_SECRET = os.getenv("SLACK_SIGNING_SECRET")
+
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://helping-willing-seasnail.ngrok-free.app'
+]
+USE_X_FORWARDED_HOST = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')

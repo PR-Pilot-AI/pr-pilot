@@ -21,7 +21,7 @@ def load_image(file_path="api/tests/fixtures/screenshot.png"):
         return f.read()
 
 
-def create_task(prompt):
+def create_task(prompt, model):
     github_project = "mlamina/DarwinGPT"
     repo = GithubRepository.objects.get(full_name=github_project)
     return Task.objects.create(
@@ -34,10 +34,24 @@ def create_task(prompt):
     )
 
 
+TIME_FRAME = "June 2024"
+PROMPT = f"""
+I want an executive summary of activity in Slack, on Github and in Linear for {TIME_FRAME}.
+
+Collect the following information:
+- All Slack messages of {TIME_FRAME} in the #bot-testing, #general and #random channels.
+- All Github issues and PRs in {TIME_FRAME}.
+- All Linear comments and issues created or edited in {TIME_FRAME}.
+
+Respond with a report that includes:
+- A one-paragraph summary of all activity
+- An "Urgent Items" section with anything that requires immediate attention (include links)
+- A "Topics" section that lists the most discussed topics
+"""
+
+
 def run_e2e_test():
-    task = create_task(
-        "Find all Linear tickets that were edited over the last 24 hours."
-    )
+    task = create_task(PROMPT, model="gpt-4o")
     settings.TASK_ID = str(task.id)
     os.environ["TASK_ID"] = str(task.id)
     engine = TaskEngine(task)
