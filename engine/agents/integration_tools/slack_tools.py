@@ -27,7 +27,9 @@ def search_slack_messages(query: str, user_token: str) -> str:
             assembled_hits = "---\n"
             for match in matches:
                 unix_timestamp = match["ts"].split(".")[0]
-                datetime_str = datetime.utcfromtimestamp(int(unix_timestamp)).strftime("%Y-%m-%d %H:%M:%S UTC")
+                datetime_str = datetime.utcfromtimestamp(int(unix_timestamp)).strftime(
+                    "%Y-%m-%d %H:%M:%S UTC"
+                )
                 assembled_hits += f"Link: {match['permalink']}\n"
                 assembled_hits += f"{datetime_str} @{match['username']} said:\n```\n{match['text']}\n```\n---\n"
             return f"Found {len(matches)} messages matching the query '{query}':\n\n{assembled_hits}"
@@ -46,15 +48,17 @@ def post_message(channel: str, message: str, bot_token: str) -> str:
         response = client.chat_postMessage(channel=channel, text=message)
 
         # Extract channel ID and timestamp
-        channel_id = response['channel']
-        timestamp = response['ts'].replace('.', '')
+        channel_id = response["channel"]
+        timestamp = response["ts"].replace(".", "")
 
         # Fetch the workspace domain
         team_info = client.team_info()
-        workspace_domain = team_info['team']['domain']
+        workspace_domain = team_info["team"]["domain"]
 
         # Construct message URL
-        message_url = f"https://{workspace_domain}.slack.com/archives/{channel_id}/p{timestamp}"
+        message_url = (
+            f"https://{workspace_domain}.slack.com/archives/{channel_id}/p{timestamp}"
+        )
 
         TaskEvent.add(
             actor="assistant",
@@ -74,6 +78,7 @@ def post_message(channel: str, message: str, bot_token: str) -> str:
 class PostSlackMessageInput(BaseModel):
     channel: str = Field(..., title="Slack channel to post the message to")
     message: str = Field(..., title="The message to post")
+
 
 SEARCH_TOOL_DESCRIPTION = """
 Search Slack messages based on a query.

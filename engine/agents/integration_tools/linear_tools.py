@@ -1,7 +1,4 @@
-from typing import List
-
 import requests
-
 from langchain.agents import Tool
 from langchain_core.tools import StructuredTool
 from pydantic.v1 import BaseModel, Field
@@ -39,10 +36,10 @@ def get_team_id_by_name(api_key, team_name):
     }
     """
     response = run_graphql_query(api_key, query)
-    teams = response['data']['teams']['nodes']
+    teams = response["data"]["teams"]["nodes"]
     for team in teams:
-        if team['name'].lower() == team_name.lower():
-            return team['id']
+        if team["name"].lower() == team_name.lower():
+            return team["id"]
     raise ValueError(f"No team found with the name '{team_name}'")
 
 
@@ -85,12 +82,12 @@ def list_linear_tools(api_key: str):
             name="search_linear_workspace",
             func=linear_search_tool,
             description="Search the user's Linear workspace. Parameters: \n"
-                        "query (str): The GraphQL search query."
+            "query (str): The GraphQL search query.",
         ),
         StructuredTool(
             name="create_linear_issue",
             func=create_linear_issue_tool,
             args_schema=LinearCreateIssueInput,
-            description="Create a new issue in the user's Linear workspace."
-        )
+            description="Create a new issue in the user's Linear workspace.",
+        ),
     ]

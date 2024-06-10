@@ -230,39 +230,44 @@ def add_slack_integration(request):
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse("account_login"))
 
-    code = request.GET.get('code')
+    code = request.GET.get("code")
     if not code:
         HttpResponse("Missing 'code' query parameter", status=400)
 
     # Exchange the code for an access token
-    redirect_path = reverse('add_slack_integration')
-    scheme = 'https' if request.is_secure() else 'http'
+    redirect_path = reverse("add_slack_integration")
+    scheme = "https" if request.is_secure() else "http"
     domain = request.get_host()
     full_url = f"{scheme}://{domain}{redirect_path}"
     response = requests.post(
-        'https://slack.com/api/oauth.v2.access',
+        "https://slack.com/api/oauth.v2.access",
         data={
-            'code': code,
-            'client_id': settings.SLACK_CLIENT_ID,
-            'client_secret': settings.SLACK_CLIENT_SECRET,
-            'redirect_uri': full_url,
-        }
+            "code": code,
+            "client_id": settings.SLACK_CLIENT_ID,
+            "client_secret": settings.SLACK_CLIENT_SECRET,
+            "redirect_uri": full_url,
+        },
     )
 
     if response.status_code != 200:
-        HttpResponse(f"Failed to finish Slack integration: {str(response)} ", status=response.status_code)
+        HttpResponse(
+            f"Failed to finish Slack integration: {str(response)} ",
+            status=response.status_code,
+        )
 
     json_response = response.json()
-    if not json_response.get('ok'):
+    if not json_response.get("ok"):
         return HttpResponse(f"Error: {json_response.get('error')}", 400)
 
     # Create a new Slack integration for the user
-    bot_token = encrypt(json_response['access_token'])
-    user_token = encrypt(json_response['authed_user']['access_token'])
+    bot_token = encrypt(json_response["access_token"])
+    user_token = encrypt(json_response["authed_user"]["access_token"])
 
     logger.info(f"Creating Slack integration for user {request.user.username}")
     if not request.user.slack_integration:
-        request.user.slack_integration = SlackIntegration.objects.create(bot_token=bot_token, user_token=user_token)
+        request.user.slack_integration = SlackIntegration.objects.create(
+            bot_token=bot_token, user_token=user_token
+        )
         request.user.save()
     else:
         request.user.slack_integration.bot_token = bot_token
@@ -280,39 +285,44 @@ def add_linear_integration(request):
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse("account_login"))
 
-    code = request.GET.get('code')
+    code = request.GET.get("code")
     if not code:
         HttpResponse("Missing 'code' query parameter", status=400)
 
     # Exchange the code for an access token
-    redirect_path = reverse('add_linear_integration')
-    scheme = 'https' if request.is_secure() else 'http'
+    redirect_path = reverse("add_linear_integration")
+    scheme = "https" if request.is_secure() else "http"
     domain = request.get_host()
     full_url = f"{scheme}://{domain}{redirect_path}"
     response = requests.post(
-        'https://api.linear.app/oauth/token',
+        "https://api.linear.app/oauth/token",
         data={
-            'code': code,
-            'client_id': settings.LINEAR_CLIENT_ID,
-            'client_secret': settings.LINEAR_CLIENT_SECRET,
-            'redirect_uri': full_url,
-            'grant_type': 'authorization_code',
-        }
+            "code": code,
+            "client_id": settings.LINEAR_CLIENT_ID,
+            "client_secret": settings.LINEAR_CLIENT_SECRET,
+            "redirect_uri": full_url,
+            "grant_type": "authorization_code",
+        },
     )
 
     if response.status_code != 200:
-        HttpResponse(f"Failed to finish Linear integration: {str(response)} ", status=response.status_code)
+        HttpResponse(
+            f"Failed to finish Linear integration: {str(response)} ",
+            status=response.status_code,
+        )
 
     json_response = response.json()
     if not response.ok:
         return HttpResponse(f"Error: {json_response.get('error')}", 400)
 
     # Create a new Linear integration for the user
-    access_token = encrypt(json_response['access_token'])
+    access_token = encrypt(json_response["access_token"])
 
     logger.info(f"Creating Linear integration for user {request.user.username}")
     if not request.user.linear_integration:
-        request.user.linear_integration = LinearIntegration.objects.create(access_token=access_token)
+        request.user.linear_integration = LinearIntegration.objects.create(
+            access_token=access_token
+        )
         request.user.save()
     else:
         request.user.linear_integration.access_token = access_token
@@ -341,7 +351,7 @@ class IntegrationView(LoginRequiredMixin, TemplateView):
             if self.request.user.linear_integration
             else None
         )
-        context['site_host'] = self.request.get_host()
+        context["site_host"] = self.request.get_host()
         return context
 
     def post(self, request, *args, **kwargs):

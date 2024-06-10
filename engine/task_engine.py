@@ -169,7 +169,9 @@ class TaskEngine:
                 image_base64 = base64.b64encode(self.task.image).decode()
             else:
                 image_base64 = ""
-            date_and_time = timezone.now().isoformat() + " " + str(timezone.get_current_timezone())
+            date_and_time = (
+                timezone.now().isoformat() + " " + str(timezone.get_current_timezone())
+            )
             executor_result = self.executor.invoke(
                 {
                     "encoded_image_url": f"data:image/png;base64,{image_base64}",

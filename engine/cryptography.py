@@ -6,7 +6,9 @@ from django.conf import settings
 
 
 def load_fernet():
-    key = base64.urlsafe_b64encode(hashlib.sha256(settings.SECRET_KEY.encode()).digest()[:32])
+    key = base64.urlsafe_b64encode(
+        hashlib.sha256(settings.SECRET_KEY.encode()).digest()[:32]
+    )
     return Fernet(key)
 
 

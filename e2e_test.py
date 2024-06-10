@@ -55,8 +55,11 @@ ALL_LINEAR_LISSUES = f"""
 Find all Linear issues of {TIME_FRAME}.
 """
 
+
 def run_e2e_test():
-    task = create_task("Create a test issue in Linear for team PR Pilot", model="gpt-4o")
+    task = create_task(
+        "Create a test issue in Linear for team PR Pilot", model="gpt-4o"
+    )
     settings.TASK_ID = str(task.id)
     os.environ["TASK_ID"] = str(task.id)
     engine = TaskEngine(task)
