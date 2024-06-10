@@ -54,3 +54,7 @@ makemigrations:
 
 ngrok:
 	ngrok http --domain=helping-willing-seasnail.ngrok-free.app 8000
+
+pr-description:
+	# Generate title and PR description (requires PR_NUMBER env var to be set)
+	pilot -f prompts/generate_pr_description.md.jinja2
