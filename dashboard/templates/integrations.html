@@ -8,6 +8,7 @@
                 <div class="list-group" id="integration-list" role="tablist">
                     <a class="list-group-item list-group-item-action active" id="list-slack-list" data-bs-toggle="list" href="#list-slack" role="tab" aria-controls="slack"><i class="fab fa-slack"></i> Slack</a>
                     <a class="list-group-item list-group-item-action" id="list-linear-list" data-bs-toggle="list" href="#list-linear" role="tab" aria-controls="linear"><i class="fa fa-bolt"></i> Linear</a>
+                    <a class="list-group-item list-group-item-action" id="list-new-integration-list" data-bs-toggle="list" href="#list-new-integration" role="tab" aria-controls="new-integration"><i class="fa fa-cogs"></i> New Integration</a>
                 </div>
             </div>
             <div class="col-md-8">
@@ -73,6 +74,42 @@
                                     </p>
                                     <p>
                                         Once activated, this integration will allow PR Pilot to access and update entities in your Linear workspace.
+                                    </p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="list-new-integration" role="tabpanel" aria-labelledby="list-new-integration-list">
+                        <div>
+                            <div>
+                                {% if new_integration_token %}
+                                    <p>
+                                        PR Pilot is connected to your New Integration and can do the following:
+                                        <ul class="list-group">
+                                            <li class="list-group-item d-flex align-items-center"><span class="badge bg-success rounded-pill me-2"><i class="fa-solid fa-cogs"></i></span>Perform actions specific to the new integration</li>
+                                        </ul>
+                                    </p>
+                                    <form method="post" action="{% url 'integrations' %}">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="action" value="delete_new_integration">
+                                        <button type="submit" class="btn btn-danger">Delete New Integration</button>
+                                    </form>
+                                {% else %}
+                                    <p>
+                                        Connect PR Pilot to your New Integration:
+                                    </p>
+                                    <p>
+                                        <form method="post" action="{% url 'integrations' %}">
+                                            {% csrf_token %}
+                                            <div class="mb-3">
+                                                <label for="newIntegrationToken" class="form-label">New Integration Token</label>
+                                                <input type="text" class="form-control" id="newIntegrationToken" name="new_integration_token" required>
+                                            </div>
+                                            <button type="submit" class="btn btn-primary">Connect</button>
+                                        </form>
+                                    </p>
+                                    <p>
+                                        Once activated, this integration will allow PR Pilot to perform actions specific to the new integration.
                                     </p>
                                 {% endif %}
                             </div>
