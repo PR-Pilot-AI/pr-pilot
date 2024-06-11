@@ -15,12 +15,6 @@ def run_graphql_query(api_key: str, query: str):
         "Content-Type": "application/json",
     }
     response = requests.post(LINEAR_API_URL, json={"query": query}, headers=headers)
-    TaskEvent.add(
-        actor="assistant",
-        action="search_linear_workspace",
-        target=query,
-        message=f"Performed a Linear search with query '{query}'",
-    )
     return response.json()
 
 
@@ -53,9 +47,17 @@ def list_linear_tools(api_key: str):
     """Create all tools for PR Pilot to use with Linear API."""
 
     def linear_search_tool(query: str):
+
+        TaskEvent.add(
+            actor="assistant",
+            action="search_linear_workspace",
+            target=query,
+            message=f"Performed a Linear search with query '{query}'",
+        )
         return run_graphql_query(api_key, query)
 
     def create_linear_issue_tool(title: str, description: str, team_name: str):
+
         team_id = get_team_id_by_name(api_key, team_name)
         query = f"""
         mutation IssueCreate {{
@@ -75,7 +77,16 @@ def list_linear_tools(api_key: str):
             }}
         }}
         """
-        return run_graphql_query(api_key, query)
+        response = run_graphql_query(api_key, query)
+        issue = response["data"]["issueCreate"]["issue"]
+        issue_link = issue["url"]
+        TaskEvent.add(
+            actor="assistant",
+            action="create_linear_issue",
+            target=issue["id"],
+            message=f"Created a new Linear issue [{issue['title']}]({issue_link}) in team '{team_name}'",
+        )
+        return response
 
     return [
         Tool(
