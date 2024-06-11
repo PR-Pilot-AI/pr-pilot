@@ -21,6 +21,11 @@ urlpatterns = [
         dashboard.views.integrations.add_linear_integration,
         name="add_linear_integration",
     ),
+    path(
+        "add-pr-pilot-integration/",
+        dashboard.views.integrations.add_pr_pilot_integration,
+        name="add_pr_pilot_integration",
+    ),
     path("tasks/", dashboard.views.tasks.TaskListView.as_view(), name="task_list"),
     path(
         "integrations/",
