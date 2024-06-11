@@ -9,7 +9,7 @@ from django.shortcuts import redirect
 from django.urls import reverse
 from django.views.generic import TemplateView
 
-from accounts.models import SlackIntegration, LinearIntegration, UserBudget
+from accounts.models import SlackIntegration, LinearIntegration, PRPilotIntegration, UserBudget
 from engine.cryptography import encrypt
 
 
@@ -125,6 +125,60 @@ def add_linear_integration(request):
     return redirect("integrations")
 
 
+@login_required
+def add_pr_pilot_integration(request):
+    """Callback for PR Pilot Oauth flow."""
+    # Check if the user is authenticated
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse("account_login"))
+
+    code = request.GET.get("code")
+    if not code:
+        HttpResponse("Missing 'code' query parameter", status=400)
+
+    # Exchange the code for an access token
+    redirect_path = reverse("add_pr_pilot_integration")
+    scheme = "https" if request.is_secure() else "http"
+    domain = request.get_host()
+    full_url = f"{scheme}://{domain}{redirect_path}"
+    response = requests.post(
+        "https://prpilot.com/api/oauth/token",
+        data={
+            "code": code,
+            "client_id": settings.PRPILOT_CLIENT_ID,
+            "client_secret": settings.PRPILOT_CLIENT_SECRET,
+            "redirect_uri": full_url,
+            "grant_type": "authorization_code",
+        },
+    )
+
+    if response.status_code != 200:
+        HttpResponse(
+            f"Failed to finish PR Pilot integration: {str(response)} ",
+            status=response.status_code,
+        )
+
+    json_response = response.json()
+    if not response.ok:
+        return HttpResponse(f"Error: {json_response.get('error')}", 400)
+
+    # Create a new PR Pilot integration for the user
+    access_token = encrypt(json_response["access_token"])
+
+    logger.info(f"Creating PR Pilot integration for user {request.user.username}")
+    if not request.user.pr_pilot_integration:
+        request.user.pr_pilot_integration = PRPilotIntegration.objects.create(
+            access_token=access_token
+        )
+        request.user.save()
+    else:
+        request.user.pr_pilot_integration.access_token = access_token
+        request.user.pr_pilot_integration.save()
+
+    # Redirect to the integrations page
+    return redirect("integrations")
+
+
 class IntegrationView(LoginRequiredMixin, TemplateView):
     template_name = "integrations.html"
 
@@ -144,6 +198,11 @@ class IntegrationView(LoginRequiredMixin, TemplateView):
             if self.request.user.linear_integration
             else None
         )
+        context["pr_pilot_access_token"] = (
+            self.request.user.pr_pilot_integration.access_token
+            if self.request.user.pr_pilot_integration
+            else None
+        )
         context["site_host"] = self.request.get_host()
         return context
 
@@ -159,4 +218,9 @@ class IntegrationView(LoginRequiredMixin, TemplateView):
             # Delete the Linear API key from the user's profile
             request.user.linear_integration.access_token = None
             request.user.linear_integration.save()
+        elif action == "delete_pr_pilot_integration":
+            logger.info(f"Deleting PR Pilot integration for user {request.user.username}")
+            # Delete the PR Pilot API key from the user's profile
+            request.user.pr_pilot_integration.access_token = None
+            request.user.pr_pilot_integration.save()
         return redirect("integrations")
