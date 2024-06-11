@@ -11,12 +11,21 @@ class SlackIntegration(models.Model):
     user_token = models.TextField(null=True, blank=False)
 
 
+class ServiceCredentials(models.Model):
+    user = models.OneToOneField('PilotUser', on_delete=models.CASCADE)
+    service_name = models.CharField(max_length=255)
+    credentials = models.JSONField()
+
+
 class PilotUser(AbstractUser):
     linear_integration = models.OneToOneField(
         LinearIntegration, on_delete=models.CASCADE, null=True, blank=True
     )
     slack_integration = models.OneToOneField(
         SlackIntegration, on_delete=models.CASCADE, null=True, blank=True
+    )
+    service_credentials = models.OneToOneField(
+        ServiceCredentials, on_delete=models.CASCADE, null=True, blank=True
     )
 
 
