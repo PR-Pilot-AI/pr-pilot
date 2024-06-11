@@ -11,6 +11,13 @@ class SlackIntegration(models.Model):
     user_token = models.TextField(null=True, blank=False)
 
 
+class ServiceCredentials(models.Model):
+    user = models.ForeignKey('PilotUser', on_delete=models.CASCADE)
+    service_name = models.CharField(max_length=255)
+    api_key = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
 class PilotUser(AbstractUser):
     linear_integration = models.OneToOneField(
         LinearIntegration, on_delete=models.CASCADE, null=True, blank=True
