@@ -27,6 +27,8 @@ from webhooks.jwt_tools import get_installation_access_token
 
 logger = logging.getLogger(__name__)
 
+MAX_BRANCH_NAME_LENGTH = 24
+
 
 class TaskEngine:
 
@@ -51,7 +53,13 @@ class TaskEngine:
     def create_unique_branch_name(self, basis: str):
         """Create branch name based on a given string. If branch exists,
         add increasing numbers at the end"""
-        unique_branch_name = f"pr-pilot/{slugify(basis)}"[:50]
+        slugified_basis = slugify(basis)
+        # Cut off branch name at las hyphen before 24 characters
+        if "-" in slugified_basis:
+            while len(slugified_basis) > MAX_BRANCH_NAME_LENGTH:
+                slugified_basis = slugified_basis[:slugified_basis.rindex("-")]
+
+        unique_branch_name = slugified_basis[:24]
         repo = Repo(settings.REPO_DIR)
 
         counter = 1

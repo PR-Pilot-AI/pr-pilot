@@ -6,7 +6,7 @@ import pytest
 
 from engine.models.task import Task
 from engine.models.task_bill import TaskBill
-from engine.task_engine import TaskEngine
+from engine.task_engine import TaskEngine, MAX_BRANCH_NAME_LENGTH
 
 
 @pytest.fixture(autouse=True)
@@ -139,11 +139,11 @@ def test_handles_custom_branch_correctly(task, engine, mock_project_class):
 
 @pytest.mark.django_db
 @pytest.mark.parametrize("existing_branches, expected_branch_name", [
-    ([], "pr-pilot/test-basis"),
-    (["pr-pilot/test-basis"], "pr-pilot/test-basis-1"),
-    (["pr-pilot/test-basis", "pr-pilot/test-basis-1"], "pr-pilot/test-basis-2"),
+    ([], "test-basis"),
+    (["test-basis"], "test-basis-1"),
+    (["test-basis", "test-basis-1"], "test-basis-2"),
 ])
-def test_create_unique_branch_name(task, existing_branches, expected_branch_name):
+def test_create_unique_branch_name__existing_branch(task, existing_branches, expected_branch_name):
     with patch("engine.task_engine.Repo") as MockRepo:
         mock_repo = MockRepo.return_value
         mock_repo.branches = existing_branches
@@ -153,4 +153,21 @@ def test_create_unique_branch_name(task, existing_branches, expected_branch_name
 
         assert branch_name == expected_branch_name
 
+
+@pytest.mark.django_db
+@pytest.mark.parametrize("branch_basis, expected_branch_name", [
+    ("Something long with Uppercase Characters", "something-long-with"),
+    ("A lot of  ==' special chars", "a-lot-of-special-chars"),
+    ("anokbranchname", "anokbranchname"),
+    ("a" * 100, "a" * MAX_BRANCH_NAME_LENGTH),
+])
+def test_create_unique_branch_name__slug(task, branch_basis, expected_branch_name):
+    with patch("engine.task_engine.Repo") as MockRepo:
+        mock_repo = MockRepo.return_value
+        mock_repo.branches = []
+
+        engine = TaskEngine(task)
+        branch_name = engine.create_unique_branch_name(branch_basis)
+
+        assert branch_name == expected_branch_name
 
