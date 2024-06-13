@@ -1,0 +1,192 @@
+[
+    {
+        "issue_number": 22,
+        "title": "Refactor TaskEngine Class into Multiple Modules",
+        "url": "https://github.com/PR-Pilot-AI/pr-pilot/issues/22"
+    },
+    {
+        "issue_number": 24,
+        "title": "Document and Integrate New TaskEngine Modules",
+        "url": "https://github.com/PR-Pilot-AI/pr-pilot/issues/24"
+    },
+    {
+        "issue_number": 25,
+        "title": "🔧 Refactor TaskEngine Class: Initialize and Manage Branches",
+        "url": "https://github.com/PR-Pilot-AI/pr-pilot/pull/25"
+    },
+    {
+        "issue_number": 35,
+        "title": "Create README.md",
+        "url": "https://github.com/PR-Pilot-AI/pr-pilot/issues/35"
+    },
+    {
+        "issue_number": 36,
+        "title": "🚀 Add comprehensive README.md for PR Pilot project",
+        "url": "https://github.com/PR-Pilot-AI/pr-pilot/pull/36"
+    },
+    {
+        "issue_number": 47,
+        "title": "Add emojis to the README file",
+        "url": "https://github.com/PR-Pilot-AI/pr-pilot/issues/47"
+    },
+    {
+        "issue_number": 48,
+        "title": "✨ Added Emojis to README.md",
+        "url": "https://github.com/PR-Pilot-AI/pr-pilot/pull/48"
+    },
+    {
+        "issue_number": 50,
+        "title": "Document PR Pilot Architecture",
+        "url": "https://github.com/PR-Pilot-AI/pr-pilot/issues/50"
+    },
+    {
+        "issue_number": 51,
+        "title": "Document Domain Model",
+        "url": "https://github.com/PR-Pilot-AI/pr-pilot/issues/51"
+    },
+    {
+        "issue_number": 52,
+        "title": "✨ Add documentation for domain model",
+        "url": "https://github.com/PR-Pilot-AI/pr-pilot/pull/52"
+    },
+    {
+        "issue_number": 53,
+        "title": "✨ Add architecture documentation",
+        "url": "https://github.com/PR-Pilot-AI/pr-pilot/pull/53"
+    },
+    {
+        "issue_number": 57,
+        "title": "Document User Journey",
+        "url": "https://github.com/PR-Pilot-AI/pr-pilot/issues/57"
+    },
+    {
+        "issue_number": 61,
+        "title": "Create a Prompt Guide",
+        "url": "https://github.com/PR-Pilot-AI/pr-pilot/issues/61"
+    },
+    {
+        "issue_number": 63,
+        "title": "✨ Update socialaccount/signup.html with PR Pilot information",
+        "url": "https://github.com/PR-Pilot-AI/pr-pilot/pull/63"
+    },
+    {
+        "issue_number": 67,
+        "title": "📝 Document the `fork_issue` Feature",
+        "url": "https://github.com/PR-Pilot-AI/pr-pilot/issues/67"
+    },
+    {
+        "issue_number": 81,
+        "title": "🚀 Add Workflow for Writing Technical Specification",
+        "url": "https://github.com/PR-Pilot-AI/pr-pilot/pull/81"
+    },
+    {
+        "issue_number": 86,
+        "title": "✨ Implement TaskWorker class and configure Redis in helm chart",
+        "url": "https://github.com/PR-Pilot-AI/pr-pilot/pull/86"
+    },
+    {
+        "issue_number": 89,
+        "title": "✨ New Workflow for Generating Diagrams",
+        "url": "https://github.com/PR-Pilot-AI/pr-pilot/pull/89"
+    },
+    {
+        "issue_number": 90,
+        "title": "📊 Sequence Diagram of Task Lifecycle",
+        "url": "https://github.com/PR-Pilot-AI/pr-pilot/issues/90"
+    },
+    {
+        "issue_number": 91,
+        "title": "📊 Class Diagram of TaskEngine, Task, TaskScheduler",
+        "url": "https://github.com/PR-Pilot-AI/pr-pilot/issues/91"
+    },
+    {
+        "issue_number": 92,
+        "title": "✨ Save content from Issue #91 as markdown file",
+        "url": "https://github.com/PR-Pilot-AI/pr-pilot/pull/92"
+    },
+    {
+        "issue_number": 93,
+        "title": "✨ Add detailed task lifecycle documentation to docs/code/task_processing.md",
+        "url": "https://github.com/PR-Pilot-AI/pr-pilot/pull/93"
+    },
+    {
+        "issue_number": 94,
+        "title": "✨ Integrated TaskEngine, Task, and TaskScheduler into domain_model.md",
+        "url": "https://github.com/PR-Pilot-AI/pr-pilot/pull/94"
+    },
+    {
+        "issue_number": 95,
+        "title": "📝 Update documentation for task worker and Redis queue in PR Pilot architecture",
+        "url": "https://github.com/PR-Pilot-AI/pr-pilot/pull/95"
+    },
+    {
+        "issue_number": 99,
+        "title": "🚀 Updated capabilities.md document for AI agent in PR Pilot project",
+        "url": "https://github.com/PR-Pilot-AI/pr-pilot/pull/99"
+    },
+    {
+        "issue_number": 106,
+        "title": "📊 Flow Diagram of TaskEngine and TaskScheduler Interaction",
+        "url": "https://github.com/PR-Pilot-AI/pr-pilot/issues/106"
+    },
+    {
+        "issue_number": 115,
+        "title": "📚 Improve Documentation for TaskEngine Class",
+        "url": "https://github.com/PR-Pilot-AI/pr-pilot/issues/115"
+    },
+    {
+        "issue_number": 123,
+        "title": "📝 Update Task Processing Documentation",
+        "url": "https://github.com/PR-Pilot-AI/pr-pilot/pull/123"
+    },
+    {
+        "issue_number": 124,
+        "title": "📄 Update Documentation for Task Processing",
+        "url": "https://github.com/PR-Pilot-AI/pr-pilot/pull/124"
+    },
+    {
+        "issue_number": 130,
+        "title": "📜 New Poem: Celebrating PR Pilot's Journey",
+        "url": "https://github.com/PR-Pilot-AI/pr-pilot/pull/130"
+    },
+    {
+        "issue_number": 146,
+        "title": "📄 Update: Documentation Issue Tracking and Script",
+        "url": "https://github.com/PR-Pilot-AI/pr-pilot/pull/146"
+    },
+    {
+        "issue_number": 148,
+        "title": "📄 Update: Documentation Ticket Handling",
+        "url": "https://github.com/PR-Pilot-AI/pr-pilot/pull/148"
+    },
+    {
+        "issue_number": 149,
+        "title": "📄 Update: Documentation Tickets Processing",
+        "url": "https://github.com/PR-Pilot-AI/pr-pilot/pull/149"
+    },
+    {
+        "issue_number": 151,
+        "title": "📄 Update: Documentation Ticket Handling",
+        "url": "https://github.com/PR-Pilot-AI/pr-pilot/pull/151"
+    },
+    {
+        "issue_number": 152,
+        "title": "📄 Update: Save and Process Documentation Issues",
+        "url": "https://github.com/PR-Pilot-AI/pr-pilot/pull/152"
+    },
+    {
+        "issue_number": 153,
+        "title": "📄 Update: Save and Process Documentation Issues",
+        "url": "https://github.com/PR-Pilot-AI/pr-pilot/pull/153"
+    },
+    {
+        "issue_number": 154,
+        "title": "📄 Update: Documentation Ticket Processing",
+        "url": "https://github.com/PR-Pilot-AI/pr-pilot/pull/154"
+    },
+    {
+        "issue_number": 155,
+        "title": "📄 Update Documentation Handling",
+        "url": "https://github.com/PR-Pilot-AI/pr-pilot/pull/155"
+    }
+]
