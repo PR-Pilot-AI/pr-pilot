@@ -57,7 +57,7 @@ class TaskEngine:
         # Cut off branch name at las hyphen before 24 characters
         if "-" in slugified_basis:
             while len(slugified_basis) > MAX_BRANCH_NAME_LENGTH:
-                slugified_basis = slugified_basis[:slugified_basis.rindex("-")]
+                slugified_basis = slugified_basis[: slugified_basis.rindex("-")]
 
         unique_branch_name = slugified_basis[:24]
         repo = Repo(settings.REPO_DIR)

@@ -138,12 +138,17 @@ def test_handles_custom_branch_correctly(task, engine, mock_project_class):
 
 
 @pytest.mark.django_db
-@pytest.mark.parametrize("existing_branches, expected_branch_name", [
-    ([], "test-basis"),
-    (["test-basis"], "test-basis-1"),
-    (["test-basis", "test-basis-1"], "test-basis-2"),
-])
-def test_create_unique_branch_name__existing_branch(task, existing_branches, expected_branch_name):
+@pytest.mark.parametrize(
+    "existing_branches, expected_branch_name",
+    [
+        ([], "test-basis"),
+        (["test-basis"], "test-basis-1"),
+        (["test-basis", "test-basis-1"], "test-basis-2"),
+    ],
+)
+def test_create_unique_branch_name__existing_branch(
+    task, existing_branches, expected_branch_name
+):
     with patch("engine.task_engine.Repo") as MockRepo:
         mock_repo = MockRepo.return_value
         mock_repo.branches = existing_branches
@@ -155,12 +160,15 @@ def test_create_unique_branch_name__existing_branch(task, existing_branches, exp
 
 
 @pytest.mark.django_db
-@pytest.mark.parametrize("branch_basis, expected_branch_name", [
-    ("Something long with Uppercase Characters", "something-long-with"),
-    ("A lot of  ==' special chars", "a-lot-of-special-chars"),
-    ("anokbranchname", "anokbranchname"),
-    ("a" * 100, "a" * MAX_BRANCH_NAME_LENGTH),
-])
+@pytest.mark.parametrize(
+    "branch_basis, expected_branch_name",
+    [
+        ("Something long with Uppercase Characters", "something-long-with"),
+        ("A lot of  ==' special chars", "a-lot-of-special-chars"),
+        ("anokbranchname", "anokbranchname"),
+        ("a" * 100, "a" * MAX_BRANCH_NAME_LENGTH),
+    ],
+)
 def test_create_unique_branch_name__slug(task, branch_basis, expected_branch_name):
     with patch("engine.task_engine.Repo") as MockRepo:
         mock_repo = MockRepo.return_value
@@ -170,4 +178,3 @@ def test_create_unique_branch_name__slug(task, branch_basis, expected_branch_nam
         branch_name = engine.create_unique_branch_name(branch_basis)
 
         assert branch_name == expected_branch_name
-
