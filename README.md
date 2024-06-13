@@ -22,7 +22,15 @@ Get started now with our [User Guide](https://docs.pr-pilot.ai/user_guide.html).
 <img src="docs/source/img/overview.png" alt="PR Pilot" height="350">
 
 
-
+```mermaid
+graph TD
+    A[User] -->|Issues command via<br>Github, Slack, etc.| B(PR Pilot)
+    B --> C{Interprets Command}
+    C -->|Checks out code| D[Docker Container]
+    C -->|Runs task| D
+    D --> E[Creates new PR]
+    E -->|Response sent to| A
+```
 
 ### Hand of work to PR Pilot from anywhere
 
