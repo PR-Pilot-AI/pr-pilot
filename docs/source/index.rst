@@ -28,6 +28,7 @@ Given a prompt, it uses LLMs (Large Language Models) to autonomously interact wi
    team
    faq
    prompt_guide
+   fork_issue
 
 Head over to our :ref:`userguide` to get started!
 
