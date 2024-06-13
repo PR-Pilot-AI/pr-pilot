@@ -135,3 +135,22 @@ def test_handles_custom_branch_correctly(task, engine, mock_project_class):
     # Make sure it only pushes the changes, but does not create a PR
     engine.finalize_working_branch.assert_called_once()
     mock_project_class.from_github.create_pull_request.assert_not_called()
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize("existing_branches, expected_branch_name", [
+    ([], "pr-pilot/test-basis"),
+    (["pr-pilot/test-basis"], "pr-pilot/test-basis-1"),
+    (["pr-pilot/test-basis", "pr-pilot/test-basis-1"], "pr-pilot/test-basis-2"),
+])
+def test_create_unique_branch_name(task, existing_branches, expected_branch_name):
+    with patch("engine.task_engine.Repo") as MockRepo:
+        mock_repo = MockRepo.return_value
+        mock_repo.branches = existing_branches
+
+        engine = TaskEngine(task)
+        branch_name = engine.create_unique_branch_name("test-basis")
+
+        assert branch_name == expected_branch_name
+
+
