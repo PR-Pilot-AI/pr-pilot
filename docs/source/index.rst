@@ -6,13 +6,26 @@
 PR Pilot Documentation
 ======================
 
-PR Pilot gives you a natural language interface for your Github projects.
-Given a prompt, it uses LLMs (Large Language Models) to autonomously interact with your code base and Github issues, enabling a wide variety of ground-breaking AI-assisted automation use cases.
+Save time and stay in the flow by delegating routine work to AI with confidence and predictability. PR Pilot assist you in your daily workflow and works with the dev tools you trust and love - exactly when and where you want it.
 
-.. image:: img/overview.png
-   :alt: alternative text
-   :align: center
 
+Quick Start
+-----------
+
+First, `add PR Pilot to your GitHub repository <https://github.com/apps/pr-pilot-ai/installations/new>`_.
+
+Then, install the CLI:
+
+.. code-block:: bash
+
+   brew tap pr-pilot-ai/homebrew-tap
+   brew install pr-pilot-cli
+
+Get your API Key from the `dashboard <https://app.pr-pilot.ai/dashboard/api-keys/>`_ and you're ready to go!
+
+.. code-block:: bash
+
+   pilot edit README.md "Add emojis to all headers"
 
 .. toctree::
    :maxdepth: 0
@@ -27,5 +40,3 @@ Given a prompt, it uses LLMs (Large Language Models) to autonomously interact wi
    support
    team
    faq
-
-Head over to our :ref:`userguide` to get started!

@@ -1,72 +1,80 @@
 (userguide)=
 # User Guide
-
-PR Pilot gives you a natural language interface for your Github projects. Given a prompt, it uses LLMs (Large Language Models) to autonomously interact with your code base and Github issues, enabling a wide variety of ground-breaking AI-assisted automation use cases.
+PR Pilot is designed for you to save time and to help you stay in the flow. 
+The CLI lets you to delegate routine work to AI with confidence and predictability. 
 
 This guide will help you understand how to use PR Pilot with your Github project.
 ## Installation
 
 If you haven't done so, [install PR Pilot](https://github.com/apps/pr-pilot-ai/installations/new) into your repository.
 
-## Where to Start
+## The Basics
 
-PR Pilot's "text-to-action" approach allows you to interact with your Github project using natural language via our [API](https://app.pr-pilot.ai/api/swagger-ui/).
+Every interaction between you and PR Pilot is a task. Tasks are created using prompts.
 
-![PR Pilot Architecture](img/overview.png)
+You and your tools can interact with PR Pilot using natural language,
+supported by a variety of tools and integrations.
+Which one is best for you highly depends on your specific use case. On [YouTube](https://www.youtube.com/watch?v=HVcW3ceqtfw&list=PLDz7ICzRy18wEgi70CPqsaCoNVSEw1GI9), 
+we provide examples of how to use PR Pilot in different scenarios.
 
-Built on top of the API, PR Pilot offers a variety of tools and integrations to help you automate your Github project.
-Which one is best for you highly depends on your specific use case. In our [blog](https://www.pr-pilot.ai/blog), 
-we provide examples of how to use PR Pilot in different scenarios, for example:
-
-- [Building a slash command for Slack](https://www.pr-pilot.ai/blog/a-natural-language-interface-between-slack-and-github)
-- [LLM-assisted technical refinements for JIRA tickets](https://www.pr-pilot.ai/blog/a-jira-integration-for-llm-assisted-technical-refinements)
-- [Creating Github Actions that interact with issues and PRs using natural language](https://www.pr-pilot.ai/blog/the-power-of-agentic-workflows)
-
-You can use PR Pilot in different ways:
-
-### Command-Line Interface
+## Command-Line Interface
 Our [CLI](https://github.com/PR-Pilot-AI/pr-pilot-cli) puts PR Pilot right at your fingertips:
 
 ```bash
-pip install --upgrade pr-pilot-cli
+brew tap pr-pilot-ai/homebrew-tap
+brew install pr-pilot-cli
 ```
 
-Open a terminal and `ls` into a repository you have installed PR Pilot, then:
-
-**📝 Ask PR Pilot to edit a local file for you:**
+Open a terminal and `ls` into a repository you have installed PR Pilot, then
+use the `pilot` command:
 
 ```bash
-pilot --edit cli/cli.py "Make sure all functions and classes have docstrings."
+pilot edit main.py "Make sure all functions and classes have docstrings."
 ```
 
-**⚡ Generate code quickly and save it as a file:**
+For more details, head over to the [CLI Documentation](https://github.com/PR-Pilot-AI/pr-pilot-cli). 
+
+### File Changes, Branches and Pull Requests
+By default, whenever PR Pilot creates or edits files,
+it will create a new branch and open a pull request for you.
+
+For example:
 
 ```bash
-pilot -o test_utils.py --code "Write some unit tests for the utils.py file."
+pilot task "Edit the README.md file: Add emojis to all headers"
 ```
 
-**🔍 Capture part of your screen and add it to a prompt:**
+will result in a new branch and a pull request with the changes.
+
+However, you can also edit local files directly:
 
 ```bash
-pilot -o component.html --code --snap "Write a Bootstrap5 component that looks like this."
+pilot edit README.md "Add emojis to all headers"
 ```
 
-**📊 Get an organized view of your Github issues:**
+This will not create a branch or a pull request, but will edit the file in-place.
 
-```bash
-pilot "Find all open Github issues labeled as 'bug', categorize and prioritize them"
+### Configuration and Customization
+
+To customize PR Pilot's behavior, use `~/.pr-pilot.yaml`:
+
+```yaml
+# Your API Key from https://app.pr-pilot.ai/dashboard/api-keys/
+api_key: YOUR_API_KEY
+
+# Default Github repository if not running CLI in a repository directory
+default_repo: owner/repo
+
+# Enable --sync by default
+auto_sync: true
+
+# Suppress status messages by default
+quiet: true
 ```
 
-**📝 Generate parts of your documentation with a template:**
-
-```bash
-pilot --direct -f prompts/README.md.jinja2 -o README.md
-```
-
-For more examples, check out [template prompts](https://github.com/PR-Pilot-AI/pr-pilot-cli/tree/main/prompts).
 
 
-### Python SDK
+## Python SDK
 
 To use PR Pilot in your own tools and integrations, you can use the [Python SDK](https://github.com/PR-Pilot-AI/pr-pilot-python):
 
@@ -79,9 +87,16 @@ Use the `create_task`, `get_task` and `wait_for_result` functions to automate yo
 ```python
 from pr_pilot.util import create_task, wait_for_result
 
+prompt = """
+1. Find all 'bug' issues created yesterday on Slack and Linear.
+2. Summarize and post them to #bugs-daily on Slack
+3. Save the summary in `reports/<date>.md`
+"""
+
 github_repo = "PR-Pilot-AI/pr-pilot"
-task = create_task(github_repo, "Summarize the README file and create a Github issue with the result.")
+task = create_task(github_repo, prompt)
 result = wait_for_result(task)
+
 print(result)
 ```
 
