@@ -117,11 +117,27 @@ def test_create_linear_issue_tool(api_key, team_name, graphql_response):
                 }
             },  # Response for create issue
         ]
-        result = create_tool.func(
+        result_message = create_tool.func(
             title=title, description=description, team_name=team_name
         )
-        assert result["data"]["issueCreate"]["issue"]["id"] == "issue1"
-        assert result["data"]["issueCreate"]["issue"]["title"] == title
-        assert (
-            result["data"]["issueCreate"]["issue"]["url"] == "http://linear.app/issue1"
+        assert result_message == f"Created a new Linear issue [{title}](http://linear.app/issue1) in team `{team_name}`"
+
+
+def test_create_linear_issue_tool_error(api_key, team_name, graphql_response):
+    tools = list_linear_tools(api_key)
+    create_tool = tools[1]
+    title = "Test Issue"
+    description = "This is a test issue."
+    with patch(
+        "engine.agents.integration_tools.linear_tools.run_graphql_query"
+    ) as mock_run_query:
+        mock_run_query.side_effect = [
+            graphql_response,  # Response for get_team_id_by_name
+            {
+                "errors": [{"message": "Error creating issue"}]
+            },  # Response for create issue
+        ]
+        result_message = create_tool.func(
+            title=title, description=description, team_name=team_name
         )
+        assert result_message == "Error creating Linear issue: Error creating issue"
