@@ -120,7 +120,10 @@ def test_create_linear_issue_tool(api_key, team_name, graphql_response):
         result_message = create_tool.func(
             title=title, description=description, team_name=team_name
         )
-        assert result_message == f"Created a new Linear issue [{title}](http://linear.app/issue1) in team `{team_name}`"
+        assert (
+            result_message
+            == f"Created a new Linear issue [{title}](http://linear.app/issue1) in team `{team_name}`"
+        )
 
 
 def test_create_linear_issue_tool_error(api_key, team_name, graphql_response):
