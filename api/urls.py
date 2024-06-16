@@ -10,6 +10,7 @@ from api import views
 urlpatterns = [
     path("tasks/", views.create_task, name="create_task"),
     path("tasks/<uuid:pk>/", views.get_task, name="get_task"),
+    path("tasks/list/", views.list_tasks, name="list_tasks"),
     path("openapi.yaml", SpectacularAPIView.as_view(), name="schema"),
     # Optional UI:
     path(
