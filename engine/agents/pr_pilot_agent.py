@@ -137,7 +137,7 @@ def move_file(source: str, destination: str):
 
 
 @tool
-def write_file(path: str, complete_entire_file_content: str, commit_message: str):
+def write_file(path: str, complete_entire_file_content: str, commit_message: Optional[str]):
     """Write content to a file.
     :param path: Path to the file
     :param complete_entire_file_content: Complete content of the file. NEVER use placeholders or partial content.
@@ -147,6 +147,8 @@ def write_file(path: str, complete_entire_file_content: str, commit_message: str
     file_system = FileSystem()
     TaskEvent.add(actor="assistant", action="write_file", target=path)
     file_system.save(complete_entire_file_content, Path(path))
+    if not commit_message:
+        commit_message = f"Update {path}"
     Project.commit_all_changes(commit_message)
     return f"Successfully wrote content to `{path}`"
 

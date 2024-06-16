@@ -6,6 +6,7 @@ import pytest
 from rest_framework.test import APIClient
 
 from api.models import UserAPIKey
+from api.views import TASK_LIST_LIMIT
 from engine.models.task import Task
 from webhooks.models import GithubRepository, GitHubAppInstallation, GitHubAccount
 
@@ -180,3 +181,29 @@ def test_create_task_via_api__branch_setting(api_key, github_repo):
     assert response.status_code == 201
     task = Task.objects.first()
     assert task.branch == "feature-branch"
+
+
+def create_task(api_key, github_repo):
+    response = client.post(
+        "/api/tasks/",
+        {
+            "prompt": "Hello, World!",
+            "github_repo": github_repo.full_name,
+        },
+        headers={"X-Api-Key": api_key},
+        format="json",
+    )
+    assert response.status_code == 201
+    return response.json()
+
+
+@pytest.mark.django_db
+def test_list_tasks(api_key, github_repo):
+    for i in range(TASK_LIST_LIMIT + 1):
+        create_task(api_key, github_repo)
+
+    response = client.get("/api/tasks/", headers={"X-Api-Key": api_key}, format="json")
+
+    # Check the response
+    assert response.status_code == 200
+    assert len(response.data) == TASK_LIST_LIMIT

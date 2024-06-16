@@ -69,15 +69,3 @@ class TaskSerializer(serializers.ModelSerializer):
             "gpt_model",
             "branch",
         ]
-
-
-class TaskListSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Task
-        fields = [
-            "id",
-            "title",
-            "status",
-            "created",
-        ]
-        read_only_fields = fields

@@ -11,10 +11,13 @@ from rest_framework.response import Response
 from rest_framework_api_key.permissions import BaseHasAPIKey
 
 from api.models import UserAPIKey
-from api.serializers import PromptSerializer, TaskSerializer, TaskListSerializer
+from api.serializers import PromptSerializer, TaskSerializer
 from engine.models.task import Task, TaskType
 from webhooks.jwt_tools import get_installation_access_token
 from webhooks.models import GithubRepository
+
+# Number of tasks to show in the task list
+TASK_LIST_LIMIT = 10
 
 
 class HasUserAPIKey(BaseHasAPIKey):
@@ -70,11 +73,12 @@ class HasUserAPIKey(BaseHasAPIKey):
 @api_view(["POST"])
 @permission_classes([HasUserAPIKey])
 def create_task(request):
+    """Create a new task."""
     api_key = UserAPIKey.objects.get_from_key(request.headers["X-Api-Key"])
     serializer = PromptSerializer(data=request.data)
     if serializer.is_valid():
         github_user = api_key.username
-        try {
+        try:
             repo = GithubRepository.objects.get(
                 full_name=serializer.validated_data["github_repo"]
             )
@@ -144,6 +148,7 @@ def create_task(request):
 @api_view(["GET"])
 @permission_classes([HasUserAPIKey])
 def get_task(request, pk):
+    """Retrieve a task by ID."""
     api_key = UserAPIKey.objects.get_from_key(request.headers["X-Api-Key"])
     task = Task.objects.get(id=pk)
     if task.github_user != api_key.username:
@@ -154,14 +159,15 @@ def get_task(request, pk):
 
 @extend_schema(
     responses={
-        status.HTTP_200_OK: TaskListSerializer(many=True),
+        status.HTTP_200_OK: TaskSerializer(many=True),
     },
-    tags=["Task List"],
+    tags=["Task Retrieval"],
 )
 @api_view(["GET"])
 @permission_classes([HasUserAPIKey])
 def list_tasks(request):
+    """List the last 10 tasks created by you."""
     api_key = UserAPIKey.objects.get_from_key(request.headers["X-Api-Key"])
     tasks = Task.objects.filter(github_user=api_key.username)
-    serializer = TaskListSerializer(tasks, many=True)
+    serializer = TaskSerializer(tasks, many=True)
     return Response(serializer.data)
