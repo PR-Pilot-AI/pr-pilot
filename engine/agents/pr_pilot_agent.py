@@ -263,7 +263,7 @@ def search_for_code_snippets(search_regex: str, glob: str) -> str:
         - Do NOT use file names in the `search_regex` parameter. Use the `glob` parameter to limit the search to specific files.
     """
     search_path = os.path.join(settings.REPO_DIR, glob)
-    command = f"rg -n {shlex.quote(search_regex)} {shlex.quote(str(search_path))}"
+    command = f"rg -n {shlex.quote(search_regex)} {str(search_path)}"
     TaskEvent.add(
         actor="assistant",
         action="search_code",
