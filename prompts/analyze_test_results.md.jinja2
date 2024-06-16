@@ -7,10 +7,11 @@ We ran our unit tests, here's the output:
 If the tests are green, do nothing. Otherwise:
 1. Read the PR #{{ env('PR_NUMBER') }}
 2. Understand which code changes caused the tests to fail
-3. Comment on the PR
+3. Provide the following as a comment on the PR:
+   - Which tests failed, including Markdown links to the files
+   - Code snippets that show the changes that caused the tests to fail
+   - A suggestion for how to fix the code and/or tests
 
 Your comment should:
 - Not have a headline
 - Not be spammy, keep it concise
-- Start by listing which tests failed, including Markdown links to the files
-- If applicable, provide code snippets that show the changes that caused the tests to fail

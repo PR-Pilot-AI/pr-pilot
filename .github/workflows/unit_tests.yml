@@ -33,5 +33,5 @@ jobs:
         PR_NUMBER: ${{ github.event.pull_request.number }}
         PR_PILOT_API_KEY: ${{ secrets.PR_PILOT_API_KEY }}
       run: |
-        pip install pr-pilot-cli==1.4.1
-        pilot --cheap --no-spinner -f prompts/analyze_test_results.md.jinja2
+        pip install pr-pilot-cli==1.8.9
+        pilot --no-spinner task -f prompts/analyze_test_results.md.jinja2
