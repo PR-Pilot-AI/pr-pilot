@@ -1,3 +1,4 @@
+import json
 import logging
 
 import requests
@@ -59,7 +60,9 @@ def list_linear_tools(api_key: str):
         )
         response = run_graphql_query(api_key, query)
         if "errors" in response:
-            message = f"Error searching Linear workspace: {response['errors'][0]['message']}"
+            message = (
+                f"Error searching Linear workspace: {response['errors'][0]['message']}"
+            )
             logger.error(message)
             logger.error(response)
             TaskEvent.add(
@@ -67,14 +70,7 @@ def list_linear_tools(api_key: str):
                 action="error",
                 message=message,
             )
-        else:
-            message = f"Found {len(response['data'])} results in the Linear workspace."
-            TaskEvent.add(
-                actor="assistant",
-                action="search_linear_workspace",
-                message=f"Performed a Linear search with query: \n\n```\n{query}\n```",
-            )
-        return message
+        return json.dumps(response, indent=2)
 
     def create_linear_issue_tool(title: str, description: str, team_name: str):
 

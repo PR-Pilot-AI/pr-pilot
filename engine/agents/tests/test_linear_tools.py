@@ -92,7 +92,7 @@ def test_linear_search_tool(api_key):
     ) as mock_run_query:
         mock_run_query.return_value = {"data": "search_results"}
         result = search_tool.func(query)
-        assert result == {"data": "search_results"}
+        assert result == '{\n  "data": "search_results"\n}'
 
 
 def test_create_linear_issue_tool(api_key, team_name, graphql_response):

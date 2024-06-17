@@ -70,7 +70,7 @@ Respond with a link to the Slack message.
 
 def run_e2e_test():
     task = create_task(
-        "Send a hello message to user mlamina@gmail.com on Slack",
+        "Find all Linear issues created since yesterday, return a list of Links",
         model="gpt-4o",
     )
     settings.TASK_ID = str(task.id)
