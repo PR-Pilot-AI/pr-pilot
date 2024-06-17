@@ -1,28 +1,39 @@
-1. Find all Linear issues created in team PR Pilot since yesterday.
-2. Find all PRs opened since yesterday
-3. Find all Github issues created since yesterday
+We have collected the following information about our projects:
+
+# New Github issues since yesterday
+{{ subtask('Find all Github issues created since yesterday 7am PST and organize them by topics. Include links ton all issues') }}
+
+# New Linear issues since yesterday
+{{ subtask('Find all Linear issues for team PR Pilot created since yesterday 7am PST and organize them by topics. Include links to all issues.') }}
+
+# New Slack messages since yesterday
+{{ subtask('Find all Slack messages in channel #bot-testing from yesterday and today. Summarize them by topics, with inline-links to messages') }}
+
+---
 
 Create a report for me to read in the morning, so that I can catch up on what happened yesterday.
-Use the following template:
+Use the following template to organize the content by topic and priority:
 
----
-# Daily Report for <date>
+```markdown
+*Daily Report for <date>*
 
-<one paragraph summary of the day. language: personal, concise, informative>
+<one paragraph summary of the day>
 
-## Highlights
+*_Highlights_*
 <one or two things that seem extra important or urgent>
 
-## Issues
-<list of issues from Linear and Github>
+*<Topic 1>_*
+<What I need to know about topic 1, with in-line links>
 
-## Pull Requests
-<list of PRs>
+*_<Topic 2>_*
+<What I need to know about topic 2, with in-line links>
 
-## Suggested Action Items for Today
----
+...
+
+```
+
+Use personal, concise, informative language.
 
 Do the following:
-1. Send the report to #daily-report on Slack
-2. Write it as a Markdown file into `reports/<year>/<month>/<yyy-mm-dd>-daily.md`.
-3. Respond only with a link to the Slack message.
+1. Send the report to #daily-reports on Slack
+2. Respond only with a link to the Slack message.
