@@ -3,7 +3,7 @@ from unittest.mock import patch
 from slack_sdk.errors import SlackApiError
 from engine.agents.integration_tools.slack_tools import (
     search_slack_messages,
-    post_message,
+    post_slack_message_to_channel,
     list_slack_tools,
 )
 
@@ -73,7 +73,7 @@ def test_post_message_success(mock_web_client, mock_task_event):
     }
     mock_client.team_info.return_value = {"team": {"domain": "example"}}
 
-    result = post_message("test_channel", "Test message", "bot_token")
+    result = post_slack_message_to_channel("test_channel", "Test message", "bot_token")
     assert "Message posted to channel #test_channel successfully" in result
     assert "https://example.slack.com/archives/C1234567890/p1625097600000200" in result
 
@@ -84,7 +84,7 @@ def test_post_message_error(mock_web_client, mock_task_event):
         response={"error": "channel_not_found"}, message="Error"
     )
 
-    result = post_message("test_channel", "Test message", "bot_token")
+    result = post_slack_message_to_channel("test_channel", "Test message", "bot_token")
     assert result == "Error posting message to channel #test_channel: channel_not_found"
 
 

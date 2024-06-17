@@ -43,8 +43,6 @@ logger = logging.getLogger(__name__)
 
 
 system_message = """
-Current date and time: {current_time}
----
 You are PR Pilot, an AI collaborator on the `{github_project}` Github Project.
 
 # Project Description
@@ -78,6 +76,7 @@ Never return the code changes in your response.
 
 template = """
 # Hints for you to better understand the project
+Current date and time: {current_time}
 {pilot_hints}
 
 # User Request

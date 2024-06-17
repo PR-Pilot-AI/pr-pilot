@@ -55,10 +55,22 @@ ALL_LINEAR_LISSUES = f"""
 Find all Linear issues of {TIME_FRAME}.
 """
 
+POST_ISSUES_TO_SLACK = """
+Find all Linear issues created since yesterday.
+Summarize them in the following way:
+- Title: "Linear issues created since <date>"
+- One concise paragraph summary of all issues
+- A list of all issue titles as links
+- Each link begins with an emoji that represents the issue type (bug, feature, etc.)
+
+Send the summary to #bot-testing on Slack.
+Respond with a link to the Slack message.
+"""
+
 
 def run_e2e_test():
     task = create_task(
-        "Create a test issue in Linear for team PR Pilot and respond with a link to the issue.",
+        "Send a hello message to user mlamina@gmail.com on Slack",
         model="gpt-4o",
     )
     settings.TASK_ID = str(task.id)

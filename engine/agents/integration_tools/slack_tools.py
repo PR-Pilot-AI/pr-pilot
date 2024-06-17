@@ -1,4 +1,5 @@
 import logging
+import re
 from datetime import datetime
 
 from langchain.tools import Tool
@@ -10,6 +11,11 @@ from slack_sdk.errors import SlackApiError
 from engine.models.task_event import TaskEvent
 
 logger = logging.getLogger(__name__)
+
+def translate_markdown(markdown):
+    """Translate Markdown into Slack-compatible format"""
+    regex = r"\[([^\]]+)\]\(([^)]+)\)"
+    return re.sub(regex, r"<\2|\1>", markdown).replace("**", "*")
 
 
 def search_slack_messages(query: str, user_token: str) -> str:
@@ -41,11 +47,12 @@ def search_slack_messages(query: str, user_token: str) -> str:
         return msg
 
 
-def post_message(channel: str, message: str, bot_token: str) -> str:
+def post_slack_message_to_channel(channel: str, message: str, bot_token: str) -> str:
+    """Post a message to a Slack channel."""
     client = WebClient(token=bot_token)
     try:
         # Post the message
-        response = client.chat_postMessage(channel=channel, text=message)
+        response = client.chat_postMessage(channel=channel, text=translate_markdown(message))
 
         # Extract channel ID and timestamp
         channel_id = response["channel"]
@@ -67,9 +74,9 @@ def post_message(channel: str, message: str, bot_token: str) -> str:
             message=f"Posted [message]({message_url}) to channel #{channel}",
         )
 
-        return f"Message posted to channel #{channel} successfully: {message_url}"
+        return f"Message posted to channel {channel} successfully: {message_url}"
     except SlackApiError as e:
-        msg = f"Error posting message to channel #{channel}: {e.response['error']}"
+        msg = f"Error posting message to channel {channel}: {e.response['error']}"
         logger.error(msg)
         return msg
 
@@ -78,6 +85,11 @@ def post_message(channel: str, message: str, bot_token: str) -> str:
 class PostSlackMessageInput(BaseModel):
     channel: str = Field(..., title="Slack channel to post the message to")
     message: str = Field(..., title="The message to post")
+
+
+class DirectSlackMessageInput(BaseModel):
+    user_email: str = Field(..., title="Email address of the Slack user")
+    message: str = Field(..., title="The message to send to the user")
 
 
 SEARCH_TOOL_DESCRIPTION = """
@@ -102,7 +114,7 @@ def list_slack_tools(bot_token: str, user_token: str) -> list:
 
     post_tool = StructuredTool(
         name="post_slack_message",
-        func=lambda channel, message: post_message(channel, message, bot_token),
+        func=lambda channel, message: post_slack_message_to_channel(channel, message, bot_token),
         description="Post a message to a Slack channel.",
         args_schema=PostSlackMessageInput,
     )
