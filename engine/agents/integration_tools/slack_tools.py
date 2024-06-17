@@ -53,6 +53,7 @@ def post_slack_message_to_channel(channel: str, message: str, bot_token: str) ->
     client = WebClient(token=bot_token)
     try:
         # Post the message
+        channel = channel.lstrip("#")
         response = client.chat_postMessage(
             channel=channel, text=translate_markdown(message)
         )
