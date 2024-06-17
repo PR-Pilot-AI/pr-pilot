@@ -57,4 +57,4 @@ ngrok:
 
 pr-description:
 	# Generate title and PR description (requires PR_NUMBER env var to be set)
-	pilot task -f prompts/generate_pr_description.md.jinja2
+	pilot --no-spinner task -f prompts/generate_pr_description.md.jinja2
