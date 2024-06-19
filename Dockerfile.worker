@@ -5,7 +5,7 @@ FROM --platform=linux/amd64 python:3.11-slim
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
-# Install git
+# Install git and ripgrep
 RUN apt-get update && \
     apt-get install -y git ripgrep && \
     rm -rf /var/lib/apt/lists/*
@@ -20,8 +20,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy project
 COPY . .
 
+# Configure git
 RUN git config --global user.name "PR Pilot"
 RUN git config --global user.email "bot@pr-pilot.ai"
 
-# Run uwsgi
+# Run task
 CMD python manage.py run_task $TASK_ID
