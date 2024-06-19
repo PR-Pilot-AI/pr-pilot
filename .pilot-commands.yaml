@@ -1,0 +1,30 @@
+commands:
+- description: Gather information about bugs on Slack, Github and Linear
+  name: bug-report
+  params:
+    cheap: false
+    code: false
+    debug: false
+    direct: true
+    file: prompts/create_api_endpoint.md.jinja2
+    model: gpt-4o
+    output: reports/bugs.md
+    quiet: false
+    snap: false
+    spinner: true
+    sync: true
+    wait: true
+- description: Organize and clean up config files (package.json, pom.xml, etc)
+  name: house-keeping
+  params:
+    cheap: false
+    code: false
+    debug: false
+    direct: false
+    file: prompts/house-keeping.md.jinja2
+    model: gpt-4o
+    quiet: true
+    snap: false
+    spinner: true
+    sync: true
+    wait: true
