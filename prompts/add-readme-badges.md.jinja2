@@ -1,25 +1,27 @@
-Our goal is to add badges to the README.md file to make it more visually appealing and informative.
+Our goal is to generate badges for the README.md file to make it more visually appealing and informative.
 
 Here is how you can determine which badges would be most useful for this project:
 
 ## Step 1: Gather project information
 1. List the `.` directory and read the `README.md` file
 2. Identify the project's main language and framework
-3. List the `.gihub/workflows` directory
+3. Identify and read additional configuration files (e.g. `package.json`, `pom.xml`, `Makefile`, etc)
+4. List the `.gihub/workflows` directory to see if there are any CI/CD or Github Actions workflows
 
 ## Step 2: Choose badges
 Based on the information gathered, choose the badges that would be most useful for this project:
 - Build status
 - Any unit tests that are run as part of CI/CD or Github Actions
 - Code coverage (ONLY if present in the project)
-- Language or framework-specific badges (e.g. Python, Django, React)
+- Language or framework-specific badges (e.g. Python, Django, React, NodeJS, Java, Spring, etc)
 - Code quality (e.g. linting, formatting)
 - License
 
-- IMPORTANT: Use correct values (e.g. dependency/framework versions).
+You MUST follow these guidelines:
+- Only use values/version numbers/etc that are defined in the project, do not make up values
+- Do not include badges that are not relevant to the project (e.g. no code coverage if there are no tests)
 
-## Step 3: Add badges to README.md
-1. Find the best place in the README to put the badges (usually at the top)
-2. Generate the badges with valid values taken from the information gathered earlier
-3. Add the badges to the README.md file
+## Step 3: Generate the badges
+1. Generate the badges with valid values taken from the information gathered earlier
+2. Respond with the Markdown code for the badges
 

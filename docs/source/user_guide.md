@@ -69,7 +69,7 @@ default_repo: owner/repo
 auto_sync: true
 
 # Suppress status messages by default
-quiet: true
+vebose: false
 ```
 
 

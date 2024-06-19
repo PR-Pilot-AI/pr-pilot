@@ -11,7 +11,11 @@
 
 # PR Pilot
 
-[![Unit Tests](https://github.com/PR-Pilot-AI/pr-pilot/actions/workflows/unit_tests.yml/badge.svg?branch=main)](https://github.com/PR-Pilot-AI/pr-pilot/actions/workflows/unit_tests.yml)
+[![Build Status](https://github.com/PR-Pilot-AI/pr-pilot/actions/workflows/unit_tests.yml/badge.svg?branch=main)](https://github.com/PR-Pilot-AI/pr-pilot/actions/workflows/unit_tests.yml)                                    │
+![Python](https://img.shields.io/badge/Python-3.8%2B-blue)                                                                                                                                                                     │
+![Django](https://img.shields.io/badge/Django-5.0.3-green)                                                                                                                                                                     │
+![License](https://img.shields.io/badge/License-GPL--3.0-blue)                                                                                                                                                                 │
+![Version](https://img.shields.io/badge/Version-1.4.10-orange)
 
 Save time and stay in the flow by delegating routine work to AI with confidence and predictability. PR Pilot assist you in your daily workflow and works with the dev tools you trust and love - exactly when and where you want it.
 

@@ -9,7 +9,7 @@ commands:
     file: prompts/create_api_endpoint.md.jinja2
     model: gpt-4o
     output: reports/bugs.md
-    quiet: false
+    verbose: true
     snap: false
     spinner: true
     sync: true
@@ -23,7 +23,7 @@ commands:
     direct: false
     file: prompts/house-keeping.md.jinja2
     model: gpt-4o
-    quiet: true
+    verbose: false
     snap: false
     spinner: true
     sync: true
