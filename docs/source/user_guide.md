@@ -1,4 +1,4 @@
-(userguide)=
+(user_guide)=
 # User Guide
 PR Pilot is designed for you to save time and to help you stay in the flow. 
 The CLI lets you to delegate routine work to AI with confidence and predictability. 
