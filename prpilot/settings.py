@@ -313,7 +313,7 @@ REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
 REDIS_PORT = os.getenv("REDIS_PORT", 6379)
 REDIS_QUEUE = os.getenv("REDIS_QUEUE", "tasks")
 
-DEFAULT_GPT_MODEL = "gpt-4-turbo"
+DEFAULT_GPT_MODEL = "gpt-4o"
 
 SLACK_APP_ID = os.getenv("SLACK_APP_ID")
 SLACK_CLIENT_ID = os.getenv("SLACK_CLIENT_ID")

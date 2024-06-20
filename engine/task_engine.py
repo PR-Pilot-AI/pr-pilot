@@ -161,9 +161,8 @@ class TaskEngine:
                 self.project.checkout_branch(self.task.branch)
             else:
                 # No branch or PR number provided, create a new branch
-                if not self.task.title:
-                    # Wait for task title to be generated
-                    task_title_thread.join()
+                # Wait for task title to be generated
+                task_title_thread.join()
                 working_branch = self.setup_working_branch(self.task.title)
             # Make sure we never work directly on the main branch
             if self.project.active_branch == self.project.main_branch:
