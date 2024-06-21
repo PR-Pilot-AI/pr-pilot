@@ -18,6 +18,9 @@ supported by a variety of tools and integrations.
 Which one is best for you highly depends on your specific use case. On [YouTube](https://www.youtube.com/watch?v=HVcW3ceqtfw&list=PLDz7ICzRy18wEgi70CPqsaCoNVSEw1GI9) 
 and in our [Demo Repo](https://github.com/PR-Pilot-AI/demo), we provide examples of how to use PR Pilot in different scenarios.
 
+PR Pilot will **run tasks autonomously** using its [standard capabilities](capabilities) and
+capabilities added via [integrations](integrations).
+
 ### You and PR Pilot
 Before you get started, there is one key concept to understand:
 
