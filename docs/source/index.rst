@@ -54,7 +54,8 @@ If you like, grab some commands from our core repository:
      pilot run test-analysis   Run the tests, analyze the output and provide suggestions
      pilot run pr-description  Generate PR Title and Description
 
-For more details, see the `User Guide <user_guide.html>`_.
+To learn more, head over to our `User Guide <user_guide.html>`_ or get inspiration
+from our `Demo Repository <https://github.com/PR-Pilot-AI/demo>`_.
 
 .. toctree::
    :maxdepth: 0

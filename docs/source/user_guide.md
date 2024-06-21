@@ -3,60 +3,233 @@
 PR Pilot is designed for you to save time and to help you stay in the flow. 
 The CLI lets you to delegate routine work to AI with confidence and predictability. 
 
-This guide will help you understand how to use PR Pilot with your Github project.
+This guide will help you understand how to use PR Pilot in your daily workflow.
 ## Installation
 
-If you haven't done so, [install PR Pilot](https://github.com/apps/pr-pilot-ai/installations/new) into your repository.
+If you haven't done so, [add PR Pilot](https://github.com/apps/pr-pilot-ai/installations/new) to your repository 
+and install the [CLI](https://github.com/PR-Pilot-AI/pr-pilot-cli).
 
 ## The Basics
 
-Every interaction between you and PR Pilot is a task. Tasks are created using prompts.
+Every interaction between you and PR Pilot is a **task**. Tasks are created using **prompts**.
 
-You and your tools can interact with PR Pilot using natural language,
+You and your tools can **interact with PR Pilot using natural language**,
 supported by a variety of tools and integrations.
-Which one is best for you highly depends on your specific use case. On [YouTube](https://www.youtube.com/watch?v=HVcW3ceqtfw&list=PLDz7ICzRy18wEgi70CPqsaCoNVSEw1GI9), 
-we provide examples of how to use PR Pilot in different scenarios.
+Which one is best for you highly depends on your specific use case. On [YouTube](https://www.youtube.com/watch?v=HVcW3ceqtfw&list=PLDz7ICzRy18wEgi70CPqsaCoNVSEw1GI9) 
+and in our [Demo Repo](https://github.com/PR-Pilot-AI/demo), we provide examples of how to use PR Pilot in different scenarios.
 
-## Command-Line Interface
-Our [CLI](https://github.com/PR-Pilot-AI/pr-pilot-cli) puts PR Pilot right at your fingertips:
+### You and PR Pilot
+Before you get started, there is one key concept to understand:
 
-```bash
-brew tap pr-pilot-ai/homebrew-tap
-brew install pr-pilot-cli
+**PR Pilot runs in its own cloud environment, not your local machine.**
+
+Let's take an example:
+
+```shell
+➜  demo git:(main) pilot --verbose --sync task "Edit the README.md file: Add emojis to all headers"
+
+✔ Task created: 78e8b1a8-a7a7-4857-80aa-25db911606b0 (0:00:00.00)
+✔ Opened Pull Request: https://github.com/PR-Pilot-AI/demo/pull/33 (0:00:27.56)
+╭──────────────────────────────── Result ─────────────────────────────────────────────╮
+│ I have added emojis to all headers in the README.md file.                           │
+│ The updated content is now more engaging and visually appealing. 🎉                 │
+│                                                                                     │
+│ If you have any more requests or need further assistance, feel free to ask! 😊      │
+╰─────────────────────────────────────────────────────────────────────────────────────╯
+✔ Pull latest changes from enhance-readme-md-with (0:00:02.67)
+
+➜  demo git:(enhance-readme-md-with)
 ```
 
-Open a terminal and `ls` into a repository you have installed PR Pilot, then
+Here is what happened:
+1. You created a task to edit the README.md file.
+2. PR Pilot picks up the task and checks out the repository in an isolated environment
+3. PR Pilot fulfills your task autonomously (in this case, adding emojis to the README.md file)
+4. The file change(s) are pushed to a new branch and a pull request is opened for you to review
+5. Because `--sync` was enabled, PR Pilot also checked out the branch for you locally
+
+Now you might say, "but I could do this with Github CoPilot!". 
+Here is why this approach is superior:
+
+1. **Clean Repository**: It is good practice to maintain code changes in separate branches. This gives PR Pilot the freedom to make mistakes without cluttering up your code base.
+2. **You're in Control**: LLMs make mistakes. We want to make it as easy as possible for you to correct them and not get stuck.
+3. **No Context Switching**: You can keep working on this branch and your changes will become part of the new pull request.
+4. **Collaboration**: With `--sync` enabled, PR Pilot's next tasks will automatically run on this branch, enabling a collaborative workflow until your code is ready for review.
+5. **Agency**: Most importantly, this allows you to use PR Pilot from anywhere - Build pipelines, Github actions, on-prem servers... you name it.
+
+To enable `--sync` by default , run `pilot config edit` and set `auto_sync: true`. 
+
+### Working with Local Files
+This approach comes with one drawback: 
+
+**PR Pilot can't access your local files when running a task.**
+
+However, there are a few ways to work around this:
+
+#### Option 1: The `edit` command
+You can use the `edit` command to let PR Pilot manipulate a local file for you:
+
+```shell
+pilot edit main.py "Make sure all functions and classes have docstrings."
+```
+
+This will edit your file **in-place**, instantly.
+
+Under the hood, this sends the local file content to PR Pilot in a special prompt,
+which is then run like any other task.
+
+#### Option 2: Prompt templates
+
+[Prompt templates](https://github.com/PR-Pilot-AI/pr-pilot-cli/tree/main/prompts) give you an easy way to
+inject shell commands into your prompts, which you can use as a gateway to your local file system:
+
+```markdown
+I have an uncommitted file I want you to look at:
+
+{{ sh(['cat', 'new_file.py']) }}
+```
+
+This will send the content of `new_file.py` to PR Pilot, where you can process it further.
+
+
+## Command-Line Interface
+Now that you understand the basics, let's dive into the details.
+**Tasks always run in the context of a Github repository**:
+
+```bash
+➜ pilot task "What's going on"
+fatal: not a git repository (or any of the parent directories): .git
+No Github repository provided. Use --repo or set 'default_repo' in /Users/mlamina/.pr-pilot.yaml.
+```
+
+Either provide the repo manually or `ls` into a repository you have installed PR Pilot, then
 use the `pilot` command:
 
 ```bash
 pilot edit main.py "Make sure all functions and classes have docstrings."
 ```
+This will auto-detect the repository for you.
 
-For more details, head over to the [CLI Documentation](https://github.com/PR-Pilot-AI/pr-pilot-cli). 
+The CLI is a powerful and flexible tool.
+We recommend you take a peak at the [CLI Documentation](https://github.com/PR-Pilot-AI/pr-pilot-cli) to understand 
+its possibilities and how it can best serve you. 
 
-### File Changes, Branches and Pull Requests
-By default, whenever PR Pilot creates or edits files,
-it will create a new branch and open a pull request for you.
 
-For example:
-
-```bash
-pilot task "Edit the README.md file: Add emojis to all headers"
-```
-
-will result in a new branch and a pull request with the changes.
-
-However, you can also edit local files directly:
+### Quick Access to Recent Tasks
+The CLI lets you easily go back and see what happens across all your repositories:
 
 ```bash
-pilot edit README.md "Add emojis to all headers"
+➜  pilot history
+                                                                                                                                                                                                                                   
+  #   Timestamp       Project                   PR   Status     Title                                                                                                                                                              
+  1   5 minutes ago   PR-Pilot-AI/pr-pilot-cli       completed  Compose a Haiku for the Project                                                                                                                                    
+  2   5 minutes ago   PR-Pilot-AI/pr-pilot-cli       completed  Compose a Haiku for the Project                                                                                                                                    
+  3   6 minutes ago   PR-Pilot-AI/pr-pilot-cli       completed  Compose a Haiku for the Project                                                                                                                                    
+  4   6 minutes ago   PR-Pilot-AI/pr-pilot-cli       completed  Compose a Haiku for the Project                                                                                                                                    
+  5   8 minutes ago   PR-Pilot-AI/pr-pilot-cli       completed  Compose a Haiku for the Project                                                                                                                                    
+  6   25 minutes ago  PR-Pilot-AI/pr-pilot-cli       completed  Automate shell completions setup with subprocess in Python script                                                                                                  
+  7   4 hours ago     PR-Pilot-AI/pr-pilot-cli       completed  Integrate Rich Library for Enhanced Output Formatting in Shell Completions Function                                                                                
+  8   4 hours ago     PR-Pilot-AI/pr-pilot-cli  #78  completed  Implement 'config' CLI Command Group with 'shell-completions' Command                                                                                              
+  9   5 hours ago     PR-Pilot-AI/pr-pilot           completed  Edit PR #170 to Reflect Recent Changes                                                                                                                             
+  10  5 hours ago     PR-Pilot-AI/pr-pilot           completed  Generate and Add Relevant Badges to README.md         
 ```
 
-This will not create a branch or a pull request, but will edit the file in-place.
+This gives you easy access to tasks, repositories and PRs you've worked on recently.
+Need to look at that prompt your wrote earlier?
 
-### Configuration and Customization
+```shell
+pilot history last <n> prompt --markdown | pbcopy
+```
 
-To customize PR Pilot's behavior, use `~/.pr-pilot.yaml`:
+### Personalization and Customization
+PR Pilot aims to streamline your workflow by reducing friction and saving you time.
+
+#### Re-Usable Commands
+If you find yourself using the same prompts over and over again, you can save them as part of your repository
+using the `--save-command` parameter, making this call **re-usable**:
+
+```bash
+➜ pilot task -f generate-pr-description.md.jinja2 --save-command
+
+ Save the task parameters as a command:
+
+  Name (e.g. generate-pr-desc): pr-description
+  Short description: Generate title and description for a pull request
+
+ Command saved to .pilot-commands.yaml
+```
+
+You can now run this command **for any PR** with `pilot run pr-description`:
+
+```bash
+➜ pilot run pr-description
+Enter value for PR_NUMBER: 83
+╭──────────── Result ─────────────╮
+│ Here is the link to the PR #83  │
+╰─────────────────────────────────╯
+```
+
+#### Sharing and Importing Commands
+
+Not only can you re-use this command now, but you can **share** it as well.
+**Import commands from any Github** repository using the `grab` command:
+
+
+```bash
+➜  code pilot grab commands pr-pilot-ai/core
+
+       pr-pilot-ai/core
+       haiku             Writes a Haiku about your project
+       test-analysis     Run unit tests, analyze the output & provide suggestions
+       daily-report      Assemble a comprehensive daily report & send it to Slack
+       pr-description    Generate PR Title & Description
+       house-keeping     Organize & clean up cfg files (package.json, pom.xml, etc)
+       readme-badges     Generate badges for your README file
+
+[?] Grab:
+   [ ] haiku
+   [X] test-analysis
+   [ ] daily-report
+ > [X] pr-description
+   [ ] house-keeping
+   [ ] readme-badges
+
+
+You can now use the following commands:
+
+  pilot run test-analysis   Run unit tests, analyze the output & provide suggestions
+  pilot run pr-description  Generate PR Title & Description
+```
+
+Our **[core repository](https://github.com/PR-Pilot-AI/core)** contains an ever-growing, curated list of commands
+that we tested and handcrafted for you. You can grab them and use them in your own repositories.
+
+#### Give hints for consistent, high-quality results
+The quality of the results you get from PR Pilot depends on the quality of the prompts you provide.
+Unwanted / wrong / unexpected results can often be avoided by providing the right context.
+To make sure you get the best results, you can create a `.pilot-hints.md` file in your repository,
+which PR Pilot will read as part of every task.
+
+Here is an example from our PR Pilot CLI repository:
+
+```markdown
+- Uses `click` to implement CLI in Python
+- Main entry point is the `pilot` command in `cli/cli.py`
+- Sub-commands implemented in `cli/commands/` directory
+- Uses `poetry` for dependency management
+- Uses `rich` for printing to the console
+```
+
+Now, **you can use domain-specific language in your prompts**. For example, if you say "Create a new command", PR Pilot knows:
+- You're talking about a CLI command
+- It should use `click` and `rich` to implement the command in `cli/commands/`
+- It should use `poetry` for dependency management
+
+This enables you to **"teach" PR Pilot about your project and your workflow**, making it easier for you to get the results you want.
+
+### Configuration
+
+PR Pilot's configuration is stored in `~/.pr-pilot.yaml`:
 
 ```yaml
 # Your API Key from https://app.pr-pilot.ai/dashboard/api-keys/
@@ -69,10 +242,10 @@ default_repo: owner/repo
 auto_sync: true
 
 # Suppress status messages by default
-vebose: false
+verbose: false
 ```
 
-
+Running `pilot config edit` will open the configuration file in your default editor.
 
 ## Python SDK
 
