@@ -35,7 +35,7 @@ PR Pilot is not just for individual developers. It can help your entire team/pro
 ### Beyond Coding
 Github CoPilot and similar tools have been groundbreaking for the developer community. 
 However, it is limited to the boundaries of your IDE. PR Pilot is not. It can help you with your code, 
-your issues, your PRs, browse the web to find information for you [and more](roadmap).
+your issues, your PRs, browse the web to find information for you.
 
 ## Values
 Over multiple iterations and feedback from users, we've learned some important lessons and tried to incorporate them into PR Pilot.

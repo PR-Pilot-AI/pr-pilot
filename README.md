@@ -126,8 +126,6 @@ jobs:
 
 ![First pilot command](docs/source/img/first_command.png)
 
-Check our **[roadmap](https://docs.pr-pilot.ai/roadmap.html)** for what's to come!
-
 ## 🛠️ Installation
 
 To get started, follow our [User Guide](https://docs.pr-pilot.ai/user_guide.html).

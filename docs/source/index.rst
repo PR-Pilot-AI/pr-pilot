@@ -64,7 +64,6 @@ from our `Demo Repository <https://github.com/PR-Pilot-AI/demo>`_.
    user_guide
    capabilities
    vision
-   roadmap
    pricing
    privacy_notice
    support

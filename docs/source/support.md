@@ -1,13 +1,13 @@
 (support)=
 # Feedback and Support
 Thank you for being interested in my work. PR Pilot is still in early development and actively shaped by
-the feedback I get from the community.
+the feedback we get from the community.
 
-## Discussions
-If you have anu questions, comments or concerns, please feel free to create a new discussion in the [Discussions](https://github.com/PR-Pilot-AI/pr-pilot/discussions).
+## Discussions & Feature Requests
+If you have any questions, suggestions, comments or concerns, please feel free to create a new discussion in the [Discussions](https://github.com/orgs/PR-Pilot-AI/discussions).
 
-## Bugs & Feature Requests
-If you've found a bug or have a feature request, please create a new issue in the [Issues](https://github.com/PR-Pilot-AI/pr-pilot/issues).
+## Bugs
+If you've found a bug start a thread [here](https://github.com/orgs/PR-Pilot-AI/discussions/categories/bugs) and we'll get back to you as soon as possible.
 
 ## Email
-You can also get in touch with me directly using the [contact form](https://www.pr-pilot.ai/contact).
+You can also get in touch with us directly using the [contact form](https://www.pr-pilot.ai/contact).
