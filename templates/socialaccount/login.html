@@ -9,8 +9,7 @@
     <div class="container mt-5">
         <h2>Welcome to PR Pilot</h2>
         <p>
-            PR Pilot lets you add agentic behavior to your Github projects.
-
+            <a href="https://www.pr-pilot.ai">PR Pilot</a> assist you in your daily workflow and works with the dev tools you trust and love - exactly when and where you want it.
 
             {% element form method="post" no_visible_fields=True %}
                 {% slot actions %}
@@ -20,13 +19,21 @@
                     {% endelement %}
                 {% endslot %}
             {% endelement %}
-        </p>
+
+            Login with your Github account to access your dashboard:
         <ul>
-            <li><a href="https://github.com/apps/pr-pilot-ai">Install Github App</a></li>
-            <li><a href="https://docs.pr-pilot.ai">Documentation</a></li>
-            <li><a href="https://www.pr-pilot.ai/blog">Blog</a></li>
-            <li><a href="https://www.pr-pilot.ai">Website</a></li>
+            <li>Create API keys for the <a href="https://github.com/PR-Pilot-AI/pr-pilot-cli">CLI</a></li>
+            <li>View a history of your all PR Pilot tasks across repositories</li>
+            <li>Check and refill your current <a href="https://docs.pr-pilot.ai/pricing.html">budget</a> </li>
+            <li>Connect PR Pilot to your favorite tools and services via integrations</li>
         </ul>
+
+
+
+
+
+        New here? Check out the <a href="https://docs.pr-pilot.ai/user_guide.html">User Guide</a> to get started.
+        </p>
     </div>
 
 {% endblock content %}
