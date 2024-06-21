@@ -62,6 +62,7 @@ from our `Demo Repository <https://github.com/PR-Pilot-AI/demo>`_.
    :hidden:
 
    user_guide
+   integrations
    capabilities
    vision
    pricing
