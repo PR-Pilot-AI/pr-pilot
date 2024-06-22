@@ -11,12 +11,19 @@ class SlackIntegration(models.Model):
     user_token = models.TextField(null=True, blank=False)
 
 
+class SentryIntegration(models.Model):
+    api_key = models.TextField(null=True, blank=False)
+
+
 class PilotUser(AbstractUser):
     linear_integration = models.OneToOneField(
         LinearIntegration, on_delete=models.CASCADE, null=True, blank=True
     )
     slack_integration = models.OneToOneField(
         SlackIntegration, on_delete=models.CASCADE, null=True, blank=True
+    )
+    sentry_integration = models.OneToOneField(
+        SentryIntegration, on_delete=models.CASCADE, null=True, blank=True
     )
 
 
