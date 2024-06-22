@@ -1,0 +1,28 @@
+<div>
+    <div>
+        {% if linear_access_token %}
+            <p>
+                PR Pilot is connected to your Linear workspace and can do the following:
+                <ul class="list-group">
+                    <li class="list-group-item d-flex align-items-center"><span class="badge bg-success rounded-pill me-2"><i class="fa-solid fa-search"></i></span>Search your workspace for issues, comments</li>
+                    <li class="list-group-item d-flex align-items-center"><span class="badge bg-success rounded-pill me-2"><i class="fa-solid fa-plus"></i></span>Create new issues in your workspace</li>
+                </ul>
+            </p>
+            <form method="post" action="{% url 'integrations' %}">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="delete_linear_integration">
+                <button type="submit" class="btn btn-danger">Delete Linear Integration</button>
+            </form>
+        {% else %}
+            <p>
+                Connect PR Pilot to your Linear workspace:
+            </p>
+            <p>
+                <a class="btn btn-primary" href="https://linear.app/oauth/authorize?response_type=code&client_id=45e9dc13c8e3ab511e93e47fe0e8a869&scope=read,issues:create&state=SECURE_RANDOM&redirect_uri=https%3A%2F%2F{{ site_host }}%2Fdashboard%2Fadd-linear-integration%2F"><i class="fa fa-bolt"></i> Connect to Linear</a>
+            </p>
+            <p>
+                Once activated, this integration will allow PR Pilot to access and update entities in your Linear workspace.
+            </p>
+        {% endif %}
+    </div>
+</div>
