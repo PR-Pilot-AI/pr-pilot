@@ -101,64 +101,112 @@ Benefits:
 - **Save time**: PR Pilot finds, compiles, formats and posts the information for you
 - **Control**: Customize the prompt with more specific requirements and instructions to get the results you need
 
-## CircleCI
+## CircleCI (coming soon)
 [CircleCI](https://circleci.com) integration is coming soon. This will open up a world of powerful new use cases for you, for example:
 
 ### Quick Access
-No more clicking through dashboards. Just ask - "Why did my deployment fail?"
+No more clicking through dashboards. Just ask:
+
+```shell
+pilot task "Why did my deployment fail?"
+```
 
 ### Reporting
 Include insights from pipelines in your [reports](https://github.com/PR-Pilot-AI/demo/tree/main/daily-report).
 
+```shell
+pilot task "Generate a report of the last 5 pipeline runs and include insights."
+```
+
 ### Faster Debugging
 Quickly correlate build results with code changes and issues.
+
+```shell
+pilot task "Look at PR #174, find the related CircleCI build and tell me why it failed."
+```
 
 The CircleCI integration will add the following capabilities to PR Pilot:
 - Read pipelines and jobs
 - Access project insights
 
-## JIRA
+## JIRA (coming soon)
 [JIRA](https://www.atlassian.com/software/jira) integration is coming soon. This will open up a world of powerful new use cases for you, for example:
 
 ### Easy Search
 Finding stuff in JIRA can be hard. PR Pilot will search and find for you.
 
+```shell
+pilot task "Find all 'API' related issues in JIRA opened in the last 7 days."
+```
+
 ### Assisted Refinements
 PR Pilot can read your ticket, find relevant information/code and assist you in adding technical context.
 
+```shell
+pilot task "Read JIRA-324, find the related code and add relevant technical context to the ticket."
+```
+
 ### Format & Label
 Let PR Pilot apply your team's style and labeling guidelines to your tickets.
+
+```shell
+pilot task "JIRA-324 is messy. Clean it up and apply labels according to our guidelines."
+```
 
 The JIRA integration will add the following capabilities to PR Pilot:
 - Read and write issues
 - Search projects
 
-## Logstash
+## Logstash (coming soon)
 [Logstash](https://www.elastic.co/logstash) integration is coming soon. This will open up a world of powerful new use cases for you, for example:
 
 ### Powerful Debugging
 With access to bug tickets and your code, PR Pilot will quickly find the right query and fetch the logs for you in seconds.
 
+```shell
+pilot task "Look at the bug issue #324 and fetch the logs for the timestamp when the error occurred.
+```
+
 ### Prompt-Based Monitoring
-Browsing through logs is annoying. Instead, use prompts - "Something's wrong. Look at the API logs in prod over the last 2 minutes"
+Browsing through logs in the browser is annoying. Now you can ask a simple question:
+
+```shell
+pilot task "Just had an error on staging. Find the API stacktrace, read the code and tell me what went wrong."
+```
 
 ### Kibana Dashboard Generation
 Generate custom, use-case specific Kibana dashboards in an instant.
 
+```shell
+pilot task "Generate a Kibana dashboard for API error rates in the last 24 hours."
+```
+
 The Logstash integration will add the following capabilities to PR Pilot:
 - Run Logstash queries
 
-## Sentry
+## Sentry (coming soon)
 [Sentry](https://sentry.io) integration is coming soon. This will open up a world of powerful new use cases for you, for example:
 
 ### Bug Analysis
 Pull together information from different services and tools to analyze bugs with ease.
 
+```shell
+pilot task "Look at bug issue #324, find the relevant Sentry events add them as a comment to the issue."
+```
+
 ### Reporting
 Include stack traces in your [reports](https://github.com/PR-Pilot-AI/demo/tree/main/daily-report).
 
+```shell
+pilot task -o report.md "Find new Sentry issues opened yesterday, read the relevant code and write an analysis."
+```
+
 ### Enrich Tickets
 Correlate Sentry events with bug issues on your favorite issue tracker.
+
+```shell
+pilot task "Read JIR-324, find the relevant code, correlate it with open Sentry issues and add a comment to the ticket."
+```
 
 The Sentry integration will add the following capabilities to PR Pilot:
 - Query Sentry issues and events
