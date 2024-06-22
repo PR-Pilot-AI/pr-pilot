@@ -1,8 +1,34 @@
 <div>
-    <h2>Sentry Integration (Coming Soon)</h2>
+    {% if sentry_api_key %}
+        <p>
+            PR Pilot is connected to your Sentry account and can do the following:
+            <ul class="list-group">
+                <li class="list-group-item d-flex align-items-center"><span class="badge bg-info rounded-pill me-2"><i class="fa fa-bug"></i></span>Query Sentry issues and events</li>
+            </ul>
+        </p>
+        <form method="post" action="{% url 'integrations' %}">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="delete_sentry_integration">
+            <button type="submit" class="btn btn-danger">Delete Sentry Integration</button>
+        </form>
+    {% else %}
+        <p>
+            Connect PR Pilot to your Sentry account by entering your API key below:
+        </p>
+        <form method="post" action="{% url 'integrations' %}">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="sentryApiKey" class="form-label">Sentry API Key</label>
+                <input type="text" class="form-control" id="sentryApiKey" name="sentry_api_key" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Save API Key</button>
+        </form>
+    {% endif %}
+</div>
+<div>
+    <h2>Sentry Integration</h2>
     <p class="lead">
-        Soon, you'll be able to connect PR Pilot to your <a href="https://sentry.io">Sentry</a> account,
-        opening up a world of powerful new use cases for you, for example:
+        Connect PR Pilot to your <a href="https://sentry.io">Sentry</a> account to unlock powerful new use cases, such as:
     </p>
     <div class="mb-3">
         <h5><span class="fw-bold">🔍 Bug Analysis</span></h5>
