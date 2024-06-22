@@ -9,7 +9,7 @@ from django.shortcuts import redirect
 from django.urls import reverse
 from django.views.generic import TemplateView
 
-from accounts.models import SlackIntegration, LinearIntegration, UserBudget
+from accounts.models import SlackIntegration, LinearIntegration, SentryIntegration, UserBudget
 from engine.cryptography import encrypt
 
 
@@ -144,6 +144,11 @@ class IntegrationView(LoginRequiredMixin, TemplateView):
             if self.request.user.linear_integration
             else None
         )
+        context["sentry_api_key"] = (
+            self.request.user.sentry_integration.api_key
+            if self.request.user.sentry_integration
+            else None
+        )
         context["site_host"] = self.request.get_host()
         return context
 
@@ -159,4 +164,18 @@ class IntegrationView(LoginRequiredMixin, TemplateView):
             # Delete the Linear API key from the user's profile
             request.user.linear_integration.access_token = None
             request.user.linear_integration.save()
+        elif action == "delete_sentry_integration":
+            logger.info(f"Deleting Sentry integration for user {request.user.username}")
+            # Delete the Sentry API key from the user's profile
+            request.user.sentry_integration.api_key = None
+            request.user.sentry_integration.save()
+        elif "sentry_api_key" in request.POST:
+            api_key = request.POST.get("sentry_api_key")
+            logger.info(f"Adding Sentry integration for user {request.user.username}")
+            if not request.user.sentry_integration:
+                request.user.sentry_integration = SentryIntegration.objects.create(api_key=api_key)
+                request.user.save()
+            else:
+                request.user.sentry_integration.api_key = api_key
+                request.user.sentry_integration.save()
         return redirect("integrations")
