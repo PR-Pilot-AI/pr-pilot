@@ -93,11 +93,72 @@ Creating new issues in Linear can be a time-consuming task, especially when you 
 prompt="People have understanding the new ProblemSolver class I wrote. \
 1. Find the class in our code and read it \
 2. Search slack for messages mentioning the class \
-3. Create a Linear issue for documenting the class
-The issue should include a summary of the class, the messages from slack, and a link to the code."
+3. Create a Linear issue for documenting the class\nThe issue should include a summary of the class, the messages from slack, and a link to the code."
 pilot task $prompt
 ```
 Benefits:
 - **Stay in the flow**: No need to switch between tools to gather information
 - **Save time**: PR Pilot finds, compiles, formats and posts the information for you
 - **Control**: Customize the prompt with more specific requirements and instructions to get the results you need
+
+## CircleCI
+[CircleCI](https://circleci.com) integration is coming soon. This will open up a world of powerful new use cases for you, for example:
+
+### Quick Access
+No more clicking through dashboards. Just ask - "Why did my deployment fail?"
+
+### Reporting
+Include insights from pipelines in your [reports](https://github.com/PR-Pilot-AI/demo/tree/main/daily-report).
+
+### Faster Debugging
+Quickly correlate build results with code changes and issues.
+
+The CircleCI integration will add the following capabilities to PR Pilot:
+- Read pipelines and jobs
+- Access project insights
+
+## JIRA
+[JIRA](https://www.atlassian.com/software/jira) integration is coming soon. This will open up a world of powerful new use cases for you, for example:
+
+### Easy Search
+Finding stuff in JIRA can be hard. PR Pilot will search and find for you.
+
+### Assisted Refinements
+PR Pilot can read your ticket, find relevant information/code and assist you in adding technical context.
+
+### Format & Label
+Let PR Pilot apply your team's style and labeling guidelines to your tickets.
+
+The JIRA integration will add the following capabilities to PR Pilot:
+- Read and write issues
+- Search projects
+
+## Logstash
+[Logstash](https://www.elastic.co/logstash) integration is coming soon. This will open up a world of powerful new use cases for you, for example:
+
+### Powerful Debugging
+With access to bug tickets and your code, PR Pilot will quickly find the right query and fetch the logs for you in seconds.
+
+### Prompt-Based Monitoring
+Browsing through logs is annoying. Instead, use prompts - "Something's wrong. Look at the API logs in prod over the last 2 minutes"
+
+### Kibana Dashboard Generation
+Generate custom, use-case specific Kibana dashboards in an instant.
+
+The Logstash integration will add the following capabilities to PR Pilot:
+- Run Logstash queries
+
+## Sentry
+[Sentry](https://sentry.io) integration is coming soon. This will open up a world of powerful new use cases for you, for example:
+
+### Bug Analysis
+Pull together information from different services and tools to analyze bugs with ease.
+
+### Reporting
+Include stack traces in your [reports](https://github.com/PR-Pilot-AI/demo/tree/main/daily-report).
+
+### Enrich Tickets
+Correlate Sentry events with bug issues on your favorite issue tracker.
+
+The Sentry integration will add the following capabilities to PR Pilot:
+- Query Sentry issues and events
