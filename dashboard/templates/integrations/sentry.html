@@ -1,25 +1,10 @@
 <div>
-    <h2>Sentry Integration (Coming Soon)</h2>
-    <p class="lead">
-        Soon, you'll be able to connect PR Pilot to your <a href="https://sentry.io">Sentry</a> account,
-        opening up a world of powerful new use cases for you, for example:
-    </p>
-    <div class="mb-3">
-        <h5><span class="fw-bold">🔍 Bug Analysis</span></h5>
-        <p>Pull together information from different services and tools to analyze bugs with ease.</p>
-    </div>
-    <div class="mb-3">
-        <h5><span class="fw-bold">📊 Reporting</span></h5>
-        <p>Include stack traces in your <a href="https://github.com/PR-Pilot-AI/demo/tree/main/daily-report" target="_blank">reports</a>.</p>
-    </div>
-    <div class="mb-3">
-        <h5><span class="fw-bold">🔗 Enrich Tickets</span></h5>
-        <p>Correlate Sentry events with bug issues on your favorite issue tracker.</p>
-    </div>
-    <p>
-        The Sentry integration will add the following capabilities to PR Pilot:
-        <ul class="list-group">
-            <li class="list-group-item d-flex align-items-center"><span class="badge bg-info rounded-pill me-2"><i class="fa fa-bug"></i></span>Query Sentry issues and events</li>
-        </ul>
-    </p>
+    <h2>Sentry Integration</h2>
+    <form method="post" action="/integrations/sentry/">
+        <div class="mb-3">
+            <label for="api_key" class="form-label">Sentry API Key</label>
+            <input type="text" class="form-control" id="api_key" name="api_key" placeholder="Enter your Sentry API Key" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Save</button>
+    </form>
 </div>
