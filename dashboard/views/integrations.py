@@ -9,7 +9,7 @@ from django.shortcuts import redirect
 from django.urls import reverse
 from django.views.generic import TemplateView
 
-from accounts.models import SlackIntegration, LinearIntegration, UserBudget
+from accounts.models import SlackIntegration, LinearIntegration, UserBudget, SentryIntegration
 from engine.cryptography import encrypt
 
 
@@ -159,4 +159,13 @@ class IntegrationView(LoginRequiredMixin, TemplateView):
             # Delete the Linear API key from the user's profile
             request.user.linear_integration.access_token = None
             request.user.linear_integration.save()
+        elif action == "save_sentry_integration":
+            api_key = request.POST.get("api_key")
+            logger.info(f"Saving Sentry integration for user {request.user.username}")
+            if not request.user.sentry_integration:
+                request.user.sentry_integration = SentryIntegration.objects.create(api_key=api_key)
+                request.user.save()
+            else:
+                request.user.sentry_integration.api_key = api_key
+                request.user.sentry_integration.save()
         return redirect("integrations")
