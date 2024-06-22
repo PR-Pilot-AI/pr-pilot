@@ -17,180 +17,22 @@
             <div class="col-md-8">
                 <div class="tab-content" id="nav-tabContent">
                     <div class="tab-pane fade show active" id="list-slack" role="tabpanel" aria-labelledby="list-slack-list">
-                        <div>
-                            <div>
-                                {% if slack_bot_token %}
-                                    <p>
-                                        PR Pilot is connected to your Slack workspace and can do the following:
-                                        <ul class="list-group">
-                                            <li class="list-group-item d-flex align-items-center"><span class="badge bg-success rounded-pill me-2"><i class="fa-solid fa-comment"></i></span>Send messages to your Slack channels</li>
-                                            <li class="list-group-item d-flex align-items-center"><span class="badge bg-success rounded-pill me-2"><i class="fa-solid fa-search"></i></span>Search your Slack channels for messages</li>
-                                            <li class="list-group-item d-flex align-items-center"><span class="badge bg-success rounded-pill me-2"><i class="fa-solid fa-terminal"></i></span>React to the <code>/pilot</code> command in Slack</li>
-                                        </ul>
-                                    </p>
-                                    <form method="post" action="{% url 'integrations' %}">
-                                        {% csrf_token %}
-                                        <input type="hidden" name="action" value="delete_slack_integration">
-                                        <button type="submit" class="btn btn-danger">Delete Slack Integration</button>
-                                    </form>
-                                {% else %}
-                                    <p>
-                                        Install PR Pilot into your Slack workspace:
-                                    </p>
-                                    <p>
-                                        <a class="btn btn-primary" href="https://slack.com/oauth/v2/authorize?client_id=7136938584914.7136834826947&scope=channels:history,chat:write,commands,team:read&user_scope=search:read&redirect_uri=https%3A%2F%2F{{ site_host }}%2Fdashboard%2Fadd-slack-integration%2F"><i class="fab fa-slack"></i> Add to Slack</a>
-                                    </p>
-                                    <p>
-                                        Once activated, this integration will:
-                                        <ul class="list-group">
-                                            <li class="list-group-item d-flex align-items-center"><span class="badge bg-success rounded-pill me-2"><i class="fa-solid fa-comment"></i></span>Allow PR Pilot to send messages to your Slack workspace</li>
-                                            <li class="list-group-item d-flex align-items-center"><span class="badge bg-success rounded-pill me-2"><i class="fa-solid fa-terminal"></i></span>Enable you to use the <code>/pilot</code> command in Slack</li>
-                                            <li class="list-group-item d-flex align-items-center"><span class="badge bg-success rounded-pill me-2"><i class="fa-solid fa-search"></i></span>Let PR Pilot search for messages in your Slack channels</li>
-                                        </ul>
-                                    </p>
-                                {% endif %}
-                            </div>
-                        </div>
+                        {% include "integrations/slack.html" %}
                     </div>
                     <div class="tab-pane fade" id="list-linear" role="tabpanel" aria-labelledby="list-linear-list">
-                        <div>
-                            <div>
-                                {% if linear_access_token %}
-                                    <p>
-                                        PR Pilot is connected to your Linear workspace and can do the following:
-                                        <ul class="list-group">
-                                            <li class="list-group-item d-flex align-items-center"><span class="badge bg-success rounded-pill me-2"><i class="fa-solid fa-search"></i></span>Search your workspace for issues, comments</li>
-                                            <li class="list-group-item d-flex align-items-center"><span class="badge bg-success rounded-pill me-2"><i class="fa-solid fa-plus"></i></span>Create new issues in your workspace</li>
-                                        </ul>
-                                    </p>
-                                    <form method="post" action="{% url 'integrations' %}">
-                                        {% csrf_token %}
-                                        <input type="hidden" name="action" value="delete_linear_integration">
-                                        <button type="submit" class="btn btn-danger">Delete Linear Integration</button>
-                                    </form>
-                                {% else %}
-                                    <p>
-                                        Connect PR Pilot to your Linear workspace:
-                                    </p>
-                                    <p>
-                                        <a class="btn btn-primary" href="https://linear.app/oauth/authorize?response_type=code&client_id=45e9dc13c8e3ab511e93e47fe0e8a869&scope=read,issues:create&state=SECURE_RANDOM&redirect_uri=https%3A%2F%2F{{ site_host }}%2Fdashboard%2Fadd-linear-integration%2F"><i class="fa fa-bolt"></i> Connect to Linear</a>
-                                    </p>
-                                    <p>
-                                        Once activated, this integration will allow PR Pilot to access and update entities in your Linear workspace.
-                                    </p>
-                                {% endif %}
-                            </div>
-                        </div>
+                        {% include "integrations/linear.html" %}
                     </div>
                     <div class="tab-pane fade" id="list-sentry" role="tabpanel" aria-labelledby="list-sentry-list">
-                        <div>
-                            <h2>Sentry Integration (Coming Soon)</h2>
-                            <p class="lead">
-                                Soon, you'll be able to connect PR Pilot to your <a href="https://sentry.io">Sentry</a> account,
-                                opening up a world of powerful new use cases for you, for example:
-                            </p>
-                            <div class="mb-3">
-                                <h5><span class="fw-bold">🔍 Bug Analysis</span></h5>
-                                <p>Pull together information from different services and tools to analyze bugs with ease.</p>
-                            </div>
-                            <div class="mb-3">
-                                <h5><span class="fw-bold">📊 Reporting</span></h5>
-                                <p>Include stack traces in your <a href="https://github.com/PR-Pilot-AI/demo/tree/main/daily-report" target="_blank">reports</a>.</p>
-                            </div>
-                            <div class="mb-3">
-                                <h5><span class="fw-bold">🔗 Enrich Tickets</span></h5>
-                                <p>Correlate Sentry events with bug issues on your favorite issue tracker.</p>
-                            </div>
-                            <p>
-                                The Sentry integration will add the following capabilities to PR Pilot:
-                                <ul class="list-group">
-                                    <li class="list-group-item d-flex align-items-center"><span class="badge bg-info rounded-pill me-2"><i class="fa fa-bug"></i></span>Query Sentry issues and events</li>
-                                </ul>
-                            </p>
-                        </div>
+                        {% include "integrations/sentry.html" %}
                     </div>
                     <div class="tab-pane fade" id="list-circleci" role="tabpanel" aria-labelledby="list-circleci-list">
-                        <div>
-                            <h2>CircleCI Integration (Coming Soon)</h2>
-                            <p class="lead">
-                                Soon, you'll be able to connect PR Pilot to your <a href="https://circleci.com">CircleCI</a> account,
-                                opening up a world of powerful new use cases for you, for example:
-                            </p>
-                            <div class="mb-3">
-                                <h5><span class="fw-bold">⚡ Quick Access</span></h5>
-                                <p>No more clicking through dashboards. Just ask - "Why did my deployment fail?"</p>
-                            </div>
-                            <div class="mb-3">
-                                <h5><span class="fw-bold">📊 Reporting</span></h5>
-                                <p>Include insights from pipelines in your <a href="https://github.com/PR-Pilot-AI/demo/tree/main/daily-report" target="_blank">reports</a>.</p>
-                            </div>
-                            <div class="mb-3">
-                                <h5><span class="fw-bold">🐞 Faster Debugging</span></h5>
-                                <p>Quickly correlate build results with code changes and issues.</p>
-                            </div>
-                            <p>
-                                The CircleCI integration will add the following capabilities to PR Pilot:
-                                <ul class="list-group">
-                                    <li class="list-group-item d-flex align-items-center"><span class="badge bg-info rounded-pill me-2"><i class="fa fa-briefcase"></i></span>Read pipelines and jobs</li>
-                                    <li class="list-group-item d-flex align-items-center"><span class="badge bg-info rounded-pill me-2"><i class="fa fa-lightbulb"></i></span>Access project insights</li>
-                                </ul>
-                            </p>
-                        </div>
+                        {% include "integrations/circleci.html" %}
                     </div>
                     <div class="tab-pane fade" id="list-jira" role="tabpanel" aria-labelledby="list-jira-list">
-                        <div>
-                            <h2>JIRA Integration (Coming Soon)</h2>
-                            <p class="lead">
-                                Soon, you'll be able to connect PR Pilot to your <a href="https://www.atlassian.com/software/jira">JIRA</a> account,
-                                opening up a world of powerful new use cases for you, for example:
-                            </p>
-                            <div class="mb-3">
-                                <h5><span class="fw-bold">🔍 Easy Search</span></h5>
-                                <p>Finding stuff in JIRA can be hard. PR Pilot will search and find for you.</p>
-                            </div>
-                            <div class="mb-3">
-                                <h5><span class="fw-bold">🛠️ Assisted Refinements</span></h5>
-                                <p>PR Pilot can read your ticket, find relevant information/code and assist you in adding technical context.</p>
-                            </div>
-                            <div class="mb-3">
-                                <h5><span class="fw-bold">🏷️ Format & Label</span></h5>
-                                <p>Let PR Pilot apply your team's style and labeling guidelines to your tickets.</p>
-                            </div>
-                            <p>
-                                The JIRA integration will add the following capabilities to PR Pilot:
-                                <ul class="list-group">
-                                    <li class="list-group-item d-flex align-items-center"><span class="badge bg-info rounded-pill me-2"><i class="fa fa-tasks"></i></span>Read and write issues</li>
-                                    <li class="list-group-item d-flex align-items-center"><span class="badge bg-info rounded-pill me-2"><i class="fa fa-search"></i></span>Search projects</li>
-                                </ul>
-                            </p>
-                        </div>
+                        {% include "integrations/jira.html" %}
                     </div>
                     <div class="tab-pane fade" id="list-logstash" role="tabpanel" aria-labelledby="list-logstash-list">
-                        <div>
-                            <h2>Logstash Integration (Coming Soon)</h2>
-                            <p class="lead">
-                                Soon, you'll be able to connect PR Pilot to your <a href="https://www.elastic.co/logstash">Logstash</a> server,
-                                opening up a world of powerful new use cases for you, for example:
-                            </p>
-                            <div class="mb-3">
-                                <h5><span class="fw-bold">🐞 Powerful Debugging</span></h5>
-                                <p>With access to bug tickets and your code, PR Pilot will quickly find the right query and fetch the logs for you in seconds.</p>
-                            </div>
-                            <div class="mb-3">
-                                <h5><span class="fw-bold">💬 Prompt-Based Monitoring</span></h5>
-                                <p>Browsing through logs is annoying. Instead, use prompts - "Something's wrong. Look at the API logs in prod over the last 2 minutes"</p>
-                            </div>
-                            <div class="mb-3">
-                                <h5><span class="fw-bold">📊 Kibana Dashboard Generation</span></h5>
-                                <p>Generate custom, use-case specific Kibana dashboards in an instant.</p>
-                            </div>
-                            <p>
-                                The Logstash integration will add the following capabilities to PR Pilot:
-                                <ul class="list-group">
-                                    <li class="list-group-item d-flex align-items-center"><span class="badge bg-info rounded-pill me-2"><i class="fa fa-database"></i></span>Run Logstash queries</li>
-                                </ul>
-                            </p>
-                        </div>
+                        {% include "integrations/logstash.html" %}
                     </div>
                 </div>
             </div>
