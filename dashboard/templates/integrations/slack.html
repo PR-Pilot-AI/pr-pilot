@@ -1,0 +1,34 @@
+<div>
+    <div>
+        {% if slack_bot_token %}
+            <p>
+                PR Pilot is connected to your Slack workspace and can do the following:
+                <ul class="list-group">
+                    <li class="list-group-item d-flex align-items-center"><span class="badge bg-success rounded-pill me-2"><i class="fa-solid fa-comment"></i></span>Send messages to your Slack channels</li>
+                    <li class="list-group-item d-flex align-items-center"><span class="badge bg-success rounded-pill me-2"><i class="fa-solid fa-search"></i></span>Search your Slack channels for messages</li>
+                    <li class="list-group-item d-flex align-items-center"><span class="badge bg-success rounded-pill me-2"><i class="fa-solid fa-terminal"></i></span>React to the <code>/pilot</code> command in Slack</li>
+                </ul>
+            </p>
+            <form method="post" action="{% url 'integrations' %}">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="delete_slack_integration">
+                <button type="submit" class="btn btn-danger">Delete Slack Integration</button>
+            </form>
+        {% else %}
+            <p>
+                Install PR Pilot into your Slack workspace:
+            </p>
+            <p>
+                <a class="btn btn-primary" href="https://slack.com/oauth/v2/authorize?client_id=7136938584914.7136834826947&scope=channels:history,chat:write,commands,team:read&user_scope=search:read&redirect_uri=https%3A%2F%2F{{ site_host }}%2Fdashboard%2Fadd-slack-integration%2F"><i class="fab fa-slack"></i> Add to Slack</a>
+            </p>
+            <p>
+                Once activated, this integration will:
+                <ul class="list-group">
+                    <li class="list-group-item d-flex align-items-center"><span class="badge bg-success rounded-pill me-2"><i class="fa-solid fa-comment"></i></span>Allow PR Pilot to send messages to your Slack workspace</li>
+                    <li class="list-group-item d-flex align-items-center"><span class="badge bg-success rounded-pill me-2"><i class="fa-solid fa-terminal"></i></span>Enable you to use the <code>/pilot</code> command in Slack</li>
+                    <li class="list-group-item d-flex align-items-center"><span class="badge bg-success rounded-pill me-2"><i class="fa-solid fa-search"></i></span>Let PR Pilot search for messages in your Slack channels</li>
+                </ul>
+            </p>
+        {% endif %}
+    </div>
+</div>
