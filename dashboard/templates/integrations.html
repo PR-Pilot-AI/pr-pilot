@@ -6,8 +6,12 @@
         <div class="row">
             <div class="col-md-4">
                 <div class="list-group" id="integration-list" role="tablist">
-                    <a class="list-group-item list-group-item-action active" id="list-slack-list" data-bs-toggle="list" href="#list-slack" role="tab" aria-controls="slack"><i class="fab fa-slack"></i> Slack</a>
-                    <a class="list-group-item list-group-item-action" id="list-linear-list" data-bs-toggle="list" href="#list-linear" role="tab" aria-controls="linear"><i class="fa fa-bolt"></i> Linear</a>
+                    <a class="list-group-item list-group-item-action active d-flex align-items-center" id="list-slack-list" data-bs-toggle="list" href="#list-slack" role="tab" aria-controls="slack"><i class="fab fa-slack me-2"></i> Slack</a>
+                    <a class="list-group-item list-group-item-action d-flex align-items-center" id="list-linear-list" data-bs-toggle="list" href="#list-linear" role="tab" aria-controls="linear"><i class="fa fa-bolt me-2"></i> Linear</a>
+                    <a class="list-group-item list-group-item-action text-muted d-flex align-items-center" id="list-sentry-list" data-bs-toggle="list" href="#list-sentry" role="tab" aria-controls="sentry"><i class="fa fa-bug me-2"></i> Sentry</a>
+                    <a class="list-group-item list-group-item-action text-muted d-flex align-items-center" id="list-circleci-list" data-bs-toggle="list" href="#list-circleci" role="tab" aria-controls="circleci"><i class="fa fa-circle me-2"></i> CircleCI</a>
+                    <a class="list-group-item list-group-item-action text-muted d-flex align-items-center" id="list-jira-list" data-bs-toggle="list" href="#list-jira" role="tab" aria-controls="jira"><i class="fa fa-tasks me-2"></i> JIRA</a>
+                    <a class="list-group-item list-group-item-action text-muted d-flex align-items-center" id="list-logstash-list" data-bs-toggle="list" href="#list-logstash" role="tab" aria-controls="logstash"><i class="fa fa-database me-2"></i> Logstash</a>
                 </div>
             </div>
             <div class="col-md-8">
@@ -76,6 +80,92 @@
                                     </p>
                                 {% endif %}
                             </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="list-sentry" role="tabpanel" aria-labelledby="list-sentry-list">
+                        <div>
+                            <h2>Sentry Integration (Coming Soon)</h2>
+                            <p class="lead">
+                                Soon, you'll be able to connect PR Pilot to your <a href="https://sentry.io">Sentry</a> account,
+                                opening up a world of powerful new use cases for you, for example:
+
+                                <ul>
+                                    <li><span class="fw-bold">Bug Analysis</span> - Pull together information from different services and tools to analyze bugs with ease</li>
+                                    <li><span class="fw-bold">Reporting</span> - Include stack traces in your <a href="https://github.com/PR-Pilot-AI/demo/tree/main/daily-report" target="_blank">reports</a> </li>
+                                    <li><span class="fw-bold">Enrich Tickets</span> - Correlate Sentry events with bug issues on your favorite issue tracker</li>
+                                </ul>
+                            </p>
+                            <p>
+                                The Sentry integration will add the following capabilities to PR Pilot:
+                                <ul class="list-group">
+                                    <li class="list-group-item d-flex align-items-center"><span class="badge bg-info rounded-pill me-2"><i class="fa fa-bug"></i></span>Query Sentry issues and events</li>
+                                </ul>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="list-circleci" role="tabpanel" aria-labelledby="list-circleci-list">
+                        <div>
+                            <h2>CircleCI Integration (Coming Soon)</h2>
+                            <p class="lead">
+                                Soon, you'll be able to connect PR Pilot to your <a href="https://circleci.com">CircleCI</a> account,
+                                opening up a world of powerful new use cases for you, for example:
+
+                                <ul>
+                                    <li><span class="fw-bold">Quick Access</span> - No more clicking through dashboards. Just ask - "Why did my deployment fail?"</li>
+                                    <li><span class="fw-bold">Reporting</span> - Include insights from pipelines in your <a href="https://github.com/PR-Pilot-AI/demo/tree/main/daily-report" target="_blank">reports</a> </li>
+                                    <li><span class="fw-bold">Faster Debugging</span> - Quickly correlate build results with code changes and issues</li>
+                                </ul>
+                            </p>
+                            <p>
+                                The CircleCI integration will add the following capabilities to PR Pilot:
+                                <ul class="list-group">
+                                    <li class="list-group-item d-flex align-items-center"><span class="badge bg-info rounded-pill me-2"><i class="fa fa-briefcase"></i></span>Read pipelines and jobs</li>
+                                    <li class="list-group-item d-flex align-items-center"><span class="badge bg-info rounded-pill me-2"><i class="fa fa-lightbulb"></i></span>Access project insights</li>
+                                </ul>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="list-jira" role="tabpanel" aria-labelledby="list-jira-list">
+                        <div>
+                            <h2>JIRA Integration (Coming Soon)</h2>
+                            <p class="lead">
+                                Soon, you'll be able to connect PR Pilot to your <a href="https://www.atlassian.com/software/jira">JIRA</a> account,
+                                opening up a world of powerful new use cases for you, for example:
+
+                                <ul>
+                                    <li><span class="fw-bold">Easy Search</span> - Finding stuff in JIRA can be hard. PR Pilot will search and find for you.</li>
+                                    <li><span class="fw-bold">Assisted Refinements</span> - PR Pilot can read your ticket, find relevant information/code and assist you in adding technical context.</li>
+                                    <li><span class="fw-bold">Format & Label</span> - Let PR Pilot apply your team's style and labeling guidelines to your tickets</li>
+                                </ul>
+                            </p>
+                            <p>
+                                The JIRA integration will add the following capabilities to PR Pilot:
+                                <ul class="list-group">
+                                    <li class="list-group-item d-flex align-items-center"><span class="badge bg-info rounded-pill me-2"><i class="fa fa-tasks"></i></span>Read and write issues</li>
+                                    <li class="list-group-item d-flex align-items-center"><span class="badge bg-info rounded-pill me-2"><i class="fa fa-search"></i></span>Search projects</li>
+                                </ul>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="list-logstash" role="tabpanel" aria-labelledby="list-logstash-list">
+                        <div>
+                            <h2>Logstash Integration (Coming Soon)</h2>
+                            <p class="lead">
+                                Soon, you'll be able to connect PR Pilot to your <a href="https://www.elastic.co/logstash">Logstash</a> server,
+                                opening up a world of powerful new use cases for you, for example:
+
+                                <ul>
+                                    <li><span class="fw-bold">Powerful Debugging</span> - With access to bug tickets and your code, PR Pilot will quickly find the right query and fetch the logs for you in seconds.</li>
+                                    <li><span class="fw-bold">Prompt-Based Monitoring</span> - Browsing through logs is annoying. Instead, use prompts - "Something's wrong. Look at the API logs in prod over the last 2 minutes"</li>
+                                    <li><span class="fw-bold">Kibana Dashboard Generation</span> - Generate custom, use-case specific Kibana dashboards in an instant</li>
+                                </ul>
+                            </p>
+                            <p>
+                                The Logstash integration will add the following capabilities to PR Pilot:
+                                <ul class="list-group">
+                                    <li class="list-group-item d-flex align-items-center"><span class="badge bg-info rounded-pill me-2"><i class="fa fa-database"></i></span>Run Logstash queries</li>
+                                </ul>
+                            </p>
                         </div>
                     </div>
                 </div>
