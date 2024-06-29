@@ -1,7 +1,6 @@
 import logging
 
 import requests
-from langchain.tools import Tool
 from langchain_core.tools import StructuredTool
 from pydantic.v1 import BaseModel, Field
 
@@ -14,7 +13,7 @@ class SentryAPI:
     def __init__(self, api_key: str, org: str):
         self.api_key = api_key
         self.org = org
-        self.base_url = f"https://sentry.io/api/0"
+        self.base_url = "https://sentry.io/api/0"
         self.headers = {
             "Authorization": f"Bearer {self.api_key}",
             "Content-Type": "application/json",
@@ -80,7 +79,12 @@ def get_sentry_events(issue_id: str, api_key: str, org: str) -> str:
                 assembled_events += f"Message: {event['message']}\n"
                 assembled_events += f"Location: {event['location']}\n"
                 assembled_events += f"culprit: {event['culprit']}\n"
-                for tag in ['environment', 'github_project', 'github_user', 'server_name']:
+                for tag in [
+                    "environment",
+                    "github_project",
+                    "github_user",
+                    "server_name",
+                ]:
                     if tag in event:
                         assembled_events += f"{tag.capitalize()}: {event[tag]}\n"
                 assembled_events += "---\n"
@@ -116,7 +120,9 @@ Get events for a specific Sentry issue ID.
 def list_sentry_tools(api_key: str, org: str) -> list:
     search_tool = StructuredTool(
         name="search_sentry_issues",
-        func=lambda query, project_slug: search_sentry_issues(query, api_key, org, project_slug),
+        func=lambda query, project_slug: search_sentry_issues(
+            query, api_key, org, project_slug
+        ),
         description=SEARCH_TOOL_DESCRIPTION,
         args_schema=SearchSentryIssuesInput,
     )

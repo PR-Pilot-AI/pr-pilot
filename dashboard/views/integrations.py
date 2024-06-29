@@ -9,7 +9,12 @@ from django.shortcuts import redirect
 from django.urls import reverse
 from django.views.generic import TemplateView
 
-from accounts.models import SlackIntegration, LinearIntegration, SentryIntegration, UserBudget
+from accounts.models import (
+    SlackIntegration,
+    LinearIntegration,
+    SentryIntegration,
+    UserBudget,
+)
 from engine.cryptography import encrypt
 
 
@@ -73,24 +78,24 @@ def add_slack_integration(request):
 
 @login_required
 def add_sentry_integration(request):
-    code = request.args.get('code')
-    install_id = request.args.get('installationId')
+    code = request.args.get("code")
+    install_id = request.args.get("installationId")
 
-    url = u'https://sentry.io/api/0/sentry-app-installations/{}/authorizations/'
+    url = "https://sentry.io/api/0/sentry-app-installations/{}/authorizations/"
     url = url.format(install_id)
 
     payload = {
-        'grant_type': 'authorization_code',
-        'code': code,
-        'client_id': settings.SENTRY_CLIENT_ID,
-        'client_secret': settings.SENTRY_CLIENT_SECRET,
+        "grant_type": "authorization_code",
+        "code": code,
+        "client_id": settings.SENTRY_CLIENT_ID,
+        "client_secret": settings.SENTRY_CLIENT_SECRET,
     }
 
     resp = requests.post(url, json=payload)
     data = resp.json()
 
-    token = data['token']
-    refresh_token = data['refreshToken']
+    token = data["token"]
+    refresh_token = data["refreshToken"]
 
     logger.info(f"Creating Sentry integration for user {request.user.username}")
     if not request.user.sentry_integration:
@@ -215,7 +220,9 @@ class IntegrationView(LoginRequiredMixin, TemplateView):
             org = request.POST.get("sentry_org")
             logger.info(f"Adding Sentry integration for user {request.user.username}")
             if not request.user.sentry_integration:
-                request.user.sentry_integration = SentryIntegration.objects.create(api_key=encrypt(api_key), org_id_or_slug=org)
+                request.user.sentry_integration = SentryIntegration.objects.create(
+                    api_key=encrypt(api_key), org_id_or_slug=org
+                )
                 request.user.save()
             else:
                 request.user.sentry_integration.api_key = encrypt(api_key)

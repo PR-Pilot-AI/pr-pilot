@@ -421,4 +421,6 @@ def create_pr_pilot_agent(
         all_messages.insert(1, image_message)
     prompt = ChatPromptTemplate.from_messages(all_messages)
     agent = create_openai_functions_agent(llm, tools, prompt)
-    return AgentExecutor(agent=agent, tools=tools, verbose=settings.DEBUG, handle_parsing_errors=True)
+    return AgentExecutor(
+        agent=agent, tools=tools, verbose=settings.DEBUG, handle_parsing_errors=True
+    )
