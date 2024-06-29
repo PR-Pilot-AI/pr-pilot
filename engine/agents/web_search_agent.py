@@ -52,7 +52,12 @@ def scrape_website(url: str):
     docs = loader.load()
     html2text = Html2TextTransformer()
     docs_transformed = html2text.transform_documents(docs)
-    return docs_transformed[0].page_content[0:700]
+    
+    if docs_transformed and docs_transformed[0].page_content:
+        return docs_transformed[0].page_content[0:700]
+    else:
+        logger.error(f"Failed to scrape content from {url}")
+        return "Failed to scrape content"
 
 
 system_message = """
