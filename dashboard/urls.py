@@ -21,6 +21,11 @@ urlpatterns = [
         dashboard.views.integrations.add_linear_integration,
         name="add_linear_integration",
     ),
+    path(
+        "add-sentry-integration/",
+        dashboard.views.integrations.add_sentry_integration,
+        name="add_sentry_integration",
+    ),
     path("tasks/", dashboard.views.tasks.TaskListView.as_view(), name="task_list"),
     path(
         "integrations/",

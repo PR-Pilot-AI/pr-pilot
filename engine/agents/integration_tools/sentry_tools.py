@@ -1,5 +1,5 @@
 import logging
-from datetime import datetime
+
 import requests
 from langchain.tools import Tool
 from langchain_core.tools import StructuredTool
@@ -11,31 +11,32 @@ logger = logging.getLogger(__name__)
 
 
 class SentryAPI:
-    def __init__(self, api_key: str):
+    def __init__(self, api_key: str, org: str):
         self.api_key = api_key
-        self.base_url = "https://sentry.io/api/0"
+        self.org = org
+        self.base_url = f"https://sentry.io/api/0"
         self.headers = {
             "Authorization": f"Bearer {self.api_key}",
             "Content-Type": "application/json",
         }
 
-    def search_issues(self, query: str) -> dict:
-        url = f"{self.base_url}/issues/?query={query}"
+    def search_issues(self, query: str, project: str) -> dict:
+        url = f"{self.base_url}/projects/{self.org}/{project}/issues/?query={query}"
         response = requests.get(url, headers=self.headers)
         response.raise_for_status()
         return response.json()
 
     def get_events(self, issue_id: str) -> dict:
-        url = f"{self.base_url}/issues/{issue_id}/events/"
+        url = f"{self.base_url}/organizations/{self.org}/issues/{issue_id}/events/"
         response = requests.get(url, headers=self.headers)
         response.raise_for_status()
         return response.json()
 
 
-def search_sentry_issues(query: str, api_key: str) -> str:
-    sentry = SentryAPI(api_key)
+def search_sentry_issues(query: str, api_key: str, org: str, project_slug: str) -> str:
+    sentry = SentryAPI(api_key, org)
     try:
-        issues = sentry.search_issues(query)
+        issues = sentry.search_issues(query, project_slug)
         TaskEvent.add(
             actor="assistant",
             action="search_sentry_issues",
@@ -62,8 +63,8 @@ def search_sentry_issues(query: str, api_key: str) -> str:
         return msg
 
 
-def get_sentry_events(issue_id: str, api_key: str) -> str:
-    sentry = SentryAPI(api_key)
+def get_sentry_events(issue_id: str, api_key: str, org: str) -> str:
+    sentry = SentryAPI(api_key, org)
     try:
         events = sentry.get_events(issue_id)
         TaskEvent.add(
@@ -75,9 +76,13 @@ def get_sentry_events(issue_id: str, api_key: str) -> str:
         if events:
             assembled_events = "---\n"
             for event in events:
-                assembled_events += f"Event ID: {event['eventID']}\n"
                 assembled_events += f"Timestamp: {event['dateCreated']}\n"
                 assembled_events += f"Message: {event['message']}\n"
+                assembled_events += f"Location: {event['location']}\n"
+                assembled_events += f"culprit: {event['culprit']}\n"
+                for tag in ['environment', 'github_project', 'github_user', 'server_name']:
+                    if tag in event:
+                        assembled_events += f"{tag.capitalize()}: {event[tag]}\n"
                 assembled_events += "---\n"
             return f"Found {len(events)} events for issue ID '{issue_id}':\n\n{assembled_events}"
         else:
@@ -91,6 +96,7 @@ def get_sentry_events(issue_id: str, api_key: str) -> str:
 # Define a schema for the input parameters
 class SearchSentryIssuesInput(BaseModel):
     query: str = Field(..., title="Query to search Sentry issues")
+    project_slug: str = Field(..., title="Slug of the Sentry project to search")
 
 
 class GetSentryEventsInput(BaseModel):
@@ -107,16 +113,17 @@ Get events for a specific Sentry issue ID.
 """
 
 
-def list_sentry_tools(api_key: str) -> list:
-    search_tool = Tool(
+def list_sentry_tools(api_key: str, org: str) -> list:
+    search_tool = StructuredTool(
         name="search_sentry_issues",
-        func=lambda query: search_sentry_issues(query, api_key),
+        func=lambda query, project_slug: search_sentry_issues(query, api_key, org, project_slug),
         description=SEARCH_TOOL_DESCRIPTION,
+        args_schema=SearchSentryIssuesInput,
     )
 
     get_events_tool = StructuredTool(
         name="get_sentry_events",
-        func=lambda issue_id: get_sentry_events(issue_id, api_key),
+        func=lambda issue_id: get_sentry_events(issue_id, api_key, org),
         description=GET_EVENTS_TOOL_DESCRIPTION,
         args_schema=GetSentryEventsInput,
     )

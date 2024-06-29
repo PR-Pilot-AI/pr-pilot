@@ -13,6 +13,7 @@ class SlackIntegration(models.Model):
 
 class SentryIntegration(models.Model):
     api_key = models.TextField(null=True, blank=False)
+    org_id_or_slug = models.TextField(null=True, blank=False)
 
 
 class PilotUser(AbstractUser):

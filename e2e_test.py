@@ -70,7 +70,7 @@ Respond with a link to the Slack message.
 
 def run_e2e_test():
     task = create_task(
-        "Find all comments made in Linear in the last 24 hours in team PR Pilot",
+        "Find events for the issue 5330206259 on Sentry for project `python-django` and give me an analysis",
         model="gpt-4o",
     )
     settings.TASK_ID = str(task.id)

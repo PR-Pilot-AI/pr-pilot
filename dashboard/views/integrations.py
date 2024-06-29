@@ -72,6 +72,42 @@ def add_slack_integration(request):
 
 
 @login_required
+def add_sentry_integration(request):
+    code = request.args.get('code')
+    install_id = request.args.get('installationId')
+
+    url = u'https://sentry.io/api/0/sentry-app-installations/{}/authorizations/'
+    url = url.format(install_id)
+
+    payload = {
+        'grant_type': 'authorization_code',
+        'code': code,
+        'client_id': settings.SENTRY_CLIENT_ID,
+        'client_secret': settings.SENTRY_CLIENT_SECRET,
+    }
+
+    resp = requests.post(url, json=payload)
+    data = resp.json()
+
+    token = data['token']
+    refresh_token = data['refreshToken']
+
+    logger.info(f"Creating Sentry integration for user {request.user.username}")
+    if not request.user.sentry_integration:
+        request.user.sentry_integration = SentryIntegration.objects.create(
+            access_token=encrypt(token), refresh_token=encrypt(refresh_token)
+        )
+        request.user.save()
+    else:
+        request.user.sentry_integration.access_token = encrypt(token)
+        request.user.sentry_integration.refresh_token = encrypt(refresh_token)
+        request.user.sentry_integration.save()
+
+    # Redirect to the integrations page
+    return redirect("integrations")
+
+
+@login_required
 def add_linear_integration(request):
     """Callback for Linear Oauth flow."""
     # Check if the user is authenticated
@@ -149,6 +185,11 @@ class IntegrationView(LoginRequiredMixin, TemplateView):
             if self.request.user.sentry_integration
             else None
         )
+        context["sentry_org"] = (
+            self.request.user.sentry_integration.org_id_or_slug
+            if self.request.user.sentry_integration
+            else None
+        )
         context["site_host"] = self.request.get_host()
         return context
 
@@ -171,11 +212,13 @@ class IntegrationView(LoginRequiredMixin, TemplateView):
             request.user.sentry_integration.save()
         elif "sentry_api_key" in request.POST:
             api_key = request.POST.get("sentry_api_key")
+            org = request.POST.get("sentry_org")
             logger.info(f"Adding Sentry integration for user {request.user.username}")
             if not request.user.sentry_integration:
-                request.user.sentry_integration = SentryIntegration.objects.create(api_key=api_key)
+                request.user.sentry_integration = SentryIntegration.objects.create(api_key=encrypt(api_key), org_id_or_slug=org)
                 request.user.save()
             else:
-                request.user.sentry_integration.api_key = api_key
+                request.user.sentry_integration.api_key = encrypt(api_key)
+                request.user.sentry_integration.org_id_or_slug = org
                 request.user.sentry_integration.save()
         return redirect("integrations")

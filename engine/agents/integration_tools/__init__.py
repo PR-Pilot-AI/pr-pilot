@@ -22,7 +22,8 @@ def integration_tools_for_user(user: PilotUser):
         )
     if user.sentry_integration and user.sentry_integration.api_key:
         logger.info(f"User {user.username} has a Sentry integration.")
-        tools = tools + list_sentry_tools(decrypt(user.sentry_integration.api_key))
+        tools = tools + list_sentry_tools(decrypt(user.sentry_integration.api_key),
+                                          user.sentry_integration.org_id_or_slug)
     if not tools:
         logger.info(f"User {user.username} has no integrations.")
     return tools

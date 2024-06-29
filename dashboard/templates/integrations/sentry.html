@@ -1,7 +1,7 @@
 <div>
     {% if sentry_api_key %}
         <p>
-            PR Pilot is connected to your Sentry account and can do the following:
+            PR Pilot is connected to your <span class="fw-bold">{{ sentry_org }}</span> Sentry organization and can do the following:
             <ul class="list-group">
                 <li class="list-group-item d-flex align-items-center"><span class="badge bg-info rounded-pill me-2"><i class="fa fa-bug"></i></span>Query Sentry issues and events</li>
             </ul>
@@ -13,39 +13,20 @@
         </form>
     {% else %}
         <p>
-            Connect PR Pilot to your Sentry account by entering your API key below:
+            Connect PR Pilot to your Sentry account by entering your <a href="https://docs.sentry.io/api/auth/#user-authentication-tokens" target="_blank">User Token</a> below.
+            Make sure to set "Read" permissions for "Issues and Events"!
         </p>
         <form method="post" action="{% url 'integrations' %}">
             {% csrf_token %}
             <div class="mb-3">
-                <label for="sentryApiKey" class="form-label">Sentry API Key</label>
+                <label for="sentryApiKey" class="form-label">User Auth Token</label>
                 <input type="text" class="form-control" id="sentryApiKey" name="sentry_api_key" required>
+            </div>
+            <div class="mb-3">
+                <label for="sentryOrg" class="form-label">Sentry Organization ID or Slug</label>
+                <input type="text" class="form-control" id="sentryOrg" name="sentry_org" required>
             </div>
             <button type="submit" class="btn btn-primary">Save API Key</button>
         </form>
     {% endif %}
-</div>
-<div>
-    <h2>Sentry Integration</h2>
-    <p class="lead">
-        Connect PR Pilot to your <a href="https://sentry.io">Sentry</a> account to unlock powerful new use cases, such as:
-    </p>
-    <div class="mb-3">
-        <h5><span class="fw-bold">🔍 Bug Analysis</span></h5>
-        <p>Pull together information from different services and tools to analyze bugs with ease.</p>
-    </div>
-    <div class="mb-3">
-        <h5><span class="fw-bold">📊 Reporting</span></h5>
-        <p>Include stack traces in your <a href="https://github.com/PR-Pilot-AI/demo/tree/main/daily-report" target="_blank">reports</a>.</p>
-    </div>
-    <div class="mb-3">
-        <h5><span class="fw-bold">🔗 Enrich Tickets</span></h5>
-        <p>Correlate Sentry events with bug issues on your favorite issue tracker.</p>
-    </div>
-    <p>
-        The Sentry integration will add the following capabilities to PR Pilot:
-        <ul class="list-group">
-            <li class="list-group-item d-flex align-items-center"><span class="badge bg-info rounded-pill me-2"><i class="fa fa-bug"></i></span>Query Sentry issues and events</li>
-        </ul>
-    </p>
 </div>
