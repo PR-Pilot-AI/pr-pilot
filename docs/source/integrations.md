@@ -101,6 +101,32 @@ Benefits:
 - **Save time**: PR Pilot finds, compiles, formats and posts the information for you
 - **Control**: Customize the prompt with more specific requirements and instructions to get the results you need
 
+
+## Sentry
+[Sentry](https://sentry.io) is a popular error tracking tool that helps developers monitor and fix crashes in real-time. By integrating PR Pilot with Sentry, you can automate various tasks related to error tracking, bug analysis, and reporting.
+
+### 🐛 Bug Analysis
+Pull together information from different services and tools to analyze bugs with ease.
+
+```shell
+pilot task "Look at bug issue #324, find the relevant Sentry events add them as a comment to the issue."
+```
+
+### 📊 Reporting
+Include stack traces in your [reports](https://github.com/PR-Pilot-AI/demo/tree/main/daily-report).
+
+```shell
+pilot task -o report.md "Find new Sentry issues opened yesterday, read the relevant code and write an analysis."
+```
+
+### 🏷️ Enrich Tickets
+Correlate Sentry events with bug issues on your favorite issue tracker.
+
+```shell
+pilot task "Read JIR-324, find the relevant code, correlate it with open Sentry issues and add a comment to the ticket."
+```
+
+
 ## CircleCI (coming soon)
 [CircleCI](https://circleci.com) integration is coming soon. This will open up a world of powerful new use cases for you, for example:
 
@@ -183,30 +209,3 @@ pilot task "Generate a Kibana dashboard for API error rates in the last 24 hours
 
 The Logstash integration will add the following capabilities to PR Pilot:
 - Run Logstash queries
-
-## Sentry (coming soon)
-[Sentry](https://sentry.io) integration is coming soon. This will open up a world of powerful new use cases for you, for example:
-
-### 🐛 Bug Analysis
-Pull together information from different services and tools to analyze bugs with ease.
-
-```shell
-pilot task "Look at bug issue #324, find the relevant Sentry events add them as a comment to the issue."
-```
-
-### 📊 Reporting
-Include stack traces in your [reports](https://github.com/PR-Pilot-AI/demo/tree/main/daily-report).
-
-```shell
-pilot task -o report.md "Find new Sentry issues opened yesterday, read the relevant code and write an analysis."
-```
-
-### 🏷️ Enrich Tickets
-Correlate Sentry events with bug issues on your favorite issue tracker.
-
-```shell
-pilot task "Read JIR-324, find the relevant code, correlate it with open Sentry issues and add a comment to the ticket."
-```
-
-The Sentry integration will add the following capabilities to PR Pilot:
-- Query Sentry issues and events

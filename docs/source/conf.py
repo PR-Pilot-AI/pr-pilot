@@ -39,9 +39,9 @@ html_theme_options = {
     "master_doc": False,
     "nav_links": [
         {
-            "href": "https://github.com/apps/pr-pilot-ai/installations/new",
+            "href": "https://www.pr-pilot.ai/",
             "internal": False,
-            "title": "Install",
+            "title": "Official Website",
         },
         {
             "href": "https://app.pr-pilot.ai/dashboard/tasks/",
