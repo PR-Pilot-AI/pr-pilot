@@ -24,8 +24,8 @@ jobs:
             5. Based on the issue content and the contents of the files you read, change the issue:
             
             - Issue body should have `Technical Details` part with bullet points that will make it easier to implement the issue
-            - Issue body should have `Acceptance Criteria` part with concise, verifyable acceptance criteria
+            - Issue body should have `Acceptance Criteria` part with concise, verifiable acceptance criteria
             - Acceptance criteria must be Markdown checkboxes
-            - Acceptance criteria must be verifyable exclusively by reading files (no running scripts, tests, etc)
+            - Acceptance criteria must be verifiable exclusively by reading files (no running scripts, tests, etc)
             - Issue title should start with an emoji 
             - Remove the `needs-refinement` label
