@@ -4,6 +4,7 @@ import dashboard.views.api_keys
 import dashboard.views.integrations
 import dashboard.views.stripe
 import dashboard.views.tasks
+import dashboard.views.cli_auth
 
 urlpatterns = [
     path(
@@ -46,5 +47,10 @@ urlpatterns = [
         "tasks/<uuid:pk>/undo/",
         dashboard.views.tasks.TaskUndoView.as_view(),
         name="task_undo",
+    ),
+    path(
+        "cli-auth/",
+        dashboard.views.cli_auth.authenticate_cli,
+        name="authenticate_cli",
     ),
 ]
