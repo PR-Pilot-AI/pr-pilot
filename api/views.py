@@ -175,3 +175,36 @@ class TaskViewSet(APIView):
             serializer = TaskSerializer(task)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @extend_schema(
+        responses={
+            status.HTTP_204_NO_CONTENT: OpenApiResponse(
+                description="Task deleted successfully",
+            ),
+            status.HTTP_404_NOT_FOUND: OpenApiResponse(
+                response=inline_serializer(
+                    name="NotFound",
+                    fields={"error": serializers.CharField()},
+                ),
+                examples=[
+                    OpenApiExample(
+                        "TaskNotFound",
+                        summary="Task Not Found",
+                        description="The specified task does not exist",
+                        value={"error": "Task not found"},
+                    )
+                ],
+                description="The specified task does not exist.",
+            ),
+        },
+        tags=["Task Deletion"],
+    )
+    def delete(self, request, pk=None):
+        """Delete a task by ID."""
+        api_key = UserAPIKey.objects.get_from_key(request.headers["X-Api-Key"])
+        try:
+            task = Task.objects.get(id=pk, github_user=api_key.username)
+        except Task.DoesNotExist:
+            return Response({"error": "Task not found"}, status=status.HTTP_404_NOT_FOUND)
+        task.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
