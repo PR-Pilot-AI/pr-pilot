@@ -12,6 +12,10 @@
                     <a class="list-group-item list-group-item-action text-muted d-flex align-items-center" id="list-circleci-list" data-bs-toggle="list" href="#list-circleci" role="tab" aria-controls="circleci"><i class="fa fa-circle me-2"></i> CircleCI</a>
                     <a class="list-group-item list-group-item-action text-muted d-flex align-items-center" id="list-jira-list" data-bs-toggle="list" href="#list-jira" role="tab" aria-controls="jira"><i class="fa fa-tasks me-2"></i> JIRA</a>
                     <a class="list-group-item list-group-item-action text-muted d-flex align-items-center" id="list-logstash-list" data-bs-toggle="list" href="#list-logstash" role="tab" aria-controls="logstash"><i class="fa fa-database me-2"></i> Logstash</a>
+                    <a class="list-group-item list-group-item-action text-muted d-flex align-items-center" id="list-confluence-list" data-bs-toggle="list" href="#list-confluence" role="tab" aria-controls="confluence"><i class="fa fa-atlassian me-2"></i> Confluence</a>
+                    <a class="list-group-item list-group-item-action text-muted d-flex align-items-center" id="list-datadog-list" data-bs-toggle="list" href="#list-datadog" role="tab" aria-controls="datadog"><i class="fa fa-dog me-2"></i> DataDog</a>
+                    <a class="list-group-item list-group-item-action text-muted d-flex align-items-center" id="list-notion-list" data-bs-toggle="list" href="#list-notion" role="tab" aria-controls="notion"><i class="fa fa-book me-2"></i> Notion</a>
+                    <a class="list-group-item list-group-item-action text-muted d-flex align-items-center" id="list-vercel-list" data-bs-toggle="list" href="#list-vercel" role="tab" aria-controls="vercel"><i class="fa fa-rocket me-2"></i> Vercel</a>
                 </div>
             </div>
             <div class="col-md-8">
@@ -33,6 +37,18 @@
                     </div>
                     <div class="tab-pane fade" id="list-logstash" role="tabpanel" aria-labelledby="list-logstash-list">
                         {% include "integrations/logstash.html" %}
+                    </div>
+                    <div class="tab-pane fade" id="list-confluence" role="tabpanel" aria-labelledby="list-confluence-list">
+                        {% include "integrations/coming_soon.html" %}
+                    </div>
+                    <div class="tab-pane fade" id="list-datadog" role="tabpanel" aria-labelledby="list-datadog-list">
+                        {% include "integrations/coming_soon.html" %}
+                    </div>
+                    <div class="tab-pane fade" id="list-notion" role="tabpanel" aria-labelledby="list-notion-list">
+                        {% include "integrations/coming_soon.html" %}
+                    </div>
+                    <div class="tab-pane fade" id="list-vercel" role="tabpanel" aria-labelledby="list-vercel-list">
+                        {% include "integrations/coming_soon.html" %}
                     </div>
                 </div>
             </div>
