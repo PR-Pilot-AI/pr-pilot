@@ -50,7 +50,7 @@ class Task(models.Model):
     result = models.TextField(blank=True)
     pilot_command = models.TextField(blank=True)
     gpt_model = models.CharField(
-        max_length=200, blank=True, null=True, default="gpt-4-turbo"
+        max_length=200, blank=True, null=True, default="gpt-4o"
     )
     image = models.BinaryField(
         blank=True, null=True, help_text="An image to be used in the task"

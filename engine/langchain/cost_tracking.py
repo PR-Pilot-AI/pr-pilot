@@ -48,11 +48,7 @@ class CostTrackerCallback(OpenAICallbackHandler):
         encoding = tiktoken.get_encoding("cl100k_base")
         self.completion_tokens = len(encoding.encode(text_response))
         model_name = standardize_model_name(self.model_name)
-        if model_name == "gpt-4o":
-            # TODO Remove this once GPT-4o is added to the cost per 1k tokens
-            completion_cost = 0.015
-            prompt_cost = 0.005
-        elif model_name in MODEL_COST_PER_1K_TOKENS:
+        if model_name in MODEL_COST_PER_1K_TOKENS:
             completion_cost = get_openai_token_cost_for_model(
                 model_name, self.completion_tokens, is_completion=True
             )

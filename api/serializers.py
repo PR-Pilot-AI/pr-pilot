@@ -44,7 +44,7 @@ class PromptSerializer(serializers.Serializer):
     )
     gpt_model = serializers.CharField(
         required=False,
-        default="gpt-4-turbo",
+        default="gpt-4o",
         help_text="The GPT model to use for the task",
     )
     image = Base64BinaryField(
