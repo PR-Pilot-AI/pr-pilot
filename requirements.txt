@@ -25,3 +25,4 @@ redis==5.0.4
 black
 flake8
 slack_sdk==3.27.2
+channels==4.0.0
