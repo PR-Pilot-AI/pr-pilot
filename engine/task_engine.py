@@ -127,13 +127,10 @@ class TaskEngine:
         else:
             self.task.title = generate_task_title("", self.task.user_request)
         self.task.save()
-        async_to_sync(get_channel_layer().group_send)(
-            str(self.task.id),
-            {
-                "type": "title_update",
-                "data": self.task.title,
-            },
-        )
+        broadcast(str(self.task.id), {
+            "type": "title_update",
+            "data": self.task.title,
+        })
 
     def run(self) -> str:
         self.task.status = "running"

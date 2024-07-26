@@ -5,6 +5,7 @@ from channels.generic.websocket import WebsocketConsumer
 
 
 class TaskEventStreamConsumer(WebsocketConsumer):
+    """Handles the websocket connection for communication between task and client."""
 
     def connect(self):
         self.task_id = self.scope["url_route"]["kwargs"]["pk"]
