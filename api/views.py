@@ -1,4 +1,3 @@
-import json
 from drf_spectacular.utils import (
     extend_schema,
     OpenApiExample,
@@ -11,13 +10,13 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_api_key.permissions import BaseHasAPIKey
+
 from api.models import UserAPIKey
 from api.serializers import PromptSerializer, TaskSerializer
 from engine.models.task import Task, TaskType
+from engine.task_scheduler import SchedulerError
 from webhooks.jwt_tools import get_installation_access_token
 from webhooks.models import GithubRepository
-from channels.generic.websocket import AsyncWebsocketConsumer
-import redis
 
 # Number of tasks to show in the task list
 TASK_LIST_LIMIT = 10
@@ -173,41 +172,14 @@ class TaskViewSet(APIView):
                 gpt_model=serializer.validated_data["gpt_model"],
                 image=serializer.validated_data.get("image"),
             )
-            task.schedule()
+            try:
+                task.schedule()
+            except SchedulerError as e:
+                task.delete()
+                return Response(
+                    {"error": "Task could not be scheduled", "details": str(e)},
+                    status=status.HTTP_409_CONFLICT,
+                )
             serializer = TaskSerializer(task)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-class TaskEventStreamConsumer(AsyncWebsocketConsumer):
-    async def connect(self):
-        self.task_id = self.scope['url_route']['kwargs']['task_id']
-        self.group_name = f'task_{self.task_id}'
-
-        await self.channel_layer.group_add(
-            self.group_name,
-            self.channel_name
-        )
-
-        await self.accept()
-
-    async def disconnect(self, close_code):
-        await self.channel_layer.group_discard(
-            self.group_name,
-            self.channel_name
-        )
-
-    async def receive(self, text_data):
-        pass
-
-    async def send_task_event(self, event):
-        await self.send(text_data=json.dumps(event['data']))
-
-
-class TaskEventStreamView(APIView):
-    permission_classes = [HasUserAPIKey]
-
-    async def get(self, request, pk):
-        consumer = TaskEventStreamConsumer()
-        await consumer.connect()
-        return consumer

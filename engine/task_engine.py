@@ -5,6 +5,8 @@ import shutil
 import threading
 from decimal import Decimal
 
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
 from django.conf import settings
 from django.utils import timezone
 from git import Repo
@@ -117,9 +119,17 @@ class TaskEngine:
         else:
             self.task.title = generate_task_title("", self.task.user_request)
         self.task.save()
+        async_to_sync(get_channel_layer().group_send)(
+            str(self.task.id),
+            {
+                "type": "title_update",
+                "data": self.task.title,
+            },
+        )
 
     def run(self) -> str:
         self.task.status = "running"
+        self.broadcast_status_update("running")
         self.task.save()
         budget = UserBudget.get_user_budget(self.task.github_user)
         if budget.budget < Decimal("0.00"):
@@ -133,6 +143,7 @@ class TaskEngine:
             self.task.result = "Budget exceeded. Please add credits to your account."
             self.task.context.respond_to_user(self.task.result)
             self.task.save()
+            self.broadcast_status_update("failed", self.task.result)
             return self.task.result
         # Generate task title in the background
         task_title_thread = threading.Thread(target=self.generate_task_title)
@@ -223,8 +234,10 @@ class TaskEngine:
                     self.task.branch = working_branch
             final_response += f"\n\n---\n📋 **[Log](https://app.pr-pilot.ai/dashboard/tasks/{str(self.task.id)}/)**"
             final_response += f" ↩️ **[Undo](https://app.pr-pilot.ai/dashboard/tasks/{str(self.task.id)}/undo/)**"
+            self.broadcast_status_update("completed", self.task.result)
         except Exception as e:
             self.task.status = "failed"
+            self.broadcast_status_update("failed")
             self.task.result = str(e)
             logger.error("Failed to run task", exc_info=e)
             dashboard_link = f"[Your Dashboard](https://app.pr-pilot.ai/dashboard/tasks/{str(self.task.id)}/)"
@@ -261,20 +274,42 @@ class TaskEngine:
         budget.save()
 
     def clone_github_repo(self):
-        TaskEvent.add(
-            actor="assistant",
-            action="clone_repo",
-            target=self.task.github_project,
-            message="Cloning repository",
-        )
+
         if os.path.exists(settings.REPO_DIR):
             logger.info("Deleting existing directory contents.")
             shutil.rmtree(settings.REPO_DIR)
         cache = RepoCache(self.task.github_project, self.github_token)
+        github_repo_url = f"https://github.com/{self.task.github_project}"
         if self.project.caching_enabled():
             logger.info("Caching is enabled! Setting up workspace...")
+            TaskEvent.add(
+                actor="assistant",
+                action="clone_repo",
+                target=self.task.github_project,
+                message=f"Load cached repository [{self.task.github_project}]({github_repo_url})",
+            )
             cache.setup_workspace()
         else:
             # If caching is disabled, clone it directly into the workspace
             logger.info("Caching is disabled! Cloning directly into workspace...")
+            TaskEvent.add(
+                actor="assistant",
+                action="clone_repo",
+                target=self.task.github_project,
+                message=f"Clone repository [{self.task.github_project}]({github_repo_url})",
+            )
             cache.clone(settings.REPO_DIR)
+
+    def broadcast_status_update(self, new_status: str, message: str = None):
+        """Broadcast a status update to the task's websocket channel."""
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(
+            str(self.task.id),
+            {
+                "type": "status_update",
+                "data": {
+                    "status": new_status,
+                    "message": message,
+                },
+            },
+        )

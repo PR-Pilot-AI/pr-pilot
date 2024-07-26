@@ -4,6 +4,7 @@ from drf_spectacular.views import (
     SpectacularSwaggerView,
     SpectacularRedocView,
 )
+
 from . import views
 
 urlpatterns = [
@@ -17,5 +18,4 @@ urlpatterns = [
         name="swagger-ui",
     ),
     path("redoc/", SpectacularRedocView.as_view(url_name="schema"), name="redoc"),
-    path("tasks/<uuid:pk>/stream/", views.TaskEventStreamView.as_view(), name="task_event_stream"),
 ]

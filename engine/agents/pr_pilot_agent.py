@@ -157,6 +157,12 @@ def write_file(
 @tool
 def list_directory(path: str):
     """List the contents of a directory."""
+    TaskEvent.add(
+        actor="assistant",
+        action="list_directory",
+        target=path,
+        message=f"List directory `{path}`",
+    )
     path = path.lstrip("/")
     file_system = FileSystem()
     node = file_system.get_node(Path(path))
@@ -177,12 +183,7 @@ def list_directory(path: str):
             "/"
         )
         directory_content += f"- {clipped_path}\n"
-    TaskEvent.add(
-        actor="assistant",
-        action="list_directory",
-        target=path,
-        message=directory_content,
-    )
+
     return directory_content
 
 
@@ -307,7 +308,7 @@ def search_github_issues(query: str, sort: Optional[str], order: Optional[str]):
         TaskEvent.add(
             actor="assistant",
             action="search_issues",
-            message=f"Searched issues with query: `{query}`. No results.",
+            message=f"Search issues with query: `{query}`. No results.",
         )
         return "No issues found"
     response = ""
@@ -317,7 +318,7 @@ def search_github_issues(query: str, sort: Optional[str], order: Optional[str]):
     TaskEvent.add(
         actor="assistant",
         action="search_issues",
-        message=f"Searched issues with query: `{query}`. Found {results.totalCount} results:\n\n{response}",
+        message=f"Search issues with query: `{query}`. Found {results.totalCount} results.",
     )
     return response
 
@@ -327,7 +328,7 @@ class PRPilotSearch(TavilySearchResults):
     def _run(
         self, query: str, run_manager: Optional[CallbackManagerForToolRun] = None
     ) -> Union[List[Dict], str]:
-        TaskEvent.add(actor="assistant", action="search", message=query)
+        TaskEvent.add(actor="assistant", action="search", message=f"Search Internet for `{query}`")
         return super()._run(query, run_manager)
 
 

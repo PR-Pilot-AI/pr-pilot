@@ -10,6 +10,7 @@ logger = logging.getLogger(__name__)
 
 # Save money by limiting the amount of input for the title generator
 INPUT_CUTOFF = 300
+MAX_TITLE_LENGTH = 100
 
 system_message = """
 You generate titles for tasks.
@@ -56,5 +57,5 @@ def generate_task_title(issue_description: str, user_request: str) -> str:
         )
         .replace("\n", "")
         .lstrip('"')
-        .rstrip('"')[:40]
+        .rstrip('"')[:MAX_TITLE_LENGTH]
     )

@@ -2,6 +2,8 @@ import logging
 import os
 import threading
 import redis
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
 
 from accounts.models import UserBudget
 from engine.job import KubernetesJob
@@ -10,6 +12,11 @@ from prpilot import settings
 
 
 logger = logging.getLogger(__name__)
+
+
+class SchedulerError(Exception):
+    def __init__(self, message):
+        super().__init__(message)
 
 
 class TaskScheduler:
@@ -31,11 +38,6 @@ class TaskScheduler:
         permission = repo.get_collaborator_permission(self.task.github_user)
         return permission == "write" or permission == "admin"
 
-    def project_has_reached_rate_limit(self):
-        """Check if the project has reached the rate limit"""
-        rate_limit = self.task.github.get_rate_limit()
-        return rate_limit.core.remaining == 0
-
     def schedule(self):
         self.context.acknowledge_user_prompt()
         if self.user_budget_empty():
@@ -45,21 +47,16 @@ class TaskScheduler:
                 "[Dashboard](https://app.pr-pilot.ai) to purchase more credits."
             )
             self.context.respond_to_user(message)
-            self.task.result = message
-            self.task.status = "failed"
-            self.task.save()
-            return
+            raise SchedulerError(message)
 
         if not self.user_can_write():
             message = (
                 f"Sorry @{self.task.github_user}, you must be a collaborator of `{self.task.github_project}` "
                 f"to run commands on this project."
             )
+            logger.info(f"User {self.task.github_user} does not have write access")
             self.context.respond_to_user(message)
-            self.task.status = "failed"
-            self.task.result = message
-            self.task.save()
-            return
+            raise SchedulerError(message)
 
         if self.task.would_reach_rate_limit():
             message = (
@@ -67,11 +64,10 @@ class TaskScheduler:
                 f"limit of {settings.TASK_RATE_LIMIT} per {settings.TASK_RATE_LIMIT_WINDOW} minutes. Please "
                 f"try again later."
             )
+            logger.info(f"Project {self.task.github_project} has reached the rate limit")
             self.context.respond_to_user(message)
-            self.task.status = "failed"
-            self.task.result = message
-            self.task.save()
-            return
+            raise SchedulerError(message)
+
         if settings.JOB_STRATEGY == "thread":
             # In local development, just run the task in a background thread
             settings.TASK_ID = self.task.id

@@ -1,6 +1,8 @@
 import logging
 import uuid
 
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
 from django.conf import settings
 from django.db import models
 from github import GithubException
@@ -104,4 +106,22 @@ class TaskEvent(models.Model):
             actor=actor, action=action, target=target, message=message, task_id=task_id
         )
         new_entry.save()
+        new_entry.broadcast()
         return new_entry
+
+    def broadcast(self):
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(
+            str(self.task_id),
+            {
+                "type": "event",
+                "data": {
+                    "id": str(self.id),
+                    "actor": self.actor,
+                    "action": self.action,
+                    "target": self.target,
+                    "message": self.message,
+                    "timestamp": self.timestamp.isoformat(),
+                },
+            },
+        )

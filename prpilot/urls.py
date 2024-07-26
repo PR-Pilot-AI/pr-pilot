@@ -17,10 +17,11 @@ Including another URLconf
 
 from allauth.socialaccount.providers.github.views import oauth2_login
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 from django.views.generic import RedirectView
 
 from accounts.views import health_check, home
+from engine.task_event_streamer import TaskEventStreamConsumer
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -41,4 +42,8 @@ urlpatterns = [
     path("api/", include("api.urls")),
     path("healthz/", health_check, name="health_check"),
     path("", home, name="home"),
+]
+
+websocket_urlpatterns = [
+    re_path(r'^ws/tasks/(?P<pk>[0-9a-f-]+)/stream/$', TaskEventStreamConsumer.as_asgi()),
 ]

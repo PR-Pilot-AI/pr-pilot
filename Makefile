@@ -76,3 +76,6 @@ pr-description:
 # Uses a specific prompt file for the task
 daily-report:
 	pilot task -f prompts/slack-report.md.jinja2
+
+redis-docker:
+	docker run -d -p 6379:6379 redis

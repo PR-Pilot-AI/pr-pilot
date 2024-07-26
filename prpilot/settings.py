@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     "rest_framework_api_key",
     "corsheaders",
     "drf_spectacular",
+    "channels",
     "api",
 ]
 
@@ -307,7 +308,7 @@ CORS_ALLOW_HEADERS = list(default_headers) + [
 CORS_ALLOW_ALL_ORIGINS = True
 
 TASK_RATE_LIMIT_WINDOW = 10  # Minutes
-TASK_RATE_LIMIT = 10  # per 10 minutes
+TASK_RATE_LIMIT = 20  # per 10 minutes
 
 REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
 REDIS_PORT = os.getenv("REDIS_PORT", 6379)
@@ -333,3 +334,14 @@ LINEAR_CLIENT_SECRET = os.getenv("LINEAR_CLIENT_SECRET")
 
 SENTRY_CLIENT_ID = os.getenv("SENTRY_CLIENT_ID")
 SENTRY_CLIENT_SECRET = os.getenv("SENTRY_CLIENT_SECRET")
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [(REDIS_HOST, REDIS_PORT)],
+        },
+    },
+}
+
+ASGI_APPLICATION = 'prpilot.asgi.application'

@@ -36,4 +36,4 @@ COPY uwsgi.ini /usr/src/app/uwsgi.ini
 EXPOSE 8000
 
 # Run uwsgi
-CMD ["uwsgi", "--ini", "uwsgi.ini"]
+CMD ["uvicorn", "--host", "0.0.0.0", "--port", "8000", "prpilot.asgi:application"]
