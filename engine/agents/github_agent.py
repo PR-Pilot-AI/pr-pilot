@@ -267,11 +267,11 @@ def remove_label_from_issue(issue_number: int, label_to_delete: str):
             actor="assistant",
             action="remove_label_from_issue",
             target=str(issue.number),
-            message=f"Removed label '{label_to_delete}' from issue [#{issue_number} {issue.title}]({issue.html_url})",
+            message=f"Remove label `{label_to_delete}` from issue [#{issue_number} {issue.title}]({issue.html_url})",
         )
-        return f"Removed label '{label_to_delete}' from issue #{issue_number}"
+        return f"Removed label `{label_to_delete}` from issue #{issue_number}"
     else:
-        return f"Label '{label_to_delete}' does not exist on issue #{issue_number}"
+        return f"Label `{label_to_delete}` does not exist on issue #{issue_number}"
 
 
 def create_github_agent():

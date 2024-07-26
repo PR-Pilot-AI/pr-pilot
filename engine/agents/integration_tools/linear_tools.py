@@ -101,7 +101,7 @@ def list_linear_tools(api_key: str):
             issue = response["data"]["issueCreate"]["issue"]
             issue_link = issue["url"]
             issue_id = issue["id"]
-            message = f"Creat new Linear issue [{issue['title']}]({issue_link}) in team `{team_name}`"
+            message = f"Create new Linear issue [{issue['title']}]({issue_link}) in team `{team_name}`"
         TaskEvent.add(
             actor="assistant",
             action="create_linear_issue",

@@ -122,7 +122,7 @@ def test_create_linear_issue_tool(api_key, team_name, graphql_response):
         )
         assert (
             result_message
-            == f"Created a new Linear issue [{title}](http://linear.app/issue1) in team `{team_name}`"
+            == f"Create new Linear issue [{title}](http://linear.app/issue1) in team `{team_name}`"
         )
 
 

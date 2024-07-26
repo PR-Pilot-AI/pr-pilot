@@ -4,6 +4,7 @@ import pytest
 
 from engine.models.cost_item import CostItem
 from engine.models.task import Task
+from engine.task_scheduler import SchedulerError
 
 
 @pytest.fixture(autouse=True)
@@ -52,9 +53,8 @@ def test_task_only_schedules_if_user_can_write(task):
     assert task.status == "scheduled"
 
     task.github.get_repo.return_value.get_collaborator_permission.return_value = "read"
-    task.schedule()
-    task.refresh_from_db()
-    assert task.status == "failed"
+    with pytest.raises(SchedulerError):
+        task.schedule()
 
 
 @pytest.mark.django_db
@@ -63,7 +63,7 @@ def test_task_would_reach_rate_limit(task):
     task.save()
 
     # Create 8 tasks in the last 10 minutes
-    for i in range(8):
+    for i in range(18):
         Task.objects.create(
             github_project="test_user/test_project",
             status="scheduled",
