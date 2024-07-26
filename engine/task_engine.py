@@ -16,6 +16,7 @@ from github.PullRequest import PullRequest
 from accounts.models import UserBudget, PilotUser
 from engine.agents.integration_tools import integration_tools_for_user
 from engine.agents.pr_pilot_agent import create_pr_pilot_agent
+from engine.channels import broadcast
 from engine.langchain.generate_pr_info import generate_pr_info, LabelsAndTitle
 from engine.langchain.generate_task_title import generate_task_title
 from engine.models.cost_item import CostItem
@@ -304,8 +305,7 @@ class TaskEngine:
 
     def broadcast_status_update(self, new_status: str, message: str = None):
         """Broadcast a status update to the task's websocket channel."""
-        channel_layer = get_channel_layer()
-        async_to_sync(channel_layer.group_send)(
+        broadcast(
             str(self.task.id),
             {
                 "type": "status_update",

@@ -35,3 +35,10 @@ def user():
         username="test_user",
         email="test_user@pr-pilot.ai",
     )
+
+
+@pytest.fixture(autouse=True)
+def mock_get_channel_layer():
+    with patch("engine.channels.async_to_sync"):
+        with patch("engine.channels.get_channel_layer") as mock:
+            yield mock
