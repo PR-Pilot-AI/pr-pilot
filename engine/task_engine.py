@@ -100,7 +100,9 @@ class TaskEngine:
         if self.project.get_diff_to_main():
             logger.info(f"Found changes on {branch_name!r} branch. Pushing changes ...")
             self.project.push_branch(branch_name)
-            TaskEvent.add(actor="assistant", action="push_branch", target=branch_name)
+            TaskEvent.add(actor="assistant", action="push_branch",
+                          target=branch_name,
+                          message=f"Push branch `{branch_name}`")
             self.project.checkout_latest_default_branch()
             return True
         else:
@@ -157,7 +159,7 @@ class TaskEngine:
                     actor="assistant",
                     action="checkout_pr_branch",
                     target=self.task.head,
-                    message="Checking out PR branch",
+                    message="Check out PR branch",
                 )
                 self.project.checkout_branch(self.task.head)
                 working_branch = self.task.head
@@ -168,7 +170,7 @@ class TaskEngine:
                     actor="assistant",
                     action="checkout_branch",
                     target=self.task.branch,
-                    message=f"Checking out PR branch `{self.task.branch}`",
+                    message=f"Check out PR branch `{self.task.branch}`",
                 )
                 self.project.checkout_branch(self.task.branch)
             else:

@@ -22,7 +22,7 @@ class GithubIssueContext(TaskContext):
             actor="assistant",
             action="comment_on_issue",
             target=comment.id,
-            message=f"Commented on [Issue {self.task.issue_number}]({comment.html_url})",
+            message=f"Comment on [Issue {self.task.issue_number}]({comment.html_url})",
         )
 
     def acknowledge_user_prompt(self):

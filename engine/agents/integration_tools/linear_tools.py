@@ -56,7 +56,7 @@ def list_linear_tools(api_key: str):
         TaskEvent.add(
             actor="assistant",
             action="search_linear_workspace",
-            message=f"Searching Linear search with query: \n\n```\n{query}\n```",
+            message=f"Search Linear with query: \n\n```\n{query}\n```",
         )
         response = run_graphql_query(api_key, query)
         if "errors" in response:
@@ -101,7 +101,7 @@ def list_linear_tools(api_key: str):
             issue = response["data"]["issueCreate"]["issue"]
             issue_link = issue["url"]
             issue_id = issue["id"]
-            message = f"Created a new Linear issue [{issue['title']}]({issue_link}) in team `{team_name}`"
+            message = f"Creat new Linear issue [{issue['title']}]({issue_link}) in team `{team_name}`"
         TaskEvent.add(
             actor="assistant",
             action="create_linear_issue",

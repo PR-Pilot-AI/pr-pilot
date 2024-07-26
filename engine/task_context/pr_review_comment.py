@@ -26,5 +26,5 @@ class PRReviewCommentContext(TaskContext):
             actor="assistant",
             action="comment_on_issue",
             target=comment.id,
-            message=f"Commented on [PR {self.task.pr_number}]({comment.html_url})",
+            message=f"Comment on [PR #{self.task.pr_number}]({comment.html_url})",
         )

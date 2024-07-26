@@ -150,6 +150,6 @@ class Project(BaseModel):
             actor="assistant",
             action="create_pull_request",
             target=pr.number,
-            message=f"Created [PR {pr.number}]({pr.html_url}) for branch `{head}`",
+            message=f"Create [PR #{pr.number}]({pr.html_url}) for branch `{head}`",
         )
         return pr

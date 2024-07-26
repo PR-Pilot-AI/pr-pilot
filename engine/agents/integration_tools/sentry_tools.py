@@ -42,7 +42,7 @@ def search_sentry_issues(query: str, api_key: str, org: str, project_slug: str) 
             actor="assistant",
             action="search_sentry_issues",
             target=query,
-            message=f"Searched for Sentry issues and found {len(issues)} matches for query '{query}'",
+            message=f"Found {len(issues)} Sentry issues for query '{query}'",
         )
         if issues:
             assembled_hits = "---\n"
@@ -74,7 +74,7 @@ def get_sentry_events(
             actor="assistant",
             action="get_sentry_events",
             target=issue_id,
-            message=f"Retrieved {len(events)} events for issue ID '{issue_id}'",
+            message=f"Load {len(events)} events for Sentry issue ID '{issue_id}'",
         )
         if events:
             assembled_events = "---\n"

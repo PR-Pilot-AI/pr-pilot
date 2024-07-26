@@ -94,7 +94,7 @@ def delete_file(path: str):
         actor="Darwin",
         action="delete_file",
         target=path,
-        message=f"Deleting file {path}",
+        message=f"Delete file {path}",
     )
     FileSystem().delete_file(path)
     Project.commit_all_changes(f"Deleted file {path}")
@@ -111,7 +111,7 @@ def copy_file(source: str, destination: str):
         actor="Darwin",
         action="copy_file",
         target=source,
-        message=f"Copying file {source} to {destination}",
+        message=f"Copy file {source} to {destination}",
     )
     FileSystem().copy_file(source, destination)
     Project.commit_all_changes(f"Copied file {source} to {destination}")
@@ -128,7 +128,7 @@ def move_file(source: str, destination: str):
         actor="Darwin",
         action="move_file",
         target=source,
-        message=f"Moving file {source} to {destination}",
+        message=f"Move file {source} to {destination}",
     )
     FileSystem().move_file(source, destination)
     Project.commit_all_changes(f"Moved file {source} to {destination}")
@@ -193,7 +193,7 @@ def read_files(file_paths: list[str]):
     if len(file_paths) > settings.MAX_READ_FILES:
         return f"Too many files ({len(file_paths)}) to read. Please limit to {settings.MAX_READ_FILES} files."
     file_system = FileSystem()
-    message = "Reading files: \n" + "\n- ".join(
+    message = "Read files: \n" + ",".join(
         f"`{file_path}`\n" for file_path in file_paths
     )
     TaskEvent.add(actor="assistant", action="read_files", message=message)

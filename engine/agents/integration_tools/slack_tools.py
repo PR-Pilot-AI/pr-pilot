@@ -28,7 +28,7 @@ def search_slack_messages(query: str, user_token: str) -> str:
             actor="assistant",
             action="search_slack_messages",
             target=query,
-            message=f"Searched for Slack messages and found {len(matches)} matches for query '{query}'",
+            message=f"Found {len(matches)} Slack messages for query '{query}'",
         )
         if matches:
             assembled_hits = "---\n"
@@ -75,7 +75,7 @@ def post_slack_message_to_channel(channel: str, message: str, bot_token: str) ->
             actor="assistant",
             action="post_slack_message",
             target=channel,
-            message=f"Posted [message]({message_url}) to channel #{channel}",
+            message=f"Post [message]({message_url}) to channel #{channel}",
         )
 
         return f"Message posted to channel #{channel} successfully: {message_url}"
