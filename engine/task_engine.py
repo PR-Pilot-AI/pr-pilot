@@ -68,7 +68,9 @@ class TaskEngine:
         counter = 1
         original_branch_name = unique_branch_name
 
-        while unique_branch_name in [str(ref).replace('origin/', '') for ref in repo.refs]:
+        while unique_branch_name in [
+            str(ref).replace("origin/", "") for ref in repo.refs
+        ]:
             unique_branch_name = f"{original_branch_name}-{counter}"
             counter += 1
         return unique_branch_name
@@ -101,9 +103,12 @@ class TaskEngine:
         if self.project.get_diff_to_main():
             logger.info(f"Found changes on {branch_name!r} branch. Pushing changes ...")
             self.project.push_branch(branch_name)
-            TaskEvent.add(actor="assistant", action="push_branch",
-                          target=branch_name,
-                          message=f"Push branch `{branch_name}`")
+            TaskEvent.add(
+                actor="assistant",
+                action="push_branch",
+                target=branch_name,
+                message=f"Push branch `{branch_name}`",
+            )
             self.project.checkout_latest_default_branch()
             return True
         else:

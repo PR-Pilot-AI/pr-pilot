@@ -45,5 +45,7 @@ urlpatterns = [
 ]
 
 websocket_urlpatterns = [
-    re_path(r'^ws/tasks/(?P<pk>[0-9a-f-]+)/stream/$', TaskEventStreamConsumer.as_asgi()),
+    re_path(
+        r"^ws/tasks/(?P<pk>[0-9a-f-]+)/stream/$", TaskEventStreamConsumer.as_asgi()
+    ),
 ]

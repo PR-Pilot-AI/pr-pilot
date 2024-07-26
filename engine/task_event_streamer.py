@@ -7,7 +7,7 @@ from channels.generic.websocket import WebsocketConsumer
 class TaskEventStreamConsumer(WebsocketConsumer):
 
     def connect(self):
-        self.task_id = self.scope['url_route']['kwargs']['pk']
+        self.task_id = self.scope["url_route"]["kwargs"]["pk"]
         async_to_sync(self.channel_layer.group_add)(self.task_id, self.channel_name)
         self.accept()
 

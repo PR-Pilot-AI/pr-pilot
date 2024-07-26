@@ -336,12 +336,12 @@ SENTRY_CLIENT_ID = os.getenv("SENTRY_CLIENT_ID")
 SENTRY_CLIENT_SECRET = os.getenv("SENTRY_CLIENT_SECRET")
 
 CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        'CONFIG': {
-            'hosts': [(REDIS_HOST, REDIS_PORT)],
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [(REDIS_HOST, REDIS_PORT)],
         },
     },
 }
 
-ASGI_APPLICATION = 'prpilot.asgi.application'
+ASGI_APPLICATION = "prpilot.asgi.application"

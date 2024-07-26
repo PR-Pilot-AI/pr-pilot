@@ -328,7 +328,9 @@ class PRPilotSearch(TavilySearchResults):
     def _run(
         self, query: str, run_manager: Optional[CallbackManagerForToolRun] = None
     ) -> Union[List[Dict], str]:
-        TaskEvent.add(actor="assistant", action="search", message=f"Search Internet for `{query}`")
+        TaskEvent.add(
+            actor="assistant", action="search", message=f"Search Internet for `{query}`"
+        )
         return super()._run(query, run_manager)
 
 

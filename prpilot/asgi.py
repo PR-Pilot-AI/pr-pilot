@@ -19,13 +19,20 @@ from engine.task_event_streamer import TaskEventStreamConsumer
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "prpilot.settings")
 
-application = ProtocolTypeRouter({
-    "http": get_asgi_application(),
-    "websocket": AllowedHostsOriginValidator(
-        AuthMiddlewareStack(
-            URLRouter([
-                re_path(r'^ws/tasks/(?P<pk>[0-9a-f-]+)/events/$', TaskEventStreamConsumer.as_asgi()),
-            ])
-        )
-    ),
-})
+application = ProtocolTypeRouter(
+    {
+        "http": get_asgi_application(),
+        "websocket": AllowedHostsOriginValidator(
+            AuthMiddlewareStack(
+                URLRouter(
+                    [
+                        re_path(
+                            r"^ws/tasks/(?P<pk>[0-9a-f-]+)/events/$",
+                            TaskEventStreamConsumer.as_asgi(),
+                        ),
+                    ]
+                )
+            )
+        ),
+    }
+)

@@ -1,15 +1,13 @@
 import logging
 import os
 import threading
+
 import redis
-from asgiref.sync import async_to_sync
-from channels.layers import get_channel_layer
 
 from accounts.models import UserBudget
 from engine.job import KubernetesJob
 from engine.util import run_task_in_background
 from prpilot import settings
-
 
 logger = logging.getLogger(__name__)
 
@@ -64,7 +62,9 @@ class TaskScheduler:
                 f"limit of {settings.TASK_RATE_LIMIT} per {settings.TASK_RATE_LIMIT_WINDOW} minutes. Please "
                 f"try again later."
             )
-            logger.info(f"Project {self.task.github_project} has reached the rate limit")
+            logger.info(
+                f"Project {self.task.github_project} has reached the rate limit"
+            )
             self.context.respond_to_user(message)
             raise SchedulerError(message)
 
