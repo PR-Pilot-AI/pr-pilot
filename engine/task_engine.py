@@ -5,8 +5,6 @@ import shutil
 import threading
 from decimal import Decimal
 
-from asgiref.sync import async_to_sync
-from channels.layers import get_channel_layer
 from django.conf import settings
 from django.utils import timezone
 from git import Repo
@@ -127,10 +125,13 @@ class TaskEngine:
         else:
             self.task.title = generate_task_title("", self.task.user_request)
         self.task.save()
-        broadcast(str(self.task.id), {
-            "type": "title_update",
-            "data": self.task.title,
-        })
+        broadcast(
+            str(self.task.id),
+            {
+                "type": "title_update",
+                "data": self.task.title,
+            },
+        )
 
     def run(self) -> str:
         self.task.status = "running"
