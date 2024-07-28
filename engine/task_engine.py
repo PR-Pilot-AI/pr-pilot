@@ -195,7 +195,8 @@ class TaskEngine:
                 image_support=self.task.image is not None,
                 additional_tools=integration_tools_for_user(
                     PilotUser.objects.get(username=self.task.github_user)
-                ) + self.project.load_pilot_behaviors(self.task, project_info),
+                )
+                + self.project.load_pilot_behaviors(self.task, project_info),
             )
 
             executor_result = executor.invoke(

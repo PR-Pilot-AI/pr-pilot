@@ -23,7 +23,8 @@ def build_agent_behavior_tool_function(task, project_info, pilot_hints, instruct
         project_info: Project information
         pilot_hints: Pilot hints
         instructions: Instructions for the agent
-        Returns: A function that will be used to create a LangChain tool for the agent behavior"""
+        Returns: A function that will be used to create a LangChain tool for the agent behavior
+    """
 
     def agent_behavior_tool_function(**input):
 
@@ -38,7 +39,7 @@ def build_agent_behavior_tool_function(task, project_info, pilot_hints, instruct
         )
 
         date_and_time = (
-                timezone.now().isoformat() + " " + str(timezone.get_current_timezone())
+            timezone.now().isoformat() + " " + str(timezone.get_current_timezone())
         )
         input_list = ("\n").join([f"{key}: {value}" for key, value in input.items()])
         user_request = f"{input_list}\n\n---\n\n{instructions}"
@@ -58,15 +59,21 @@ def build_agent_behavior_tool_function(task, project_info, pilot_hints, instruct
             message=f"Agent behavior: {input}",
         )
         return executor_result["output"]
+
     return agent_behavior_tool_function
 
 
 class AgentBehavior(BaseModel):
     """User-defined behavior for the PR Pilot agent."""
+
     title: str = Field(..., title="Short title of the behavior")
-    args: Optional[dict] = Field(None, title="Arguments required to perform the behavior")
+    args: Optional[dict] = Field(
+        None, title="Arguments required to perform the behavior"
+    )
     instructions: str = Field(..., title="Instructions for the agent")
-    result: Optional[str] = Field("A short summary of your actions", title="Expected result of the behavior")
+    result: Optional[str] = Field(
+        "A short summary of your actions", title="Expected result of the behavior"
+    )
 
     @property
     def slug(self):
@@ -79,12 +86,14 @@ class AgentBehavior(BaseModel):
             final_instructions += f"\n\nRespond with: {self.result}"
         fields = {}
         for key, value in self.args.items():
-            fields[key.replace(' ', '-')] = (str, FieldInfo(title=value))
-        AgentBehaviorToolSchema = create_model('AgentBehaviorToolSchema', **fields)
+            fields[key.replace(" ", "-")] = (str, FieldInfo(title=value))
+        AgentBehaviorToolSchema = create_model("AgentBehaviorToolSchema", **fields)
 
         return StructuredTool(
             name=self.slug,
-            func=build_agent_behavior_tool_function(task, project_info, pilot_hints, self.instructions),
+            func=build_agent_behavior_tool_function(
+                task, project_info, pilot_hints, self.instructions
+            ),
             description=self.title,
             args_schema=AgentBehaviorToolSchema,
         )

@@ -93,11 +93,18 @@ class Project(BaseModel):
         if node:
             try:
                 behaviors = yaml.safe_load(node.content)
-                tools = [AgentBehavior(**behavior).to_agent_tool(task, project_info, self.load_pilot_hints()) for behavior in behaviors]
+                tools = [
+                    AgentBehavior(**behavior).to_agent_tool(
+                        task, project_info, self.load_pilot_hints()
+                    )
+                    for behavior in behaviors
+                ]
             except ScannerError:
                 raise ValueError("Invalid YAML in .pilot-behaviors.yaml")
             except ValidationError as e:
-                raise ValueError(f"Invalid agent behavior in .pilot-behaviors.yaml: {e}")
+                raise ValueError(
+                    f"Invalid agent behavior in .pilot-behaviors.yaml: {e}"
+                )
 
             logger.info(f"Loaded {len(tools)} agent behaviors from {self.name}")
             return tools
