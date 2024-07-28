@@ -1,11 +1,16 @@
 import logging
 from pathlib import Path
+from typing import List
 
 import git
+import yaml
 from django.conf import settings
 from github.Repository import Repository
-from pydantic import Field, BaseModel
+from langchain_core.tools import StructuredTool
+from pydantic import Field, BaseModel, ValidationError
+from yaml.scanner import ScannerError
 
+from engine.agents.behavior import AgentBehavior
 from engine.file_system import FileSystem
 from engine.models.task_event import TaskEvent
 from engine.models.task import Task
@@ -80,6 +85,25 @@ class Project(BaseModel):
         file_system = FileSystem()
         node = file_system.get_node(Path(".pilot-hints.md"))
         return node.content if node else ""
+
+    def load_pilot_behaviors(self, task, project_info) -> List[StructuredTool]:
+        """Load agent behaviors from the repository"""
+        file_system = FileSystem()
+        node = file_system.get_node(Path(".pilot-behaviors.yaml"))
+        if node:
+            try:
+                behaviors = yaml.safe_load(node.content)
+                tools = [AgentBehavior(**behavior).to_agent_tool(task, project_info, self.load_pilot_hints()) for behavior in behaviors]
+            except ScannerError:
+                raise ValueError("Invalid YAML in .pilot-behaviors.yaml")
+            except ValidationError as e:
+                raise ValueError(f"Invalid agent behavior in .pilot-behaviors.yaml: {e}")
+
+            logger.info(f"Loaded {len(tools)} agent behaviors from {self.name}")
+            return tools
+        else:
+            logger.info("No agent behaviors found")
+        return []
 
     def discard_all_changes(self):
         logger.info("Discarding all changes")

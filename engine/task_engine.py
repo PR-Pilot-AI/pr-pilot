@@ -37,13 +37,6 @@ class TaskEngine:
         os.environ["GIT_COMMIT_HOOK"] = ""
         self.task = task
         self.max_steps = max_steps
-        self.executor = create_pr_pilot_agent(
-            task.gpt_model,
-            image_support=self.task.image is not None,
-            additional_tools=integration_tools_for_user(
-                PilotUser.objects.get(username=task.github_user)
-            ),
-        )
         self.github_token = get_installation_access_token(self.task.installation_id)
         self.github = Github(self.github_token)
         self.github_repo = self.github.get_repo(self.task.github_project)
@@ -197,7 +190,15 @@ class TaskEngine:
             date_and_time = (
                 timezone.now().isoformat() + " " + str(timezone.get_current_timezone())
             )
-            executor_result = self.executor.invoke(
+            executor = create_pr_pilot_agent(
+                self.task.gpt_model,
+                image_support=self.task.image is not None,
+                additional_tools=integration_tools_for_user(
+                    PilotUser.objects.get(username=self.task.github_user)
+                ) + self.project.load_pilot_behaviors(self.task, project_info),
+            )
+
+            executor_result = executor.invoke(
                 {
                     "encoded_image_url": f"data:image/png;base64,{image_base64}",
                     "user_request": self.task.user_request,
