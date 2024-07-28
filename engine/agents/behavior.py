@@ -8,7 +8,6 @@ from pydantic.v1.fields import FieldInfo
 
 from accounts.models import PilotUser
 from engine.agents.integration_tools import integration_tools_for_user
-from engine.models.task_event import TaskEvent
 from engine.util import slugify
 
 MAX_TOOL_NAME_LEN = 35
@@ -51,12 +50,6 @@ def build_agent_behavior_tool_function(task, project_info, pilot_hints, instruct
                 "pilot_hints": pilot_hints,
                 "current_time": date_and_time,
             }
-        )
-        TaskEvent.add(
-            actor="assistant",
-            action="agent_behavior",
-            target=task.github_project,
-            message=f"Agent behavior: {input}",
         )
         return executor_result["output"]
 

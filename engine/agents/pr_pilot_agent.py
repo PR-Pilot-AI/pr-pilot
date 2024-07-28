@@ -146,7 +146,12 @@ def write_file(
     """
     path = path.lstrip("/")
     file_system = FileSystem()
-    TaskEvent.add(actor="assistant", action="write_file", target=path)
+    TaskEvent.add(
+        actor="assistant",
+        action="write_file",
+        target=path,
+        message=f"Write content to `{path}`",
+    )
     file_system.save(complete_entire_file_content, Path(path))
     if not commit_message:
         commit_message = f"Update {path}"

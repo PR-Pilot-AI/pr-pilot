@@ -147,6 +147,48 @@ pilot history last <n> prompt --markdown | pbcopy
 ### Personalization and Customization
 PR Pilot aims to streamline your workflow by reducing friction and saving you time.
 
+#### Custom Behavior
+You can "teach" PR Pilot new behaviors by creating a `pilot-behaviors.yaml` file in your repository.
+This file contains a list of **custom behaviors** that PR Pilot will use when running tasks in your repository:
+
+```yaml
+- title: Scramble a file
+  args:
+    file_path: Path to the file to scramble
+  instructions: |
+    1. Read the file
+    2. Reverse every word in the file
+    3. Write the file to <original_name>.scrambled.<original_ending>
+- title: Translate a file
+  args:
+    file_path: Path to the file to translate
+    new_language: Target language
+  instructions: |
+    1. Read the file
+    2. Translate the content into the new language
+    3. Write the file to <original_name>.<new_lang>.<original_ending>
+```
+
+Now, you can run this behavior in any task:
+
+```bash
+➜ pilot task "Translate the README file into French and then scramble the translated file"
+✔ Read files: README.md                                                                                                                                                                                    
+✔ Write content to README.fr.md                                                                                                                                                                            
+✔ Add French translation of README.md                                                                                                                                                                      
+✔ List directory .                                                                                                                                                                                         
+✔ Read files: README.fr.md                                                                                                                                                                                 
+✔ Write content to README.fr.scrambled.md                                                                                                                                                                  
+✔ Scrambled the words in README.fr.md as requested.                                                                                                                                                        
+✔ Push branch translate-and-scramble                                                                                                                                                                     
+✔ Create PR #220 for branch translate-and-scramble                                                                                                                                                       
+✔ Translate and scramble the README file into French                                                                                                                                                       
+✔ SUCCESS  (0:00:27.54)
+                                                                                                                                             
+  The README.md file has been successfully translated into French and scrambled. The resulting file is saved as README.fr.scrambled.md.          
+```
+
+
 #### Re-Usable Commands
 If you find yourself using the same prompts over and over again, you can save them as part of your repository
 using the `--save-command` parameter, making this call **re-usable**:
