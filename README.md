@@ -132,7 +132,7 @@ To get started, follow our [User Guide](https://docs.pr-pilot.ai/user_guide.html
 
 ## 🚀 Run Locally
 
-Set the following environment variables:
+Set the following environment variables with `.env` filename:
 
 | Variable                | Description                                                     |
 |-------------------------|-----------------------------------------------------------------|
@@ -141,10 +141,9 @@ Set the following environment variables:
 | `GITHUB_WEBHOOK_SECRET` | Secret for securing webhooks                                    |
 | `GITHUB_APP_ID`         | GitHub App ID                                                   |
 | `OPENAI_API_KEY`        | API key for OpenAI services                                     |
-| `REPO_DIR`              | Directory for storing repository data                           |
 | `TAVILY_API_KEY`        | API key for Tavily search engine                                |
-| `STRIPE_API_KEY`        | Stripe API key for handling payments                            |
-| `STRIPE_WEBHOOK_SECRET` | Secret for securing Stripe webhook endpoints                    |
+| `STRIPE_API_KEY`        | (Optional) Stripe API key for handling payments                            |
+| `STRIPE_WEBHOOK_SECRET` | (Optional) Secret for securing Stripe webhook endpoints                    |
 | `DJANGO_SECRET_KEY`     | Secret key for Django                                           |
 | `SENTRY_DSN`            | (Optional) Sentry DSN for error monitoring                      |
 | `JOB_STRATEGY`          | (Optional) Strategy for running jobs ('thread', 'redis', 'log') |
@@ -152,13 +151,26 @@ Set the following environment variables:
 | `REDIS_PORT`            | (Optional) Redis port for job scheduling                        |
 | `REPO_CACHE_DIR`        | (Optional) Directory for storing repository cache               |
 | `REPO_DIR`              | (Optional) Workspace for storing repo in worker                 |
-| `SLACK_APP_ID`          | Slack App ID               |
-| `SLACK_CLIENT_ID`       | Slack Client ID            |
-| `SLACK_CLIENT_SECRET`   | Slack Client Secret        |
-| `SLACK_SIGNING_SECRET`  | Slack Signing Secret       |
+| `SLACK_APP_ID`          | Slack App ID                                                    |
+| `SLACK_CLIENT_ID`       | Slack Client ID                                                 |
+| `SLACK_CLIENT_SECRET`   | Slack Client Secret                                             |
+| `SLACK_SIGNING_SECRET`  | Slack Signing Secret                                            |
+| `DJANGO_SECRET_KEY`     | ~                                                               |
+| `DJANGO_BASE_URL`       | ~                                                               |
+| `DJANGO_CORS_ORIGIN`    | ~                                                               |
+| `POSTGRES_DB`           | ~                                                               |
+| `POSTGRES_USER`         | ~                                                               |
+| `POSTGRES_PASSWORD`     | ~                                                               |
+| `POSTGRES_HOST`         | ~                                                               |
+| `POSTGRES_PORT`         | ~                                                               |
+
+### Requirements
+
+- [Rancher Desktop](https://rancherdesktop.io/) or [Docker](https://docs.docker.com/engine/install/)
+
+### Setup
 
 To get PR Pilot up and running on your own machine, follow these steps:
-
 
 ```bash
 # Clone the repository
@@ -167,23 +179,8 @@ git clone https://github.com/PR-Pilot-AI/pr-pilot.git
 # Change directory
 cd pr-pilot
 
-# Install dependencies
-pip install -r requirements.txt
-
-# Apply migrations
-python manage.py migrate
-
-# Create a superuser
-python manage.py createsuperuser
-
 # Start the development server
-python manage.py runserver
-```
-
-To expose your local server to the internet, you can use `ngrok`:
-
-```bash
-ngrok http 8000
+docker compose up -d --build
 ```
 
 ## 🧪 Unit Tests

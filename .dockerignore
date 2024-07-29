@@ -6,7 +6,7 @@ venv
 __pycache__
 .tox
 repo_workspace
-local.env
+*.env
 .pytest_cache
 *.sqlite3
 *.pem

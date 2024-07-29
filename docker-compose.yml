@@ -1,0 +1,32 @@
+services:
+  pr-pilot:
+    build:
+      context: .
+    container_name: pr-pilot
+    env_file:
+      - .env
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      - ./github_app_private_key.pem:/usr/src/app/github_app_private_key.pem
+    restart: always
+    ports:
+      - '8000:8000'
+
+  database:
+    image: postgres:16.3
+    container_name: database
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - data-db:/var/lib/postgresql/data
+
+volumes:
+  data-db:
+
+networks:
+  default:
+    name: pr-pilot
+    external: true

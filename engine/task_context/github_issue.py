@@ -1,5 +1,6 @@
 import logging
 
+from django.conf import settings
 from engine.models.task_event import TaskEvent
 from engine.task_context.task_context import TaskContext
 
@@ -30,6 +31,6 @@ class GithubIssueContext(TaskContext):
         replaced = self.task.request_comment.body.replace("/pilot", "**/pilot**")
         replaced = replaced.replace(
             f"{self.task.pilot_command}",
-            f"[{self.task.pilot_command}](https://app.pr-pilot.ai/dashboard/tasks/{str(self.task.id)}/)",
+            f"[{self.task.pilot_command}]({settings.BASE_URL}/dashboard/tasks/{str(self.task.id)}/)",
         )
         self.task.request_comment.edit(replaced)

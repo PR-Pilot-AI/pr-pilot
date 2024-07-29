@@ -5,6 +5,7 @@ import threading
 import redis
 
 from accounts.models import UserBudget
+from django.conf import settings
 from engine.job import KubernetesJob
 from engine.util import run_task_in_background
 from prpilot import settings
@@ -42,7 +43,7 @@ class TaskScheduler:
             logger.info(f"User {self.task.github_user} has no budget")
             message = (
                 "You have used up your budget. Please visit the "
-                "[Dashboard](https://app.pr-pilot.ai) to purchase more credits."
+                f"[Dashboard]({settings.BASE_URL}) to purchase more credits."
             )
             self.context.respond_to_user(message)
             raise SchedulerError(message)

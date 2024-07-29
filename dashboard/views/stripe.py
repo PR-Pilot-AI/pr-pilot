@@ -26,7 +26,7 @@ def create_stripe_payment_link(request):
         line_items=[{"price": price, "quantity": int(credits)}],
         after_completion={
             "type": "redirect",
-            "redirect": {"url": "https://app.pr-pilot.ai/dashboard/tasks/"},
+            "redirect": {"url": f"{settings.BASE_URL}/dashboard/tasks/"},
         },
         metadata={
             "github_user": request.user.username,
