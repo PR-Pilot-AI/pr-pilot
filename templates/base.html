@@ -79,52 +79,73 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 
         <div class="container-fluid p-3" id="mainContainer">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-danger" role="alert">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
             {% block content %}{% endblock %}
         </div>
 
         <!-- Refill Credits Modal -->
         <div class="modal fade" id="refillCreditsModal" tabindex="-1" aria-labelledby="refillCreditsModalLabel" aria-hidden="true">
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="refillCreditsModalLabel">Refill Credits</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                <form id="refillCreditsForm">
-                  <div class="mb-3">
-                    <label for="creditsAmount" class="form-label">Amount of Credits</label>
-                    <div class="input-group">
-                      <span class="input-group-text"><i class="fas fa-coins"></i></span>
-                      <input type="number" class="form-control" id="creditsAmount" placeholder="100 Credits = $1" required>
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="refillCreditsModalLabel">Refill Credits</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                  </div>
-                  <button type="submit" id="refillButton" class="btn btn-primary d-block w-100">Refill</button>
-
-                </form>
-              </div>
+                    <div class="modal-body">
+                        <form id="refillCreditsForm">
+                            <div class="mb-3">
+                                <label for="creditsAmount" class="form-label">Amount of Credits</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-coins"></i></span>
+                                    <input type="number" class="form-control" id="creditsAmount" placeholder="100 Credits = $1" required>
+                                </div>
+                                <div id="error-message" class="text-danger mt-2" style="display: none;">Amount must be greater than 50.</div>
+                            </div>
+                            <button type="submit" id="refillButton" class="btn btn-primary d-block w-100">Refill</button>
+                        </form>
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
         <script>
-        document.addEventListener('DOMContentLoaded', function() {
-          const creditsAmount = document.getElementById('creditsAmount');
-          const refillButton = document.getElementById('refillButton');
+            document.addEventListener('DOMContentLoaded', function() {
+                const creditsAmount = document.getElementById('creditsAmount');
+                const refillButton = document.getElementById('refillButton');
+                const errorMessage = document.getElementById('error-message');
 
-          // Disable the button on page load
-          refillButton.disabled = true;
+                // Disable the button on page load
+                refillButton.disabled = true;
 
-          // Event listener for input on the credits amount field
-          creditsAmount.addEventListener('input', function() {
-            // Check if the input field has a value. If it does not, disable the button.
-            refillButton.disabled = this.value.length === 0 || isNaN(this.value) || parseInt(this.value, 10) <= 0;
-          });
-        });
-        document.getElementById('refillCreditsForm').addEventListener('submit', function(event) {
-          event.preventDefault();
-          const amount = document.getElementById('creditsAmount').value;
-          window.location.href = `/dashboard/refill?credits=${amount}`;
-        });
+                // Event listener for input on the credits amount field
+                creditsAmount.addEventListener('input', function() {
+                    const value = parseInt(this.value, 10);
+                    if (isNaN(value) || value <= 50) {
+                        refillButton.disabled = true;
+                        errorMessage.style.display = 'block';
+                    } else {
+                        refillButton.disabled = false;
+                        errorMessage.style.display = 'none';
+                    }
+                });
+            });
+
+            document.getElementById('refillCreditsForm').addEventListener('submit', function(event) {
+                event.preventDefault();
+                const amount = document.getElementById('creditsAmount').value;
+                if (parseInt(amount, 10) > 50) {
+                    window.location.href = `/dashboard/refill?credits=${amount}`;
+                } else {
+                    // Show the error message if the value is less than or equal to 50
+                    document.getElementById('error-message').style.display = 'block';
+                }
+            });
         </script>
+
     </body>
 </html>
